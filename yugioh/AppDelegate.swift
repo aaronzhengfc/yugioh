@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         
         
         //微信接口初始化
-        WXApi.registerApp(wechatKey)
+        WeChatSharing.register()
         
         //日志
         let deviceName = UIDevice.current.name  //获取设备名称
@@ -55,6 +55,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         
         return WXApi.handleOpen(url, delegate: self)
+    }
+
+    func application(_ app: UIApplication, open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        return WXApi.handleOpen(url, delegate: self)
+    }
+
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity,
+                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        return WXApi.handleOpenUniversalLink(userActivity, delegate: self)
+    }
+
+    func onResp(_ resp: BaseResp) {
+        // Cancellation is a normal outcome; other errors should be visible to the user.
+        guard resp is SendMessageToWXResp, resp.errCode != 0, resp.errCode != -2 else { return }
+        DispatchQueue.main.async {
+            guard var presenter = self.window?.rootViewController else { return }
+            while let presented = presenter.presentedViewController { presenter = presented }
+            WeChatSharing.showError("微信分享失败，请稍后重试。", from: presenter)
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

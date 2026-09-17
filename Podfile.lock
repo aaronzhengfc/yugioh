@@ -8,7 +8,7 @@ PODS:
   - SQLite.swift/standard (0.12.2)
   - SwiftyGif (5.1.1)
   - SwiftyJSON (4.3.0)
-  - WechatOpenSDK (1.7.9)
+  - WechatOpenSDK-XCFramework (2.0.4)
 
 DEPENDENCIES:
   - Agrume
@@ -16,17 +16,17 @@ DEPENDENCIES:
   - Kingfisher (~> 5.0)
   - SQLite.swift (~> 0.12.0)
   - SwiftyJSON (~> 4.0)
-  - WechatOpenSDK
+  - WechatOpenSDK-XCFramework
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Agrume
     - Floaty
     - Kingfisher
     - SQLite.swift
     - SwiftyGif
     - SwiftyJSON
-    - WechatOpenSDK
+    - WechatOpenSDK-XCFramework
 
 SPEC CHECKSUMS:
   Agrume: dd627819c7965ca99b08d2f76054bf3a3e824d34
@@ -35,8 +35,8 @@ SPEC CHECKSUMS:
   SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
   SwiftyGif: f7702483db93586a41f04f4927cd682852a2fa10
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
-  WechatOpenSDK: 1fe7e3b07db860d6a936c3ff4a5aba6b890958d9
+  WechatOpenSDK-XCFramework: 36fb2bea0754266c17184adf4963d7e6ff98b69f
 
-PODFILE CHECKSUM: af0cf4fee0387b71d063156aff9ee27fcee41193
+PODFILE CHECKSUM: 0469d4eedfe4cb92307e2e44161f400f70d0e0ed
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.16.2

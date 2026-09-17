@@ -32,7 +32,6 @@
 		A03FDB571F19FCA3001EA6C2 /* DeckPO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03FDB561F19FCA3001EA6C2 /* DeckPO.swift */; };
 		A03FDB591F1A01FA001EA6C2 /* DeckService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03FDB581F1A01FA001EA6C2 /* DeckService.swift */; };
 		A03FDB5B1F1A1A0E001EA6C2 /* DeckEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03FDB5A1F1A1A0E001EA6C2 /* DeckEntity.swift */; };
-		A04B4D9E22BFFA4F00FD58C4 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A04B4D9C22BFFA4F00FD58C4 /* libWeChatSDK.a */; };
 		A05458941FE6CFCF00916E3D /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A05458931FE6CFCF00916E3D /* AboutView.xib */; };
 		A059F8FF1F68470600D019F7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A059F8FE1F68470600D019F7 /* GoogleService-Info.plist */; };
 		A05F47541DDB1870005533C9 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05F47531DDB1870005533C9 /* RangeSlider.swift */; };
@@ -42,7 +41,6 @@
 		A08E9A8921DA416E00936C40 /* ToolViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08E9A8821DA416E00936C40 /* ToolViewController.swift */; };
 		A08E9A8B21DA43F100936C40 /* CalculateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A08E9A8A21DA43F100936C40 /* CalculateView.xib */; };
 		A08E9A8F21DA466200936C40 /* CalculateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08E9A8E21DA466200936C40 /* CalculateView.swift */; };
-		A08E9A9321DA4F7F00936C40 /* BattleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08E9A9221DA4F7F00936C40 /* BattleView.swift */; };
 		A0972EF11EDB1C18005FAB9C /* DataButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0972EF01EDB1C18005FAB9C /* DataButton.swift */; };
 		A0A4F17A24E9199200121604 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A4F17924E9199200121604 /* AboutView.swift */; };
 		A0AB33051F079599005211BA /* CardDeckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AB33041F079599005211BA /* CardDeckViewController.swift */; };
@@ -59,6 +57,7 @@
 		A0F0E8461F36B9B2009B8E85 /* DeckViewEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F0E8451F36B9B2009B8E85 /* DeckViewEntity.swift */; };
 		A0F93DC91DC9414B0001289D /* CardSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F93DC81DC9414B0001289D /* CardSearchViewController.swift */; };
 		A0F93DCB1DC941550001289D /* CardSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0F93DCA1DC941550001289D /* CardSearchViewController.xib */; };
+		AFBA00992D282BFF0036C1B3 /* BattleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBA00982D282BFF0036C1B3 /* BattleView.swift */; };
 		C7E28034866CB4189C5C8DE5 /* Pods_yugioh.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0305D7B0B45950B42C0C6634 /* Pods_yugioh.framework */; };
 /* End PBXBuildFile section */
 
@@ -120,9 +119,6 @@
 		A03FDB561F19FCA3001EA6C2 /* DeckPO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckPO.swift; sourceTree = "<group>"; };
 		A03FDB581F1A01FA001EA6C2 /* DeckService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckService.swift; sourceTree = "<group>"; };
 		A03FDB5A1F1A1A0E001EA6C2 /* DeckEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckEntity.swift; sourceTree = "<group>"; };
-		A04B4D9B22BFFA4E00FD58C4 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
-		A04B4D9C22BFFA4F00FD58C4 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
-		A04B4D9D22BFFA4F00FD58C4 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
 		A05458931FE6CFCF00916E3D /* AboutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
 		A059F8FE1F68470600D019F7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A05F47531DDB1870005533C9 /* RangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
@@ -133,7 +129,6 @@
 		A08E9A8821DA416E00936C40 /* ToolViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolViewController.swift; sourceTree = "<group>"; };
 		A08E9A8A21DA43F100936C40 /* CalculateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CalculateView.xib; sourceTree = "<group>"; };
 		A08E9A8E21DA466200936C40 /* CalculateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateView.swift; sourceTree = "<group>"; };
-		A08E9A9221DA4F7F00936C40 /* BattleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BattleView.swift; path = /Users/zhengfucheng/Documents/github_workspace/yugioh/yugioh/BattleView.swift; sourceTree = "<absolute>"; };
 		A0972EF01EDB1C18005FAB9C /* DataButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataButton.swift; sourceTree = "<group>"; };
 		A0A4F17924E9199200121604 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		A0AB33041F079599005211BA /* CardDeckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardDeckViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +145,7 @@
 		A0F0E8451F36B9B2009B8E85 /* DeckViewEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckViewEntity.swift; sourceTree = "<group>"; };
 		A0F93DC81DC9414B0001289D /* CardSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardSearchViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		A0F93DCA1DC941550001289D /* CardSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardSearchViewController.xib; sourceTree = "<group>"; };
+		AFBA00982D282BFF0036C1B3 /* BattleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleView.swift; sourceTree = "<group>"; };
 		F277A06B470FF8C64E06C9BB /* Pods-yugioh.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yugioh.debug.xcconfig"; path = "Pods/Target Support Files/Pods-yugioh/Pods-yugioh.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -159,7 +155,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7E28034866CB4189C5C8DE5 /* Pods_yugioh.framework in Frameworks */,
-				A04B4D9E22BFFA4F00FD58C4 /* libWeChatSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,8 +218,8 @@
 				A0F0E8431F36AF80009B8E85 /* DeckTableCell.xib */,
 				A05458931FE6CFCF00916E3D /* AboutView.xib */,
 				A0A4F17924E9199200121604 /* AboutView.swift */,
+				AFBA00982D282BFF0036C1B3 /* BattleView.swift */,
 				A0C2AF7E20A9F2D500030D55 /* BattleView.xib */,
-				A08E9A9221DA4F7F00936C40 /* BattleView.swift */,
 				A08E9A8A21DA43F100936C40 /* CalculateView.xib */,
 				A08E9A8E21DA466200936C40 /* CalculateView.swift */,
 			);
@@ -360,9 +355,6 @@
 		A05458861FE6AB9C00916E3D /* Wexin */ = {
 			isa = PBXGroup;
 			children = (
-				A04B4D9C22BFFA4F00FD58C4 /* libWeChatSDK.a */,
-				A04B4D9D22BFFA4F00FD58C4 /* WXApi.h */,
-				A04B4D9B22BFFA4E00FD58C4 /* WXApiObject.h */,
 				A0899E231F5BD13700E1D37F /* WeixinShareTest-Bridging-Header.h */,
 			);
 			name = Wexin;
@@ -560,7 +552,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-yugioh/Pods-yugioh-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-yugioh/Pods-yugioh-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Agrume/Agrume.framework",
 				"${BUILT_PRODUCTS_DIR}/Floaty/Floaty.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
@@ -579,7 +571,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-yugioh/Pods-yugioh-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yugioh/Pods-yugioh-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -598,7 +590,6 @@
 				A039AE631D95FC35009ABFD1 /* CardViewController.swift in Sources */,
 				A0972EF11EDB1C18005FAB9C /* DataButton.swift in Sources */,
 				A037FA4329CAC49A001ECCBD /* KeyValueEntryEntity.swift in Sources */,
-				A08E9A9321DA4F7F00936C40 /* BattleView.swift in Sources */,
 				A00EAA081DBE89CD001FD546 /* CardDetailViewController.swift in Sources */,
 				A0609C061E3F3F14005739B7 /* CardViewWithStarController.swift in Sources */,
 				A0EDEEFC1E55EDBE00401416 /* Constant.swift in Sources */,
@@ -609,6 +600,7 @@
 				A0F0E8461F36B9B2009B8E85 /* DeckViewEntity.swift in Sources */,
 				A0F0E83E1F36A3F7009B8E85 /* DeckViewController.swift in Sources */,
 				A03FDB571F19FCA3001EA6C2 /* DeckPO.swift in Sources */,
+				AFBA00992D282BFF0036C1B3 /* BattleView.swift in Sources */,
 				A022E6E21DC343AA00E7D8EE /* CardPO.swift in Sources */,
 				A039AE671D95FDED009ABFD1 /* Extension.swift in Sources */,
 				A03FDB5B1F1A1A0E001EA6C2 /* DeckEntity.swift in Sources */,
@@ -803,6 +795,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LW783GQGY7;
 				INFOPLIST_FILE = yugioh/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -829,6 +822,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LW783GQGY7;
 				INFOPLIST_FILE = yugioh/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -972,6 +966,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LW783GQGY7;
 				INFOPLIST_FILE = yugioh/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

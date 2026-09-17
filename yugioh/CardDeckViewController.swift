@@ -74,6 +74,7 @@ class CardDeckViewController: UIViewController {
     }
     
     @objc func shareButtonHandler() {
+        guard WeChatSharing.canShare(from: self) else { return }
         
         
         let img = self.getShareViewImage()
@@ -97,7 +98,7 @@ class CardDeckViewController: UIViewController {
         req.message = message
         req.bText = false
         req.scene = 0
-        WXApi.send(req)
+        WeChatSharing.send(req, from: self)
     }
     
     

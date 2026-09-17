@@ -6,6 +6,6 @@
 //  Copyright © 2017 sightcorner. All rights reserved.
 //
 
-@import UIKit; //使用1.6版必须有（PS：1.5版可以不要）
-#import "WXApiObject.h"
-#import "WXApi.h"
+@import UIKit;
+// Use the headers from the same CocoaPods SDK that is linked into the app.
+#import <WXApi.h>

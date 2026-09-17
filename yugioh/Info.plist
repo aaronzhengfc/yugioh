@@ -33,6 +33,13 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>WeChatUniversalLink</key>
+	<string></string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+		<string>weixinULAPI</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

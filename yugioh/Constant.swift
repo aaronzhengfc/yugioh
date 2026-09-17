@@ -63,3 +63,47 @@ public func getDB() -> Connection {
 }
 
 
+
+// Set WeChatUniversalLink in Info.plist to the URL registered on WeChat Open Platform.
+enum WeChatSharing {
+    private(set) static var isRegistered = false
+
+    static func register() {
+        guard let link = Bundle.main.object(forInfoDictionaryKey: "WeChatUniversalLink") as? String,
+              let url = URL(string: link), url.scheme == "https", url.host != nil else {
+            print("WeChat: configure WeChatUniversalLink in Info.plist before sharing.")
+            return
+        }
+        isRegistered = WXApi.registerApp(wechatKey, universalLink: link)
+        if !isRegistered { print("WeChat: SDK registration failed.") }
+    }
+
+    static func canShare(from presenter: UIViewController) -> Bool {
+        guard isRegistered else {
+            showError("微信分享暂不可用，请稍后重试。", from: presenter)
+            return false
+        }
+        guard WXApi.isWXAppInstalled() else {
+            showError("请先安装微信，再分享卡牌。", from: presenter)
+            return false
+        }
+        return true
+    }
+
+    static func send(_ request: SendMessageToWXReq, from presenter: UIViewController) {
+        WXApi.send(request) { [weak presenter] success in
+            guard !success else { return }
+            DispatchQueue.main.async {
+                guard let presenter = presenter else { return }
+                showError("无法发送到微信，请稍后重试。", from: presenter)
+            }
+        }
+    }
+
+    static func showError(_ message: String, from presenter: UIViewController) {
+        guard presenter.presentedViewController == nil else { return }
+        let alert = UIAlertController(title: "微信分享", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "好", style: .default))
+        presenter.present(alert, animated: true)
+    }
+}
