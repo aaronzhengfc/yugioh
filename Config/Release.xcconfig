@@ -1,0 +1,2 @@
+#include "../Pods/Target Support Files/Pods-yugioh/Pods-yugioh.release.xcconfig"
+#include "Local.xcconfig"

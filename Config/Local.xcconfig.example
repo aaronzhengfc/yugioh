@@ -1,0 +1,4 @@
+// Copy to Local.xcconfig and fill in your values.
+WECHAT_APP_ID = YOUR_WECHAT_APP_ID
+// Escape URL slashes in xcconfig, e.g. https:/$()/your-domain.example/wechat/
+WECHAT_UNIVERSAL_LINK =

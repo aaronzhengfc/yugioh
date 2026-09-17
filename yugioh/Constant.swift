@@ -30,7 +30,7 @@ public let qiniuUrlPrefix: String = "http://yugioh.oss-cn-beijing.aliyuncs.com/y
 public let qiniuUrlSuffix: String = ".jpg"
 
 //wechat id
-public let wechatKey: String = "wx13153ecd85ee39a9"
+public let wechatKey: String = Bundle.main.object(forInfoDictionaryKey: "WeChatAppID") as? String ?? ""
 
 
 public let nc = NotificationCenter.default
@@ -64,14 +64,14 @@ public func getDB() -> Connection {
 
 
 
-// Set WeChatUniversalLink in Info.plist to the URL registered on WeChat Open Platform.
+// Configure WeChat values in the Git-ignored Config/Local.xcconfig.
 enum WeChatSharing {
     private(set) static var isRegistered = false
 
     static func register() {
         guard let link = Bundle.main.object(forInfoDictionaryKey: "WeChatUniversalLink") as? String,
               let url = URL(string: link), url.scheme == "https", url.host != nil else {
-            print("WeChat: configure WeChatUniversalLink in Info.plist before sharing.")
+            print("WeChat: configure WECHAT_UNIVERSAL_LINK in Config/Local.xcconfig before sharing.")
             return
         }
         isRegistered = WXApi.registerApp(wechatKey, universalLink: link)

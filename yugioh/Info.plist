@@ -27,14 +27,16 @@
 			<string>weixin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wx13153ecd85ee39a9</string>
+				<string>$(WECHAT_APP_ID)</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>WeChatAppID</key>
+	<string>$(WECHAT_APP_ID)</string>
 	<key>WeChatUniversalLink</key>
-	<string></string>
+	<string>$(WECHAT_UNIVERSAL_LINK)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>weixin</string>
