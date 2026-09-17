@@ -102,7 +102,11 @@ open class DOFavoriteButton: UIButton {
     }
     
     fileprivate func createLayers(image: UIImage!) {
-        self.layer.sublayers = nil
+        // UIKit owns other layers (including the button's image/title views).
+        // Removing those directly leaves the view and layer hierarchies inconsistent.
+        circleShape?.removeFromSuperlayer()
+        imageShape?.removeFromSuperlayer()
+        lines?.forEach { $0.removeFromSuperlayer() }
         
         let imageFrame = CGRect(x: frame.size.width / 2 - frame.size.width / 4, y: frame.size.height / 2 - frame.size.height / 4, width: frame.size.width / 2, height: frame.size.height / 2)
         let imgCenterPoint = CGPoint(x: imageFrame.midX, y: imageFrame.midY)

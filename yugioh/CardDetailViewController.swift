@@ -58,12 +58,16 @@ class CardDetailViewController: UIViewController {
     
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         self.contentView.backgroundColor = greyColor
-        
-        //如果是iphonex 则高度需要改变
-        if isIPhoneX() {
-            innerViewHeader.constant = 96
-        }
+
+        // Keep card content below the navigation bar on every device and orientation.
+        innerViewHeader.isActive = false
+        let headerConstraint = innerView.topAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.topAnchor, constant: materialGap
+        )
+        headerConstraint.isActive = true
+        innerViewHeader = headerConstraint
     
         self.view.backgroundColor = UIColor.clear
         let frameWidth = self.proxy.frame.width
