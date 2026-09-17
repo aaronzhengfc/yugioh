@@ -801,7 +801,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.47.1;
+				MARKETING_VERSION = 1.49.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -828,7 +828,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.47.1;
+				MARKETING_VERSION = 1.49.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -972,7 +972,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.47.1;
+				MARKETING_VERSION = 1.49.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
