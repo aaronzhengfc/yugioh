@@ -1,76 +1,86 @@
-//
-//  DeckViewController.swift
-//  yugioh
-//
-//  Created by Aaron on 6/8/2017.
-//  Copyright © 2017 sightcorner. All rights reserved.
-//
-
-import Foundation
-
 import UIKit
 
 class DeckViewController: UIViewController {
-    
-    
     @IBOutlet weak var tableView: UITableView!
-    
-    fileprivate var deckService: DeckService = DeckService()
-    
-    
-    fileprivate var deckViewEntitys: [DeckViewEntity] = getDeckViewEntity()
-    
-    
+
+    private struct Section {
+        let title: String
+        let decks: [DeckViewEntity]
+    }
+    private var sections: [Section] = []
+
     override func viewDidLoad() {
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.register(DeckTableCell.NibObject(), forCellReuseIdentifier: DeckTableCell.identifier())
-        
+        super.viewDidLoad()
+        let decks = getDeckViewEntity()
+        sections = [
+            Section(title: "我的空间", decks: decks.filter { $0.type == "star" || $0.type == "self" }),
+            Section(title: "历届世界冠军", decks: decks.filter { $0.type == "worldchampionship" }),
+            Section(title: "经典卡组", decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) })
+        ].filter { !$0.decks.isEmpty }
+        view.backgroundColor = .systemGroupedBackground
+        tableView.backgroundColor = .systemGroupedBackground
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 58
+        tableView.sectionHeaderTopPadding = 0
+        tableView.contentInset.bottom = 8
+        tableView.register(DeckTableCell.self, forCellReuseIdentifier: "DeckCard")
+        tableView.tableFooterView = UIView()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        tableView.reloadData()
-    }
+
 }
 
+extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
 
-extension DeckViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.tableView.deselectRow(at: indexPath, animated: true)
-        
-        if deckViewEntitys[indexPath.row].id == "1" {
-            let controller = CardViewWithStarController()
-            self.navigationController?.pushViewController(controller, animated: true)
-        } else {
-            // 卡组展示
-            let controller = CardDeckViewController()
-            let rootController: ViewController = self.tabBarController as! ViewController
-            controller.rootController = rootController
-            controller.deckViewEntity = deckViewEntitys[indexPath.row]
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
-        
-    }
-    
-    
-}
-
-extension DeckViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return deckViewEntitys.count
+        sections[section].decks.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: DeckTableCell.identifier(), for: indexPath) as! DeckTableCell
-        let deckViewEntity = deckViewEntitys[indexPath.row]
-        cell.title.text = deckViewEntity.title
-        cell.introduction.text = ""
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DeckCard", for: indexPath) as! DeckTableCell
+        cell.configure(sections[indexPath.section].decks[indexPath.row])
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 48
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView()
+        header.backgroundColor = .systemGroupedBackground
+        let label = UILabel()
+        label.text = sections[section].title
+        label.font = .preferredFont(forTextStyle: .subheadline)
+        label.textColor = .secondaryLabel
+        label.adjustsFontForContentSizeCategory = true
+        label.accessibilityTraits = .header
+        label.translatesAutoresizingMaskIntoConstraints = false
+        header.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 20),
+            label.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -20),
+            label.topAnchor.constraint(equalTo: header.topAnchor, constant: 8),
+            label.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -6)
+        ])
+        return header
     }
-    
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat { 32 }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let deck = sections[indexPath.section].decks[indexPath.row]
+        if deck.type == "star" {
+            navigationController?.pushViewController(CardViewWithStarController(), animated: true)
+        } else {
+            let controller = CardDeckViewController()
+            controller.rootController = tabBarController as? ViewController
+            controller.deckViewEntity = deck
+            navigationController?.pushViewController(controller, animated: true)
+        }
+    }
 }
