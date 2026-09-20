@@ -28,7 +28,6 @@
 		A039AE671D95FDED009ABFD1 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A039AE661D95FDED009ABFD1 /* Extension.swift */; };
 		A039AE711D9734D6009ABFD1 /* CardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A039AE701D9734D6009ABFD1 /* CardTableViewCell.swift */; };
 		A039AE731D9734DF009ABFD1 /* CardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A039AE721D9734DF009ABFD1 /* CardTableViewCell.xib */; };
-		A03F9FE42BCBD2E4002D611A /* cards.cdb in Resources */ = {isa = PBXBuildFile; fileRef = A03F9FE32BCBD2E3002D611A /* cards.cdb */; };
 		A03FDB571F19FCA3001EA6C2 /* DeckPO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03FDB561F19FCA3001EA6C2 /* DeckPO.swift */; };
 		A03FDB591F1A01FA001EA6C2 /* DeckService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03FDB581F1A01FA001EA6C2 /* DeckService.swift */; };
 		A03FDB5B1F1A1A0E001EA6C2 /* DeckEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03FDB5A1F1A1A0E001EA6C2 /* DeckEntity.swift */; };
@@ -58,6 +57,7 @@
 		A0F93DC91DC9414B0001289D /* CardSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F93DC81DC9414B0001289D /* CardSearchViewController.swift */; };
 		A0F93DCB1DC941550001289D /* CardSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0F93DCA1DC941550001289D /* CardSearchViewController.xib */; };
 		AFBA00992D282BFF0036C1B3 /* BattleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBA00982D282BFF0036C1B3 /* BattleView.swift */; };
+		AFF95309306027CD001F0FC2 /* cards.cdb in Resources */ = {isa = PBXBuildFile; fileRef = AFF95308306027CD001F0FC2 /* cards.cdb */; };
 		C7E28034866CB4189C5C8DE5 /* Pods_yugioh.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0305D7B0B45950B42C0C6634 /* Pods_yugioh.framework */; };
 /* End PBXBuildFile section */
 
@@ -115,7 +115,6 @@
 		A039AE761D973CA3009ABFD1 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		A039AE771D973CA3009ABFD1 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		A039AE781D973CA3009ABFD1 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
-		A03F9FE32BCBD2E3002D611A /* cards.cdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = cards.cdb; sourceTree = "<group>"; };
 		A03FDB561F19FCA3001EA6C2 /* DeckPO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckPO.swift; sourceTree = "<group>"; };
 		A03FDB581F1A01FA001EA6C2 /* DeckService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckService.swift; sourceTree = "<group>"; };
 		A03FDB5A1F1A1A0E001EA6C2 /* DeckEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckEntity.swift; sourceTree = "<group>"; };
@@ -146,6 +145,7 @@
 		A0F93DC81DC9414B0001289D /* CardSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardSearchViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		A0F93DCA1DC941550001289D /* CardSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardSearchViewController.xib; sourceTree = "<group>"; };
 		AFBA00982D282BFF0036C1B3 /* BattleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleView.swift; sourceTree = "<group>"; };
+		AFF95308306027CD001F0FC2 /* cards.cdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = cards.cdb; sourceTree = "<group>"; };
 		C0DE00000000000000000001 /* Config/Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		C0DE00000000000000000002 /* Config/Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Release.xcconfig; sourceTree = SOURCE_ROOT; };
 		C0DE00000000000000000003 /* Config/Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Production.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -303,7 +303,7 @@
 		A039AE5A1D95F934009ABFD1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				A03F9FE32BCBD2E3002D611A /* cards.cdb */,
+				AFF95308306027CD001F0FC2 /* cards.cdb */,
 				A039AE741D973CA3009ABFD1 /* Roboto-Bold.ttf */,
 				A039AE751D973CA3009ABFD1 /* Roboto-Light.ttf */,
 				A039AE761D973CA3009ABFD1 /* Roboto-Medium.ttf */,
@@ -511,7 +511,7 @@
 				A08E9A8B21DA43F100936C40 /* CalculateView.xib in Resources */,
 				A0F93DCB1DC941550001289D /* CardSearchViewController.xib in Resources */,
 				A039AE331D95F17F009ABFD1 /* Assets.xcassets in Resources */,
-				A03F9FE42BCBD2E4002D611A /* cards.cdb in Resources */,
+				AFF95309306027CD001F0FC2 /* cards.cdb in Resources */,
 				A0EE4CDD25BD6B8700F0DBE4 /* CardViewWithStarController.xib in Resources */,
 				A039AE2E1D95F17F009ABFD1 /* Main.storyboard in Resources */,
 			);
