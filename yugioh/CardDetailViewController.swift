@@ -182,7 +182,6 @@ class CardDetailViewController: UIViewController {
     
     
     @objc func shareButtonHandler() {
-        guard WeChatSharing.canShare(from: self) else { return }
         let img = getShareViewImage(v: innerView)
         let ext = WXImageObject()
         ext.imageData = img.jpegData(compressionQuality: 1)!

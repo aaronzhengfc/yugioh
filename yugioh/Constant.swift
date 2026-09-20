@@ -78,26 +78,41 @@ enum WeChatSharing {
         if !isRegistered { print("WeChat: SDK registration failed.") }
     }
 
-    static func canShare(from presenter: UIViewController) -> Bool {
-        guard isRegistered else {
-            showError("微信分享暂不可用，请稍后重试。", from: presenter)
-            return false
-        }
-        guard WXApi.isWXAppInstalled() else {
-            showError("请先安装微信，再分享卡牌。", from: presenter)
-            return false
-        }
-        return true
-    }
-
     static func send(_ request: SendMessageToWXReq, from presenter: UIViewController) {
+        // A system share sheet also works without OpenSDK registration.
+        // The user chooses WeChat from the extensions installed on their device.
+        guard isRegistered, WXApi.isWXAppInstalled() else {
+            presentSystemShare(request, from: presenter)
+            return
+        }
         WXApi.send(request) { [weak presenter] success in
             guard !success else { return }
             DispatchQueue.main.async {
                 guard let presenter = presenter else { return }
-                showError("无法发送到微信，请稍后重试。", from: presenter)
+                presentSystemShare(request, from: presenter)
             }
         }
+    }
+
+    private static func presentSystemShare(_ request: SendMessageToWXReq,
+                                          from presenter: UIViewController) {
+        guard let object = request.message.mediaObject as? WXImageObject,
+              let image = UIImage(data: object.imageData) else {
+            showError("无法生成分享图片，请重试。", from: presenter)
+            return
+        }
+        let sheet = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        if let popover = sheet.popoverPresentationController {
+            if let button = presenter.navigationItem.rightBarButtonItem {
+                popover.barButtonItem = button
+            } else {
+                popover.sourceView = presenter.view
+                popover.sourceRect = CGRect(x: presenter.view.bounds.midX,
+                                            y: presenter.view.bounds.midY, width: 1, height: 1)
+                popover.permittedArrowDirections = []
+            }
+        }
+        presenter.present(sheet, animated: true)
     }
 
     static func showError(_ message: String, from presenter: UIViewController) {

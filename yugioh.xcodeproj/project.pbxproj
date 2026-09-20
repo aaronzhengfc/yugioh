@@ -146,10 +146,10 @@
 		A0F93DC81DC9414B0001289D /* CardSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardSearchViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		A0F93DCA1DC941550001289D /* CardSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardSearchViewController.xib; sourceTree = "<group>"; };
 		AFBA00982D282BFF0036C1B3 /* BattleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleView.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000001 /* Config/Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Debug.xcconfig; sourceTree = SOURCE_ROOT; };
+		C0DE00000000000000000002 /* Config/Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Release.xcconfig; sourceTree = SOURCE_ROOT; };
+		C0DE00000000000000000003 /* Config/Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Production.xcconfig; sourceTree = SOURCE_ROOT; };
 		F277A06B470FF8C64E06C9BB /* Pods-yugioh.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yugioh.debug.xcconfig"; path = "Pods/Target Support Files/Pods-yugioh/Pods-yugioh.debug.xcconfig"; sourceTree = "<group>"; };
-		C0DE00000000000000000001 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Debug.xcconfig; sourceTree = SOURCE_ROOT; };
-		C0DE00000000000000000002 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Release.xcconfig; sourceTree = SOURCE_ROOT; };
-		C0DE00000000000000000003 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Production.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,9 +232,9 @@
 		A039AE1C1D95F17E009ABFD1 = {
 			isa = PBXGroup;
 			children = (
-				C0DE00000000000000000001 /* Debug.xcconfig */,
-				C0DE00000000000000000002 /* Release.xcconfig */,
-				C0DE00000000000000000003 /* Production.xcconfig */,
+				C0DE00000000000000000001 /* Config/Debug.xcconfig */,
+				C0DE00000000000000000002 /* Config/Release.xcconfig */,
+				C0DE00000000000000000003 /* Config/Production.xcconfig */,
 				A039AE271D95F17E009ABFD1 /* yugioh */,
 				A039AE3F1D95F17F009ABFD1 /* yugiohTests */,
 				A039AE4A1D95F17F009ABFD1 /* yugiohUITests */,
@@ -793,7 +793,7 @@
 		};
 		A039AE511D95F17F009ABFD1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0DE00000000000000000001 /* Debug.xcconfig */;
+			baseConfigurationReference = C0DE00000000000000000001 /* Config/Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -807,7 +807,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.49.1;
+				MARKETING_VERSION = 1.50.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -820,7 +820,7 @@
 		};
 		A039AE521D95F17F009ABFD1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0DE00000000000000000002 /* Release.xcconfig */;
+			baseConfigurationReference = C0DE00000000000000000002 /* Config/Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -834,7 +834,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.49.1;
+				MARKETING_VERSION = 1.50.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -964,7 +964,7 @@
 		};
 		A0C936F21DCB2AEF00281940 /* PRODUCTION */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0DE00000000000000000003 /* Production.xcconfig */;
+			baseConfigurationReference = C0DE00000000000000000003 /* Config/Production.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -978,7 +978,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.49.1;
+				MARKETING_VERSION = 1.50.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

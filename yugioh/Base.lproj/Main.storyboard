@@ -46,7 +46,7 @@
                             <constraint firstItem="csZ-O1-NNW" firstAttribute="leading" secondItem="NvS-SE-27W" secondAttribute="leading" id="Mga-P3-dDu"/>
                             <constraint firstItem="csZ-O1-NNW" firstAttribute="width" secondItem="NvS-SE-27W" secondAttribute="width" id="mbX-8e-ZCP"/>
                             <constraint firstItem="csZ-O1-NNW" firstAttribute="top" secondItem="NvS-SE-27W" secondAttribute="top" id="xNp-9t-atN"/>
-                            <constraint firstAttribute="bottom" secondItem="csZ-O1-NNW" secondAttribute="bottom" constant="48" id="ygb-3R-BR4"/>
+                            <constraint firstAttribute="bottom" secondItem="csZ-O1-NNW" secondAttribute="bottom" id="ygb-3R-BR4"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="卡牌" image="ic_view_carousel_white" id="14g-xH-QyR"/>

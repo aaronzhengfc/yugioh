@@ -74,7 +74,10 @@ class CardDeckViewController: UIViewController {
     }
     
     @objc func shareButtonHandler() {
-        guard WeChatSharing.canShare(from: self) else { return }
+        guard tableView.numberOfItems(inSection: 0) > 0 else {
+            WeChatSharing.showError("请先向卡组添加卡牌，再分享。", from: self)
+            return
+        }
         
         
         let img = self.getShareViewImage()
@@ -103,6 +106,8 @@ class CardDeckViewController: UIViewController {
     
     
     func getShareViewImage() -> UIImage {
+        let originalOffset = tableView.contentOffset
+        defer { tableView.setContentOffset(originalOffset, animated: false) }
         UIGraphicsBeginImageContextWithOptions(tableView.contentSize, false, 0)
         
         tableView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
