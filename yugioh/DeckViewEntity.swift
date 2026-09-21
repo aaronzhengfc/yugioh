@@ -17,6 +17,9 @@ class DeckViewEntity {
     public var introduction: String = ""
     // 卡组类型
     public var type: String = ""
+    public var champion: String = ""
+    public var championRegion: String = ""
+    public var isCancelled: Bool = false
     
     init() {
         

@@ -797,10 +797,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = yugioh/yugioh.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: fucheng zheng (LW783GQGY7)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LW783GQGY7;
-				CODE_SIGN_ENTITLEMENTS = yugioh/yugioh.entitlements;
 				INFOPLIST_FILE = yugioh/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -808,7 +808,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.50.1;
+				MARKETING_VERSION = 1.51.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -825,10 +825,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = yugioh/yugioh.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: fucheng zheng (LW783GQGY7)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LW783GQGY7;
-				CODE_SIGN_ENTITLEMENTS = yugioh/yugioh.entitlements;
 				INFOPLIST_FILE = yugioh/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -836,7 +836,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.50.1;
+				MARKETING_VERSION = 1.51.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -970,10 +970,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = yugioh/yugioh.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: fucheng zheng (LW783GQGY7)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LW783GQGY7;
-				CODE_SIGN_ENTITLEMENTS = yugioh/yugioh.entitlements;
 				INFOPLIST_FILE = yugioh/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -981,7 +981,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.50.1;
+				MARKETING_VERSION = 1.51.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

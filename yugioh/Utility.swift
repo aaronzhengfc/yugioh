@@ -162,7 +162,21 @@ func getDeckViewEntity() -> [DeckViewEntity] {
     ]
     // "游戏王世界锦标赛冠军卡组"
     let championDecks: [DeckViewEntity] = getDecksByDeckFormat(deckFormat: "worldchampionship")
+    var championNames: [String: String] = [:]
+    var championRegions: [String: String] = [:]
+    do {
+        for row in try getDB().prepare("SELECT deckCode, champion, countryRegionZh FROM newdeck_metadata WHERE deckFormat = 'worldchampionship'") {
+            if let year = row[0] as? String, let name = row[1] as? String {
+                championNames[year] = name
+                championRegions[year] = row[2] as? String ?? ""
+            }
+        }
+    } catch {
+        print("Unable to load champion names: \(error.localizedDescription)")
+    }
     for each in championDecks {
+        each.champion = championNames[each.id] ?? ""
+        each.championRegion = championRegions[each.id] ?? ""
         each.title = each.title + "游戏王世界锦标赛冠军卡组"
         tmp.append(each)
     }

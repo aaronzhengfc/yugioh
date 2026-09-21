@@ -232,6 +232,7 @@ class CardDetailViewController: UIViewController {
         if cardService.isExist(id: cardEntity.id) { cardService.delete(id: cardEntity.id) }
         else { cardService.save(id: cardEntity.id) }
         updateFavorite()
+        FavoriteFeedback.play(on: favoriteButton, selected: cardEntity.isSelected)
     }
 
     private func updateFavorite() {
@@ -241,8 +242,8 @@ class CardDetailViewController: UIViewController {
         configuration.title = selected ? "已收藏" : "收藏"
         configuration.image = UIImage(systemName: selected ? "star.fill" : "star")
         configuration.imagePadding = 8
-        configuration.baseForegroundColor = accent
-        configuration.baseBackgroundColor = accent
+        configuration.baseForegroundColor = selected ? .systemOrange : .tertiaryLabel
+        configuration.baseBackgroundColor = selected ? .systemOrange : .tertiaryLabel
         configuration.cornerStyle = .large
         favoriteButton.configuration = configuration
         favoriteButton.accessibilityTraits = selected ? [.button, .selected] : [.button]

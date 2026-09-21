@@ -85,6 +85,7 @@ class CardTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        FavoriteFeedback.reset(favorite)
         card.kf.cancelDownloadTask()
         card.image = nil
         afterDeselect = nil
@@ -123,6 +124,7 @@ class CardTableViewCell: UITableViewCell {
         if entity.isSelected { cardService.save(id: entity.id) }
         else { cardService.delete(id: entity.id) }
         updateFavorite()
+        FavoriteFeedback.play(on: favorite, selected: entity.isSelected)
         if !entity.isSelected { afterDeselect?() }
     }
 }

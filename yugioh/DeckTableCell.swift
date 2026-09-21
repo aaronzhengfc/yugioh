@@ -7,6 +7,8 @@ final class DeckTableCell: UITableViewCell {
     private var labelsLeading: NSLayoutConstraint!
     private let heading = UILabel()
     private let subtitle = UILabel()
+    private let arrow = UIImageView(image: UIImage(systemName: "chevron.right"))
+    private var isCancelled = false
     private var accent = UIColor.systemGreen
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -39,7 +41,6 @@ final class DeckTableCell: UITableViewCell {
         let labels = UIStackView(arrangedSubviews: [heading, subtitle])
         labels.axis = .vertical
         labels.spacing = 3
-        let arrow = UIImageView(image: UIImage(systemName: "chevron.right"))
         arrow.tintColor = .tertiaryLabel
         arrow.contentMode = .scaleAspectFit
         contentView.addSubview(card)
@@ -74,6 +75,12 @@ final class DeckTableCell: UITableViewCell {
     }
 
     func configure(_ deck: DeckViewEntity, detail: String) {
+        isCancelled = deck.isCancelled
+        arrow.isHidden = isCancelled
+        heading.textColor = isCancelled ? .secondaryLabel : .label
+        subtitle.textColor = .secondaryLabel
+        card.backgroundColor = isCancelled ? .systemGray5 : .secondarySystemGroupedBackground
+        accessibilityTraits = isCancelled ? [.staticText, .notEnabled] : .button
         badge.isHidden = deck.type == "worldchampionship"
         labelsLeading.constant = badge.isHidden ? 12 : 58
         heading.text = deck.title
@@ -101,7 +108,15 @@ final class DeckTableCell: UITableViewCell {
             subtitle.text = deck.introduction == deck.title || deck.introduction.isEmpty
                 ? "探索卡牌搭配与构筑" : deck.introduction
         }
-        subtitle.text = detail
+        if isCancelled {
+            subtitle.text = "世界赛停办"
+        } else if deck.type == "worldchampionship", !deck.champion.isEmpty {
+            let championLine = ["冠军", deck.champion, deck.championRegion]
+                .filter { !$0.isEmpty }.joined(separator: " · ")
+            subtitle.text = [championLine, detail].filter { !$0.isEmpty }.joined(separator: "\n")
+        } else {
+            subtitle.text = detail
+        }
         icon.tintColor = accent
         badge.backgroundColor = accent.withAlphaComponent(0.10)
         accessibilityLabel = [heading.text, subtitle.text].compactMap { $0 }.joined(separator: "，")
@@ -109,6 +124,7 @@ final class DeckTableCell: UITableViewCell {
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-        card.backgroundColor = highlighted ? accent.withAlphaComponent(0.08) : .secondarySystemGroupedBackground
+        card.backgroundColor = isCancelled ? .systemGray5
+            : (highlighted ? accent.withAlphaComponent(0.08) : .secondarySystemGroupedBackground)
     }
 }

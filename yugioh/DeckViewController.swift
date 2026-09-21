@@ -13,6 +13,7 @@ class DeckViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         for deck in sections.flatMap({ $0.decks }) {
+            guard !deck.isCancelled else { continue }
             let key = deck.type + ":" + deck.id
             if deck.type == "star" {
                 summaries[key] = "已收藏 \(CardService().list().count) 张卡牌"
@@ -28,9 +29,17 @@ class DeckViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let decks = getDeckViewEntity()
+        var champions = decks.filter { $0.type == "worldchampionship" }
+        for year in 2020...2022 {
+            let entry = DeckViewEntity(id: String(year), title: "\(year) 世界冠军卡组",
+                                       introduction: "世界赛停办", type: "worldchampionship")
+            entry.isCancelled = true
+            champions.append(entry)
+        }
+        champions.sort { $0.id > $1.id }
         sections = [
             Section(title: "我的空间", decks: decks.filter { $0.type == "star" || $0.type == "self" }),
-            Section(title: "历届世界冠军", decks: decks.filter { $0.type == "worldchampionship" }),
+            Section(title: "历届世界冠军", decks: champions),
             Section(title: "经典卡组", decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) })
         ].filter { !$0.decks.isEmpty }
         view.backgroundColor = .systemGroupedBackground
@@ -66,7 +75,7 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
         let header = UIView()
         header.backgroundColor = .systemGroupedBackground
         let label = UILabel()
-        label.text = sections[section].title + "  ·  " + String(sections[section].decks.count)
+        label.text = sections[section].title + "  ·  " + String(sections[section].decks.filter { !$0.isCancelled }.count)
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .secondaryLabel
         label.adjustsFontForContentSizeCategory = true
@@ -88,9 +97,18 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat { 32 }
 
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        !sections[indexPath.section].decks[indexPath.row].isCancelled
+    }
+
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        sections[indexPath.section].decks[indexPath.row].isCancelled ? nil : indexPath
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let deck = sections[indexPath.section].decks[indexPath.row]
+        guard !deck.isCancelled else { return }
         if deck.type == "star" {
             navigationController?.pushViewController(CardViewWithStarController(), animated: true)
         } else {

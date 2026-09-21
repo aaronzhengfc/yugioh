@@ -403,3 +403,69 @@ open class DOFavoriteButton: UIButton {
         lines[4].removeAllAnimations()
     }
 }
+
+/// Favorite feedback for the current system buttons, without changing their titles or layout.
+enum FavoriteFeedback {
+    private static let layerName = "favoriteFeedbackBurst"
+    private static let animationKey = "favoriteFeedbackScale"
+
+    static func reset(_ button: UIButton) {
+        button.imageView?.layer.removeAnimation(forKey: animationKey)
+        button.layer.sublayers?.filter { $0.name == layerName }.forEach { $0.removeFromSuperlayer() }
+    }
+
+    static func play(on button: UIButton, selected: Bool) {
+        reset(button)
+        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        button.layoutIfNeeded()
+        guard let icon = button.imageView, !icon.bounds.isEmpty else { return }
+        let bounce = CAKeyframeAnimation(keyPath: "transform.scale")
+        bounce.values = selected ? [0.65, 1.3, 0.94, 1] : [1, 0.8, 1]
+        bounce.keyTimes = selected ? [0, 0.45, 0.75, 1] : [0, 0.4, 1]
+        bounce.duration = selected ? 0.45 : 0.25
+        icon.layer.add(bounce, forKey: animationKey)
+        guard selected else { return }
+
+        let frame = icon.convert(icon.bounds, to: button)
+        let center = CGPoint(x: frame.midX, y: frame.midY)
+        let radius = max(frame.width, frame.height) / 2 + 4
+        let burst = CALayer()
+        burst.name = layerName
+        burst.frame = button.bounds
+        button.layer.addSublayer(burst)
+        let ring = CAShapeLayer()
+        ring.bounds = CGRect(x: 0, y: 0, width: radius * 2, height: radius * 2)
+        ring.position = center
+        ring.path = UIBezierPath(ovalIn: ring.bounds).cgPath
+        ring.fillColor = UIColor.clear.cgColor
+        ring.strokeColor = UIColor.systemOrange.resolvedColor(with: button.traitCollection).cgColor
+        ring.lineWidth = 1.5
+        burst.addSublayer(ring)
+        let expand = CABasicAnimation(keyPath: "transform.scale")
+        expand.fromValue = 0.5
+        expand.toValue = 1.35
+        expand.duration = 0.45
+        ring.add(expand, forKey: "expand")
+        for index in 0..<6 {
+            let angle = CGFloat(index) * .pi / 3
+            let ray = CAShapeLayer()
+            let path = UIBezierPath()
+            path.move(to: CGPoint(x: center.x + cos(angle) * radius, y: center.y + sin(angle) * radius))
+            path.addLine(to: CGPoint(x: center.x + cos(angle) * (radius + 4), y: center.y + sin(angle) * (radius + 4)))
+            ray.path = path.cgPath
+            ray.strokeColor = ring.strokeColor
+            ray.lineWidth = 1.5
+            ray.lineCap = .round
+            burst.addSublayer(ray)
+        }
+        burst.opacity = 0
+        let fade = CAKeyframeAnimation(keyPath: "opacity")
+        fade.values = [0, 0.8, 0]
+        fade.keyTimes = [0, 0.2, 1]
+        fade.duration = 0.5
+        burst.add(fade, forKey: "fade")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak burst] in
+            burst?.removeFromSuperlayer()
+        }
+    }
+}
