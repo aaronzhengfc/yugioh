@@ -70,12 +70,11 @@ enum WeChatSharing {
 
     static func shareButton(target: Any, action: Selector) -> UIBarButtonItem {
         let button = UIButton(type: .system)
-        var style = UIButton.Configuration.tinted()
+        var style = UIButton.Configuration.plain()
         style.title = "分享"
         style.image = UIImage(systemName: "square.and.arrow.up")
         style.imagePadding = 6
-        style.baseForegroundColor = UIColor(red: 0.12, green: 0.36, blue: 0.29, alpha: 1)
-        style.baseBackgroundColor = style.baseForegroundColor
+        style.baseForegroundColor = .label
         style.cornerStyle = .capsule
         style.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
         button.configuration = style

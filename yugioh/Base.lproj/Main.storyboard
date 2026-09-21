@@ -178,18 +178,19 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="8CU-cw-4h8" secondAttribute="trailing" id="A0y-it-bdA"/>
-                            <constraint firstItem="Kde-sg-sVi" firstAttribute="centerX" secondItem="6Vx-pZ-7fQ" secondAttribute="centerX" id="GAW-XH-ncJ"/>
+                            <constraint firstItem="Kde-sg-sVi" firstAttribute="leading" secondItem="6Vx-pZ-7fQ" secondAttribute="leading" constant="12" id="GAW-XH-ncJ"/>
+                            <constraint firstAttribute="trailing" secondItem="Kde-sg-sVi" secondAttribute="trailing" constant="12" id="tool-segment-trailing"/>
                             <constraint firstItem="sdM-Eb-WHX" firstAttribute="top" secondItem="8CU-cw-4h8" secondAttribute="bottom" id="Mec-L9-ghB"/>
                             <constraint firstItem="sdM-Eb-WHX" firstAttribute="top" secondItem="AML-2B-za0" secondAttribute="bottom" id="NZf-a3-Ty7"/>
-                            <constraint firstItem="AML-2B-za0" firstAttribute="leading" secondItem="6Vx-pZ-7fQ" secondAttribute="leading" id="QJr-nG-kIg" customClass="A"/>
-                            <constraint firstItem="8CU-cw-4h8" firstAttribute="top" secondItem="Kde-sg-sVi" secondAttribute="bottom" constant="32" id="QjE-dJ-W0M"/>
-                            <constraint firstItem="AML-2B-za0" firstAttribute="top" secondItem="Kde-sg-sVi" secondAttribute="bottom" constant="32" id="YUu-fn-Ug9"/>
+                            <constraint firstItem="AML-2B-za0" firstAttribute="leading" secondItem="6Vx-pZ-7fQ" secondAttribute="leading" id="QJr-nG-kIg"/>
+                            <constraint firstItem="8CU-cw-4h8" firstAttribute="top" secondItem="Kde-sg-sVi" secondAttribute="bottom" constant="12" id="QjE-dJ-W0M"/>
+                            <constraint firstItem="AML-2B-za0" firstAttribute="top" secondItem="Kde-sg-sVi" secondAttribute="bottom" constant="12" id="YUu-fn-Ug9"/>
                             <constraint firstItem="qv3-SY-6Xn" firstAttribute="leading" secondItem="6Vx-pZ-7fQ" secondAttribute="leading" id="dWZ-0Q-Tfe"/>
                             <constraint firstAttribute="trailing" secondItem="qv3-SY-6Xn" secondAttribute="trailing" id="jQ2-dr-AcB"/>
                             <constraint firstItem="sdM-Eb-WHX" firstAttribute="top" secondItem="qv3-SY-6Xn" secondAttribute="bottom" id="kDC-9m-LHA"/>
                             <constraint firstItem="8CU-cw-4h8" firstAttribute="leading" secondItem="6Vx-pZ-7fQ" secondAttribute="leading" id="qn8-35-iPt"/>
                             <constraint firstAttribute="trailing" secondItem="AML-2B-za0" secondAttribute="trailing" id="rIO-xs-wtf"/>
-                            <constraint firstItem="qv3-SY-6Xn" firstAttribute="top" secondItem="Kde-sg-sVi" secondAttribute="bottom" constant="32" id="tPu-K7-Efu"/>
+                            <constraint firstItem="qv3-SY-6Xn" firstAttribute="top" secondItem="Kde-sg-sVi" secondAttribute="bottom" constant="12" id="tPu-K7-Efu"/>
                             <constraint firstItem="Kde-sg-sVi" firstAttribute="top" secondItem="pUM-GV-Jh2" secondAttribute="bottom" constant="8" id="xuR-5p-cfH"/>
                         </constraints>
                     </view>

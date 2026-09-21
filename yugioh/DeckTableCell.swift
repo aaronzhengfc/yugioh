@@ -4,7 +4,7 @@ final class DeckTableCell: UITableViewCell {
     private let card = UIView()
     private let badge = UIView()
     private let icon = UIImageView()
-    private let year = UILabel()
+    private var labelsLeading: NSLayoutConstraint!
     private let heading = UILabel()
     private let subtitle = UILabel()
     private var accent = UIColor.systemGreen
@@ -28,48 +28,44 @@ final class DeckTableCell: UITableViewCell {
         badge.layer.cornerRadius = 10
         badge.layer.cornerCurve = .continuous
         icon.contentMode = .scaleAspectFit
-        year.font = .systemFont(ofSize: 14, weight: .semibold)
-        year.textAlignment = .center
-        heading.font = .preferredFont(forTextStyle: .headline)
+        heading.font = .preferredFont(forTextStyle: .subheadline)
         heading.numberOfLines = 0
-        subtitle.font = .preferredFont(forTextStyle: .subheadline)
+        subtitle.font = .preferredFont(forTextStyle: .caption1)
         subtitle.textColor = .secondaryLabel
         subtitle.numberOfLines = 0
         heading.adjustsFontForContentSizeCategory = true
         subtitle.adjustsFontForContentSizeCategory = true
-        subtitle.isHidden = true
+        subtitle.isHidden = false
         let labels = UIStackView(arrangedSubviews: [heading, subtitle])
         labels.axis = .vertical
-        labels.spacing = 6
+        labels.spacing = 3
         let arrow = UIImageView(image: UIImage(systemName: "chevron.right"))
         arrow.tintColor = .tertiaryLabel
         arrow.contentMode = .scaleAspectFit
         contentView.addSubview(card)
         [badge, labels, arrow].forEach { card.addSubview($0) }
-        [icon, year].forEach { badge.addSubview($0) }
-        [card, badge, labels, arrow, icon, year].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        badge.addSubview(icon)
+        [card, badge, labels, arrow, icon].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        labelsLeading = labels.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 58)
         NSLayoutConstraint.activate([
-            card.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            card.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            card.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            card.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             card.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
             card.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3),
-            badge.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
+            badge.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 12),
             badge.centerYAnchor.constraint(equalTo: card.centerYAnchor),
-            badge.widthAnchor.constraint(equalToConstant: 40),
-            badge.heightAnchor.constraint(equalToConstant: 40),
+            badge.widthAnchor.constraint(equalToConstant: 34),
+            badge.heightAnchor.constraint(equalToConstant: 34),
             card.heightAnchor.constraint(greaterThanOrEqualToConstant: 52),
             icon.centerXAnchor.constraint(equalTo: badge.centerXAnchor),
             icon.centerYAnchor.constraint(equalTo: badge.centerYAnchor),
             icon.widthAnchor.constraint(equalToConstant: 21),
             icon.heightAnchor.constraint(equalToConstant: 21),
-            year.leadingAnchor.constraint(equalTo: badge.leadingAnchor),
-            year.trailingAnchor.constraint(equalTo: badge.trailingAnchor),
-            year.centerYAnchor.constraint(equalTo: badge.centerYAnchor),
-            labels.leadingAnchor.constraint(equalTo: badge.trailingAnchor, constant: 16),
-            labels.topAnchor.constraint(equalTo: card.topAnchor, constant: 12),
-            labels.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -12),
+            labelsLeading,
+            labels.topAnchor.constraint(equalTo: card.topAnchor, constant: 7),
+            labels.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -7),
             labels.trailingAnchor.constraint(equalTo: arrow.leadingAnchor, constant: -12),
-            arrow.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
+            arrow.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -12),
             arrow.centerYAnchor.constraint(equalTo: card.centerYAnchor),
             arrow.widthAnchor.constraint(equalToConstant: 8)
         ])
@@ -77,9 +73,9 @@ final class DeckTableCell: UITableViewCell {
         accessibilityTraits = .button
     }
 
-    func configure(_ deck: DeckViewEntity) {
-        year.isHidden = true
-        icon.isHidden = false
+    func configure(_ deck: DeckViewEntity, detail: String) {
+        badge.isHidden = deck.type == "worldchampionship"
+        labelsLeading.constant = badge.isHidden ? 12 : 58
         heading.text = deck.title
         switch deck.type {
         case "star":
@@ -94,9 +90,6 @@ final class DeckTableCell: UITableViewCell {
             accent = .systemIndigo
             let digits = String(deck.title.prefix(4))
             if Int(digits) != nil {
-                year.text = digits
-                year.isHidden = false
-                icon.isHidden = true
                 heading.text = "\(digits) 世界冠军卡组"
             } else {
                 icon.image = UIImage(systemName: "trophy.fill")
@@ -108,8 +101,8 @@ final class DeckTableCell: UITableViewCell {
             subtitle.text = deck.introduction == deck.title || deck.introduction.isEmpty
                 ? "探索卡牌搭配与构筑" : deck.introduction
         }
+        subtitle.text = detail
         icon.tintColor = accent
-        year.textColor = accent
         badge.backgroundColor = accent.withAlphaComponent(0.10)
         accessibilityLabel = [heading.text, subtitle.text].compactMap { $0 }.joined(separator: "，")
     }

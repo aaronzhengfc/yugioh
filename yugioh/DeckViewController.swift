@@ -8,6 +8,22 @@ class DeckViewController: UIViewController {
         let decks: [DeckViewEntity]
     }
     private var sections: [Section] = []
+    private var summaries: [String: String] = [:]
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        for deck in sections.flatMap({ $0.decks }) {
+            let key = deck.type + ":" + deck.id
+            if deck.type == "star" {
+                summaries[key] = "已收藏 \(CardService().list().count) 张卡牌"
+            } else if deck.type == "self" || summaries[key] == nil {
+                let cards = deck.type == "self" ? DeckService().list() : getDeckEntity(deckFormat: deck.type, deckName: deck.id)
+                let counts = (0...2).map { (cards[String($0)] ?? []).reduce(0) { $0 + $1.number } }
+                summaries[key] = "主 \(counts[0])   ·   副 \(counts[1])   ·   额外 \(counts[2])"
+            }
+        }
+        tableView.reloadData()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +57,8 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DeckCard", for: indexPath) as! DeckTableCell
-        cell.configure(sections[indexPath.section].decks[indexPath.row])
+        let deck = sections[indexPath.section].decks[indexPath.row]
+        cell.configure(deck, detail: summaries[deck.type + ":" + deck.id] ?? "")
         return cell
     }
 
@@ -49,7 +66,7 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
         let header = UIView()
         header.backgroundColor = .systemGroupedBackground
         let label = UILabel()
-        label.text = sections[section].title
+        label.text = sections[section].title + "  ·  " + String(sections[section].decks.count)
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .secondaryLabel
         label.adjustsFontForContentSizeCategory = true
@@ -57,8 +74,8 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
         label.translatesAutoresizingMaskIntoConstraints = false
         header.addSubview(label)
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 20),
-            label.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -20),
+            label.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 14),
+            label.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -14),
             label.topAnchor.constraint(equalTo: header.topAnchor, constant: 8),
             label.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -6)
         ])

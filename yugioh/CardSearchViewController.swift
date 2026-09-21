@@ -125,7 +125,7 @@ class CardSearchViewController: UIViewController {
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.register(CardTableViewCell.NibObject(), forCellReuseIdentifier: CardTableViewCell.identifier())
+        self.tableView.register(CardTableViewCell.self, forCellReuseIdentifier: CardTableViewCell.identifier())
         self.tableView.backgroundColor = greyColor
         self.tableView.separatorStyle = .none
         self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
@@ -503,15 +503,7 @@ extension CardSearchViewController: UITableViewDataSource {
     
     @objc(tableView:heightForRowAtIndexPath:)
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var ifLastRowWillAddGap: CGFloat = 0
-        if indexPath.row == searchResult.count - 1 {
-            ifLastRowWillAddGap = 8
-        }
-        
-        var result = (self.view.frame.width - materialGap * 2) / 3 / 160 * 230
-        result = result + materialGap + ifLastRowWillAddGap
-        
-        return result
+        return UIFontMetrics(forTextStyle: .caption1).scaledValue(for: 126)
     }
    
     

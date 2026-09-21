@@ -46,84 +46,103 @@ class CalculateView: UIView {
     
     
     func setup() {
-        Bundle.main.loadNibNamed("CalculateView", owner: self, options: nil)
-        self.addSubview(contentView)
-        contentView.frame = self.bounds
-        //添加计分版按钮
-        addButtons(datas: datas, dataWidth: 56, dataHeight: 56, dataDefaultHeight: 200)
-        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.contentView.backgroundColor = greyColor
-    }
-    
-    
-    
-    
-    
-    private func addButtons(datas: [String],
-                            dataWidth: Int, dataHeight: Int, dataDefaultHeight: Int
-        ) {
-        
-        let rootWidth = UIScreen.main.bounds.size.width
-        let columnGap: Int = 8
-        let rowGap: Int = 4
-        
-        let num = 5
-        let gap = (Int(rootWidth) - (dataWidth * num + columnGap * (num - 1))) / 2
-        
-        var row = 0
-        var column = 0
-        
-        
-        
-        for data in datas {
-            
-            let button: DataButton
-            if(row == 0 && column == 2) {
-                let f = CGRect.init(x: gap + 1 * (dataWidth + columnGap), y: dataDefaultHeight + row * (dataHeight + rowGap), width: (dataWidth) * 2 + rowGap, height: dataHeight)
-                button = DataButton(frame: f)
-                button.setTitleColor(UIColor.black.withAlphaComponent(0.54), for: .normal)
-                button.backgroundColor = UIColor.white
-                button.layer.cornerRadius = 4
-                self.calculateButton = button
-                
-            } else if(data == "") {
-                column = column + 1
-                if column == num {
-                    column = 0
-                    row = row + 1
-                }
-                continue
-            } else if (column % 5 == 0 || column % 5 == 4) {
-                let f = CGRect.init(x: gap + column * (dataWidth + columnGap), y: dataDefaultHeight + row * (dataHeight + rowGap), width: dataWidth, height: dataHeight)
-                button = DataButton(frame: f)
-                button.setTitleColor(UIColor.white.withAlphaComponent(0.87), for: .normal)
-                button.backgroundColor = redColor
-                button.layer.cornerRadius = 8
-            } else {
-                let f = CGRect.init(x: gap + column * (dataWidth + columnGap), y: dataDefaultHeight + row * (dataHeight + rowGap), width: dataWidth, height: dataHeight)
-                button = DataButton(frame: f)
-                button.setTitleColor(UIColor.black.withAlphaComponent(0.54), for: .normal)
-                button.backgroundColor = UIColor.white
-                button.layer.cornerRadius = 4
-            }
-            
-            button.setTitle(data, for: .normal)
-            button.data = data
-            button.index = column
-            
-            button.addTarget(self, action: #selector(CalculateView.performButton), for: .touchUpInside)
-            self.contentView.addSubview(button)
-            
-            column = column + 1
-            if column == num {
-                column = 0
-                row = row + 1
-            }
+        backgroundColor = .systemGroupedBackground
+        let scroll = UIScrollView()
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 12
+        addSubview(scroll)
+        scroll.addSubview(stack)
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            scroll.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scroll.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scroll.topAnchor.constraint(equalTo: topAnchor),
+            scroll.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stack.leadingAnchor.constraint(equalTo: scroll.contentLayoutGuide.leadingAnchor, constant: 12),
+            stack.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor, constant: -12),
+            stack.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor, constant: 4),
+            stack.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor, constant: -12),
+            stack.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor, constant: -24)
+        ])
+        let scores = UIStackView()
+        scores.spacing = 10
+        scores.distribution = .fillEqually
+        for player in 0...1 {
+            let panel = UIStackView()
+            panel.axis = .vertical
+            panel.spacing = 6
+            panel.isLayoutMarginsRelativeArrangement = true
+            panel.layoutMargins = UIEdgeInsets(top: 14, left: 12, bottom: 14, right: 12)
+            panel.backgroundColor = .secondarySystemGroupedBackground
+            panel.layer.cornerRadius = 14
+            let title = UILabel()
+            title.text = player == 0 ? "玩家 1 · LP" : "玩家 2 · LP"
+            title.font = .systemFont(ofSize: 13, weight: .medium)
+            title.textColor = .secondaryLabel
+            title.textAlignment = .center
+            let score = UILabel()
+            score.text = "8000"
+            score.font = .monospacedDigitSystemFont(ofSize: 34, weight: .semibold)
+            score.textAlignment = .center
+            score.adjustsFontSizeToFitWidth = true
+            score.minimumScaleFactor = 0.4
+            panel.addArrangedSubview(title)
+            panel.addArrangedSubview(score)
+            scores.addArrangedSubview(panel)
+            if player == 0 { scoreLableOne = score } else { scoreLableTwo = score }
         }
+        stack.addArrangedSubview(scores)
+        let inputRow = UIStackView()
+        inputRow.spacing = 8
+        calculateButton = DataButton(type: .system)
+        calculateButton.setTitle("", for: .normal)
+        calculateButton.setTitleColor(.label, for: .normal)
+        calculateButton.titleLabel?.font = .monospacedDigitSystemFont(ofSize: 26, weight: .medium)
+        calculateButton.backgroundColor = .secondarySystemGroupedBackground
+        calculateButton.layer.cornerRadius = 12
+        calculateButton.isUserInteractionEnabled = false
+        calculateButton.accessibilityLabel = "输入的生命值"
+        inputRow.addArrangedSubview(calculateButton)
+        let clear = makeButton("清除", column: 3)
+        clear.widthAnchor.constraint(equalToConstant: 68).isActive = true
+        inputRow.addArrangedSubview(clear)
+        inputRow.heightAnchor.constraint(equalToConstant: 52).isActive = true
+        stack.addArrangedSubview(inputRow)
+        for values in [["−", "1", "2", "3", "−"], ["+", "4", "5", "6", "+"],
+                       ["减半", "7", "8", "9", "减半"], ["变成", "0", "00", "000", "变成"]] {
+            let row = UIStackView()
+            row.spacing = 6
+            row.distribution = .fillEqually
+            for (column, value) in values.enumerated() { row.addArrangedSubview(makeButton(value, column: column)) }
+            row.heightAnchor.constraint(equalToConstant: 48).isActive = true
+            stack.addArrangedSubview(row)
+        }
+        let hint = UILabel()
+        hint.text = "左侧操作玩家 1，右侧操作玩家 2"
+        hint.textAlignment = .center
+        hint.textColor = .secondaryLabel
+        hint.font = .systemFont(ofSize: 12)
+        stack.addArrangedSubview(hint)
     }
-    
-    
-    
+
+    private func makeButton(_ title: String, column: Int) -> DataButton {
+        let button = DataButton(type: .system)
+        button.data = title == "−" ? "-" : title
+        button.index = column
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(.label, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: title.count > 1 ? 14 : 21, weight: .medium)
+        button.backgroundColor = column == 0 || column == 4 ? .tertiarySystemFill : .secondarySystemGroupedBackground
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(performButton), for: .touchUpInside)
+        if column == 0 || column == 4 {
+            button.accessibilityLabel = "玩家 \(column == 0 ? 1 : 2) \(title)"
+        }
+        return button
+    }
+
     @objc private func performButton(sender: DataButton) {
         if sender.data == "" {
             return
@@ -190,7 +209,7 @@ class CalculateView: UIView {
         
         if isStringAnInt(string: sender.data) {
             let title = self.calculateButton.currentTitle! + sender.data
-            self.calculateButton.setTitle(title, for: .normal)
+            if title.count <= 8 { self.calculateButton.setTitle(title, for: .normal) }
             return
         }
     }

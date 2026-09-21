@@ -1,135 +1,128 @@
-//
-//  CardTableViewCell.swift
-//  yugioh
-//
-//  Created by Aaron on 25/9/2016.
-//  Copyright © 2016 sightcorner. All rights reserved.
-//
-
-import Foundation
 import UIKit
 import Kingfisher
 
-
 class CardTableViewCell: UITableViewCell {
-    
-    @IBOutlet weak var cellContentView: UIView!
-    @IBOutlet weak var cellContentInnerView: UIView!
-    @IBOutlet weak var card: UIImageView!
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var type: UILabel!
-    @IBOutlet weak var effect: UIVerticalAlignLabel!
-    @IBOutlet weak var star: DOFavoriteButton!
-    @IBOutlet weak var attack: UILabel!
-    @IBOutlet weak var property: UILabel!
-    @IBOutlet weak var usage: UILabel!
-    @IBOutlet weak var effectConstraint: NSLayoutConstraint!
-    @IBOutlet weak var password: UILabel!
-    @IBOutlet weak var startDate: UILabel!
-    
-    private var tableView: UITableView!
-    
-    private var cardService = CardService()
-    
+    let card = UIImageView()
+    private let nameLabel = UILabel()
+    private let metadata = UILabel()
+    private let stats = UILabel()
+    private let effect = UILabel()
+    private let footnote = UILabel()
+    private let cardID = UILabel()
+    private let date = UILabel()
+    private let favorite = UIButton(type: .system)
+    private var entity: CardEntity?
+    private let cardService = CardService()
     var afterDeselect: (() -> Void)?
-    
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    private func setup() {
+        backgroundColor = .systemBackground
+        card.contentMode = .scaleAspectFit
+        for (label, size, weight) in [(nameLabel, CGFloat(15), UIFont.Weight.semibold),
+                                       (metadata, 11, .regular), (stats, 12, .medium),
+                                       (effect, 12, .regular), (footnote, 10, .regular),
+                                       (cardID, 10, .regular), (date, 10, .regular)] {
+            label.font = UIFontMetrics(forTextStyle: .caption1).scaledFont(for: .systemFont(ofSize: size, weight: weight))
+            label.adjustsFontForContentSizeCategory = true
+            label.textColor = [metadata, footnote, cardID, date].contains(label) ? .secondaryLabel : .label
+        }
+        effect.numberOfLines = 2
+        effect.lineBreakMode = .byTruncatingTail
+        favorite.tintColor = .secondaryLabel
+        favorite.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
+        favorite.accessibilityLabel = "收藏卡牌"
+        let titleRow = UIStackView(arrangedSubviews: [nameLabel, UIView()])
+        titleRow.arrangedSubviews[1].widthAnchor.constraint(equalToConstant: 30).isActive = true
+        let text = UIStackView(arrangedSubviews: [titleRow, metadata, stats, effect])
+        text.axis = .vertical
+        text.spacing = 3
+        let footer = UIStackView(arrangedSubviews: [footnote, cardID, date])
+        footer.distribution = .fillEqually
+        footer.spacing = 4
+        cardID.textAlignment = .center
+        date.textAlignment = .right
+        [footnote, cardID, date].forEach {
+            $0.setContentCompressionResistancePriority(.required, for: .vertical)
+        }
+        let divider = UIView()
+        divider.backgroundColor = .separator
+        [card, text, footer, favorite, divider].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
+        NSLayoutConstraint.activate([
+            card.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            card.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 9),
+            card.widthAnchor.constraint(equalToConstant: 72),
+            card.heightAnchor.constraint(equalToConstant: 104),
+            card.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -9),
+            text.leadingAnchor.constraint(equalTo: card.trailingAnchor, constant: 10),
+            text.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -14),
+            text.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 9),
+            text.bottomAnchor.constraint(lessThanOrEqualTo: footer.topAnchor, constant: -4),
+            footer.leadingAnchor.constraint(equalTo: text.leadingAnchor),
+            footer.trailingAnchor.constraint(equalTo: text.trailingAnchor),
+            footer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -9),
+            favorite.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            favorite.topAnchor.constraint(equalTo: contentView.topAnchor),
+            favorite.widthAnchor.constraint(equalToConstant: 44),
+            favorite.heightAnchor.constraint(equalToConstant: 44),
+            divider.leadingAnchor.constraint(equalTo: text.leadingAnchor),
+            divider.trailingAnchor.constraint(equalTo: text.trailingAnchor),
+            divider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            divider.heightAnchor.constraint(equalToConstant: 0.5)
+        ])
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        card.kf.cancelDownloadTask()
+        card.image = nil
+        afterDeselect = nil
+    }
+
     func prepare(cardEntity: CardEntity, tableView: UITableView, indexPath: IndexPath) {
-        
-        self.tableView = tableView
-        
-        let img = UIImage(named: "ic_star_white")?.withRenderingMode(.alwaysTemplate)
-        star.imageColorOn = yellowColor
-        star.imageColorOff = greyColor
-        star.image = img
-        if cardEntity.isSelected {
-            star.selectWithNoCATransaction()
-        } else {
-            star.deselect()
-        }
-        
-        star.cardEntity = cardEntity
-        
-        
-        cellContentView.backgroundColor = greyColor
-        cellContentInnerView.backgroundColor = UIColor.white
-        
-        // 标题
-        self.title.text = cardEntity.getName()
-        // 效果
-        self.effect.text = cardEntity.getDesc()
-        // 类型
-        self.type.text = cardEntity.getType()
-        // 限制：从常量池中判断使用范围：禁止，限制，准限制，无限制
-        self.usage.text = cardEntity.getBanlistInfoText()
-        // 编号
-        self.password.text = "ID: " + cardEntity.getId()
-        self.startDate.text = cardEntity.getStartDate()
-        
-        self.property.text = ""
-        if cardEntity.getAttribute() != "" {
-            addPropertyText(paddingText: cardEntity.getAttribute())
-        }
-        if cardEntity.getRace() != "" {
-            addPropertyText(paddingText: cardEntity.getRace())
-        }
-        if cardEntity.getLevel() != "" {
-            addPropertyText(paddingText: cardEntity.getLevel())
-        }
-        
-        
-        if !cardEntity.getAtk().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            self.attack.text = cardEntity.getAtk()
-        } else {
-            self.attack.text = ""
-        }
-        if !cardEntity.getDef().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            self.attack.text = self.attack.text! + " / " + cardEntity.getDef()
-        }
+        entity = cardEntity
+        nameLabel.text = cardEntity.getName()
+        metadata.text = [cardEntity.getType(), cardEntity.getAttribute(), cardEntity.getRace()]
+            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")
+        var values: [String] = []
+        if !cardEntity.getLevel().isEmpty { values.append("★ " + cardEntity.getLevel()) }
+        if !cardEntity.getLinkval().isEmpty { values.append("LINK " + cardEntity.getLinkval()) }
+        if !cardEntity.getAtk().isEmpty { values.append("ATK " + cardEntity.getAtk()) }
+        if !cardEntity.getDef().isEmpty { values.append("DEF " + cardEntity.getDef()) }
+        if !cardEntity.getScale().isEmpty { values.append("刻度 " + cardEntity.getScale()) }
+        stats.text = values.joined(separator: "   ")
+        stats.isHidden = values.isEmpty
+        effect.text = cardEntity.getDesc()
+        footnote.text = cardEntity.getBanlistInfoText()
+        cardID.text = "ID " + cardEntity.id
+        date.text = cardEntity.getStartDate()
+        updateFavorite()
     }
-    
-    private func addPropertyText(paddingText: String!) {
-        if self.property.text! != "" {
-            self.property.text! += " / ";
-        }
-        self.property.text! += paddingText;
-    }
-    
-    @IBAction func clickButton(_ sender: Any) {
-        let starButton = sender as! DOFavoriteButton
-        let cardEntity = starButton.cardEntity
-        
-        
-        //setLog(event: AnalyticsEventAddToCart, description: cardEntity.id)
-        
-        if starButton.isSelected {
-            cardEntity.isSelected = false
-            cardService.delete(id: cardEntity.id)
-            starButton.deselect()
-            if let f = afterDeselect {
-                f()
-            }
-        } else {
-            cardEntity.isSelected = true
-            cardService.save(id: cardEntity.id)
-            starButton.select()
-        }
-        
-    }
-    
-    
-    
-}
 
-fileprivate var key: UInt8 = 0
+    private func updateFavorite() {
+        let selected = entity?.isSelected == true
+        favorite.setImage(UIImage(systemName: selected ? "star.fill" : "star"), for: .normal)
+        favorite.tintColor = selected ? .systemOrange : .tertiaryLabel
+        favorite.accessibilityLabel = selected ? "取消收藏" : "收藏卡牌"
+    }
 
-fileprivate extension UIButton {
-    var cardEntity: CardEntity {
-        get {
-            return objc_getAssociatedObject(self, &key) as! CardEntity
-        }
-        
-        set(value) {
-            objc_setAssociatedObject(self, &key, value, .OBJC_ASSOCIATION_RETAIN)
-        }
+    @objc private func toggleFavorite() {
+        guard let entity = entity else { return }
+        entity.isSelected.toggle()
+        if entity.isSelected { cardService.save(id: entity.id) }
+        else { cardService.delete(id: entity.id) }
+        updateFavorite()
+        if !entity.isSelected { afterDeselect?() }
     }
 }

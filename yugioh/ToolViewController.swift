@@ -23,11 +23,17 @@ class ToolViewController: UIViewController {
     
     
     override func viewDidLoad() {
-        self.view.backgroundColor = greyColor
+        super.viewDidLoad()
+        view.backgroundColor = .systemGroupedBackground
+        segmentedControl.selectedSegmentTintColor = .secondarySystemGroupedBackground
+        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.label,
+                                                .font: UIFont.systemFont(ofSize: 14, weight: .medium)], for: .normal)
+        display()
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         display()
         self.battleView.initialCard()
     }
