@@ -1,2 +1,5 @@
 #include "../Pods/Target Support Files/Pods-yugioh/Pods-yugioh.debug.xcconfig"
 #include "Local.xcconfig"
+
+// Load Objective-C categories used by WeChat OpenSDK (including WXApi+ExtraUrl).
+OTHER_LDFLAGS = $(inherited) -ObjC

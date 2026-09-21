@@ -68,6 +68,51 @@ public func getDB() -> Connection {
 enum WeChatSharing {
     private(set) static var isRegistered = false
 
+    static func shareButton(target: Any, action: Selector) -> UIBarButtonItem {
+        let button = UIButton(type: .system)
+        var style = UIButton.Configuration.tinted()
+        style.title = "分享"
+        style.image = UIImage(systemName: "square.and.arrow.up")
+        style.imagePadding = 6
+        style.baseForegroundColor = UIColor(red: 0.12, green: 0.36, blue: 0.29, alpha: 1)
+        style.baseBackgroundColor = style.baseForegroundColor
+        style.cornerStyle = .capsule
+        style.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
+        button.configuration = style
+        button.accessibilityLabel = "分享到微信"
+        button.addTarget(target, action: action, for: .touchUpInside)
+        return UIBarButtonItem(customView: button)
+    }
+
+    static func sendImage(_ image: UIImage, from presenter: UIViewController) {
+        // Keep text lossless where possible; OpenSDK permits up to 25 MB.
+        guard let png = image.pngData(),
+              let data = png.count <= 25 * 1024 * 1024 ? png : image.jpegData(compressionQuality: 0.95),
+              data.count <= 25 * 1024 * 1024 else {
+            showError("分享图片过大，请减少卡组中的卡牌后重试。", from: presenter)
+            return
+        }
+        let object = WXImageObject()
+        object.imageData = data
+        let message = WXMediaMessage()
+        message.mediaObject = object
+        let ratio = 240 / max(image.size.width, image.size.height)
+        let size = CGSize(width: max(1, image.size.width * ratio), height: max(1, image.size.height * ratio))
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let thumbnail = UIGraphicsImageRenderer(size: size, format: format).image { _ in
+            image.draw(in: CGRect(origin: .zero, size: size))
+        }
+        if let data = thumbnail.jpegData(compressionQuality: 0.7), data.count <= 64 * 1024 {
+            message.thumbData = data
+        }
+        let request = SendMessageToWXReq()
+        request.message = message
+        request.bText = false
+        request.scene = 0
+        send(request, from: presenter)
+    }
+
     static func register() {
         guard let link = Bundle.main.object(forInfoDictionaryKey: "WeChatUniversalLink") as? String,
               let url = URL(string: link), url.scheme == "https", url.host != nil else {
@@ -79,40 +124,21 @@ enum WeChatSharing {
     }
 
     static func send(_ request: SendMessageToWXReq, from presenter: UIViewController) {
-        // A system share sheet also works without OpenSDK registration.
-        // The user chooses WeChat from the extensions installed on their device.
-        guard isRegistered, WXApi.isWXAppInstalled() else {
-            presentSystemShare(request, from: presenter)
+        guard WXApi.isWXAppInstalled() else {
+            showError("请先安装微信，再使用微信分享。", from: presenter)
+            return
+        }
+        guard isRegistered else {
+            showError("微信分享配置未完成，请配置微信开放平台的 Universal Link 后重新打包。", from: presenter)
             return
         }
         WXApi.send(request) { [weak presenter] success in
             guard !success else { return }
             DispatchQueue.main.async {
                 guard let presenter = presenter else { return }
-                presentSystemShare(request, from: presenter)
+                showError("无法发起微信分享，请检查微信版本及应用的微信开放平台配置。", from: presenter)
             }
         }
-    }
-
-    private static func presentSystemShare(_ request: SendMessageToWXReq,
-                                          from presenter: UIViewController) {
-        guard let object = request.message.mediaObject as? WXImageObject,
-              let image = UIImage(data: object.imageData) else {
-            showError("无法生成分享图片，请重试。", from: presenter)
-            return
-        }
-        let sheet = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-        if let popover = sheet.popoverPresentationController {
-            if let button = presenter.navigationItem.rightBarButtonItem {
-                popover.barButtonItem = button
-            } else {
-                popover.sourceView = presenter.view
-                popover.sourceRect = CGRect(x: presenter.view.bounds.midX,
-                                            y: presenter.view.bounds.midY, width: 1, height: 1)
-                popover.permittedArrowDirections = []
-            }
-        }
-        presenter.present(sheet, animated: true)
     }
 
     static func showError(_ message: String, from presenter: UIViewController) {

@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "LW783GQGY7.com.sightcorner.yugioh",
+        "paths": [
+          "/wechat/yugioh/*"
+        ]
+      }
+    ]
+  }
+}

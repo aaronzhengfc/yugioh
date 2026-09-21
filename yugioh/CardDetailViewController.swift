@@ -29,10 +29,7 @@ class CardDetailViewController: UIViewController {
         super.viewDidLoad()
         title = "卡牌详情"
         view.tintColor = accent
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "square.and.arrow.up"), style: .plain,
-            target: self, action: #selector(shareButtonHandler))
-        navigationItem.rightBarButtonItem?.accessibilityLabel = "分享卡牌"
+        navigationItem.rightBarButtonItem = WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler))
         setupLayout()
         populateContent()
         updateFavorite()
@@ -269,24 +266,11 @@ class CardDetailViewController: UIViewController {
     @objc private func shareButtonHandler() {
         view.layoutIfNeeded()
         let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
+        format.scale = 3
         let image = UIGraphicsImageRenderer(size: content.bounds.size, format: format).image { context in
             content.layer.render(in: context.cgContext)
         }
-        guard let data = image.jpegData(compressionQuality: 0.9) else { return }
-        let object = WXImageObject()
-        object.imageData = data
-        let message = WXMediaMessage()
-        message.mediaObject = object
-        let thumbSize = CGSize(width: 80, height: max(1, 80 * image.size.height / image.size.width))
-        message.thumbData = UIGraphicsImageRenderer(size: thumbSize, format: format).image { _ in
-            image.draw(in: CGRect(origin: .zero, size: thumbSize))
-        }.jpegData(compressionQuality: 0.5)
-        let request = SendMessageToWXReq()
-        request.message = message
-        request.bText = false
-        request.scene = 0
-        WeChatSharing.send(request, from: self)
+        WeChatSharing.sendImage(image, from: self)
     }
 }
 
