@@ -119,45 +119,30 @@ class CardDetailViewController: UIViewController {
         summary.spacing = 8
         let name = label(cardEntity.getName() ?? "", style: .headline)
         summary.addArrangedSubview(name)
-        let metadata = [cardEntity.getType(), cardEntity.getAttribute(), cardEntity.getRace()]
-            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " / ")
+        let metadata = cardEntity.getMetadataText()
         summary.addArrangedSubview(label(metadata, style: .footnote, color: .secondaryLabel))
 
-        var stats: [String] = []
-        if !cardEntity.getLevel().isEmpty { stats.append("等级  \(cardEntity.getLevel())") }
-        if !cardEntity.getAtk().isEmpty { stats.append("ATK  \(cardEntity.getAtk())") }
-        if !cardEntity.getDef().isEmpty { stats.append("DEF  \(cardEntity.getDef())") }
-        if !cardEntity.getLinkval().isEmpty { stats.append("LINK  \(cardEntity.getLinkval())") }
-        if !cardEntity.getScale().isEmpty { stats.append("灵摆刻度  \(cardEntity.getScale())") }
+        let stats = cardEntity.getStatsText()
         if !stats.isEmpty {
-            let values = label(stats.joined(separator: "   "), style: .footnote)
-            values.font = UIFontMetrics(forTextStyle: .footnote).scaledFont(for: .monospacedDigitSystemFont(ofSize: 13, weight: .semibold))
+            let values = label(stats, style: .footnote, color: .secondaryLabel)
+            values.font = UIFontMetrics(forTextStyle: .footnote).scaledFont(for: .monospacedDigitSystemFont(ofSize: 13, weight: .regular))
             summary.addArrangedSubview(values)
         }
-        let status = UIButton(type: .system)
-        var badge = UIButton.Configuration.tinted()
-        badge.title = cardEntity.getBanlistInfoText()
-        badge.baseForegroundColor = accent
-        badge.baseBackgroundColor = accent
-        badge.cornerStyle = .capsule
-        badge.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 8, bottom: 3, trailing: 8)
-        badge.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-            var attributes = incoming
-            attributes.font = UIFont.preferredFont(forTextStyle: .caption1)
-            return attributes
-        }
-        status.configuration = badge
-        status.isUserInteractionEnabled = false
-        status.accessibilityTraits = .staticText
-        let statusRow = UIStackView(arrangedSubviews: [status, UIView()])
-        summary.addArrangedSubview(statusRow)
-        let details = ["ID  \(cardEntity.getId())",
-                       cardEntity.getStartDate().isEmpty ? nil : cardEntity.getStartDate()]
-            .compactMap { $0 }.filter { !$0.isEmpty }
-        summary.addArrangedSubview(label(details.joined(separator: " · "), style: .caption1, color: .secondaryLabel))
+        let spacer = UIView()
+        spacer.setContentHuggingPriority(.init(1), for: .vertical)
+        spacer.setContentCompressionResistancePriority(.init(1), for: .vertical)
+        summary.addArrangedSubview(spacer)
+        let details = [cardEntity.getBanlistInfoText(), "ID \(cardEntity.getId())", cardEntity.getStartDate()]
+            .filter { !$0.isEmpty }
+        let detailsLabel = label(details.joined(separator: " · "), style: .caption2, color: .secondaryLabel)
+        detailsLabel.numberOfLines = 1
+        detailsLabel.adjustsFontSizeToFitWidth = true
+        detailsLabel.minimumScaleFactor = 0.75
+        summary.addArrangedSubview(detailsLabel)
         let header = UIStackView(arrangedSubviews: [cardImage, summary])
         header.spacing = 12
-        header.alignment = .center
+        header.alignment = .top
+        summary.heightAnchor.constraint(greaterThanOrEqualTo: cardImage.heightAnchor).isActive = true
         header.isLayoutMarginsRelativeArrangement = true
         header.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
         header.backgroundColor = .secondarySystemGroupedBackground

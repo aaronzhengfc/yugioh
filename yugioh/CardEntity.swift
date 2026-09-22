@@ -189,6 +189,30 @@ class CardEntity {
         return r;
     }
     
+    func getStatsText() -> String {
+        var values: [String] = []
+        if !getLevel().isEmpty { values.append("★ " + getLevel()) }
+        if !getLinkval().isEmpty { values.append("LINK " + getLinkval()) }
+        if !getAtk().isEmpty { values.append("ATK " + getAtk()) }
+        if !getDef().isEmpty { values.append("DEF " + getDef()) }
+        if !getScale().isEmpty { values.append("刻度 " + getScale()) }
+        return values.joined(separator: "   ")
+    }
+
+    func getMetadataText() -> String {
+        let rawType = type ?? ""
+        let typeKeys = rawType.hasSuffix("Monster")
+            ? rawType.split(separator: " ").map(String.init) : [rawType]
+        // Use the same entries and labels as the search filter buttons.
+        let typeLabels = keyValueMap.filter {
+            $0.key == "type" && typeKeys.contains($0.subKey)
+        }.map { getValue(entry: $0) }
+        let parts = (typeLabels.isEmpty ? [getType() ?? ""] : typeLabels)
+            + [getAttribute() ?? "", getRace() ?? ""]
+        return parts.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }.joined(separator: " · ")
+    }
+
     func getAttribute() -> String!  {
         
         var r = ""

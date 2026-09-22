@@ -3,6 +3,7 @@ import Kingfisher
 
 class CardTableViewCell: UITableViewCell {
     let card = UIImageView()
+    private let panel = UIView()
     private let nameLabel = UILabel()
     private let metadata = UILabel()
     private let stats = UILabel()
@@ -25,18 +26,26 @@ class CardTableViewCell: UITableViewCell {
     }
 
     private func setup() {
-        backgroundColor = .systemBackground
+        backgroundColor = .clear
+        selectionStyle = .none
+        panel.backgroundColor = .secondarySystemGroupedBackground
+        panel.layer.cornerRadius = 12
+        panel.layer.cornerCurve = .continuous
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(panel)
         card.contentMode = .scaleAspectFit
         for (label, size, weight) in [(nameLabel, CGFloat(15), UIFont.Weight.semibold),
-                                       (metadata, 11, .regular), (stats, 12, .medium),
+                                       (metadata, 11, .regular), (stats, 12, .regular),
                                        (effect, 12, .regular), (footnote, 10, .regular),
                                        (cardID, 10, .regular), (date, 10, .regular)] {
             label.font = UIFontMetrics(forTextStyle: .caption1).scaledFont(for: .systemFont(ofSize: size, weight: weight))
             label.adjustsFontForContentSizeCategory = true
-            label.textColor = [metadata, footnote, cardID, date].contains(label) ? .secondaryLabel : .label
+            label.textColor = label == nameLabel ? .label : .secondaryLabel
         }
+        stats.font = UIFontMetrics(forTextStyle: .caption1).scaledFont(for: .monospacedDigitSystemFont(ofSize: 12, weight: .regular))
         effect.numberOfLines = 2
         effect.lineBreakMode = .byTruncatingTail
+        favorite.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(font: nameLabel.font, scale: .small), forImageIn: .normal)
         favorite.tintColor = .secondaryLabel
         favorite.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
         favorite.accessibilityLabel = "收藏卡牌"
@@ -53,34 +62,37 @@ class CardTableViewCell: UITableViewCell {
         [footnote, cardID, date].forEach {
             $0.setContentCompressionResistancePriority(.required, for: .vertical)
         }
-        let divider = UIView()
-        divider.backgroundColor = .separator
-        [card, text, footer, favorite, divider].forEach {
+        [card, text, footer, favorite].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview($0)
+            panel.addSubview($0)
         }
         NSLayoutConstraint.activate([
-            card.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-            card.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 9),
+            panel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            panel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            panel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
+            panel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3),
+            card.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 12),
+            card.topAnchor.constraint(equalTo: panel.topAnchor, constant: 9),
             card.widthAnchor.constraint(equalToConstant: 72),
             card.heightAnchor.constraint(equalToConstant: 104),
-            card.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -9),
+            card.bottomAnchor.constraint(lessThanOrEqualTo: panel.bottomAnchor, constant: -9),
             text.leadingAnchor.constraint(equalTo: card.trailingAnchor, constant: 10),
-            text.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -14),
-            text.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 9),
+            text.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -14),
+            text.topAnchor.constraint(equalTo: panel.topAnchor, constant: 9),
             text.bottomAnchor.constraint(lessThanOrEqualTo: footer.topAnchor, constant: -4),
             footer.leadingAnchor.constraint(equalTo: text.leadingAnchor),
             footer.trailingAnchor.constraint(equalTo: text.trailingAnchor),
-            footer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -9),
-            favorite.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
-            favorite.topAnchor.constraint(equalTo: contentView.topAnchor),
+            footer.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -9),
+            favorite.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -4),
+            favorite.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
             favorite.widthAnchor.constraint(equalToConstant: 44),
-            favorite.heightAnchor.constraint(equalToConstant: 44),
-            divider.leadingAnchor.constraint(equalTo: text.leadingAnchor),
-            divider.trailingAnchor.constraint(equalTo: text.trailingAnchor),
-            divider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            divider.heightAnchor.constraint(equalToConstant: 0.5)
+            favorite.heightAnchor.constraint(equalToConstant: 44)
         ])
+    }
+
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        panel.backgroundColor = highlighted ? .tertiarySystemGroupedBackground : .secondarySystemGroupedBackground
     }
 
     override func prepareForReuse() {
@@ -94,16 +106,10 @@ class CardTableViewCell: UITableViewCell {
     func prepare(cardEntity: CardEntity, tableView: UITableView, indexPath: IndexPath) {
         entity = cardEntity
         nameLabel.text = cardEntity.getName()
-        metadata.text = [cardEntity.getType(), cardEntity.getAttribute(), cardEntity.getRace()]
-            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")
-        var values: [String] = []
-        if !cardEntity.getLevel().isEmpty { values.append("★ " + cardEntity.getLevel()) }
-        if !cardEntity.getLinkval().isEmpty { values.append("LINK " + cardEntity.getLinkval()) }
-        if !cardEntity.getAtk().isEmpty { values.append("ATK " + cardEntity.getAtk()) }
-        if !cardEntity.getDef().isEmpty { values.append("DEF " + cardEntity.getDef()) }
-        if !cardEntity.getScale().isEmpty { values.append("刻度 " + cardEntity.getScale()) }
-        stats.text = values.joined(separator: "   ")
-        stats.isHidden = values.isEmpty
+        metadata.text = cardEntity.getMetadataText()
+        let statsText = cardEntity.getStatsText()
+        stats.text = statsText
+        stats.isHidden = statsText.isEmpty
         effect.text = cardEntity.getDesc()
         footnote.text = cardEntity.getBanlistInfoText()
         cardID.text = "ID " + cardEntity.id

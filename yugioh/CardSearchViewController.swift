@@ -126,7 +126,7 @@ class CardSearchViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.register(CardTableViewCell.self, forCellReuseIdentifier: CardTableViewCell.identifier())
-        self.tableView.backgroundColor = greyColor
+        self.tableView.backgroundColor = .systemGroupedBackground
         self.tableView.separatorStyle = .none
         self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
@@ -503,7 +503,7 @@ extension CardSearchViewController: UITableViewDataSource {
     
     @objc(tableView:heightForRowAtIndexPath:)
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UIFontMetrics(forTextStyle: .caption1).scaledValue(for: 126)
+        return UIFontMetrics(forTextStyle: .caption1).scaledValue(for: 126) + 6
     }
    
     
