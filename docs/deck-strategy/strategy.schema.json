@@ -1,0 +1,1170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Yu-Gi-Oh product releases, deck strategies and metagame evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sources",
+    "products",
+    "printings",
+    "archetypes",
+    "contexts",
+    "decklists",
+    "guides",
+    "metagame_snapshots",
+    "release_analyses"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "products": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/product"
+      }
+    },
+    "printings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/printing"
+      }
+    },
+    "archetypes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/archetype"
+      }
+    },
+    "contexts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/context"
+      }
+    },
+    "decklists": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/decklist"
+      }
+    },
+    "guides": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/guide"
+      }
+    },
+    "metagame_snapshots": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/metagame"
+      }
+    },
+    "release_analyses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/release_analysis"
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "url",
+        "title",
+        "kind",
+        "retrieved_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "official_product",
+            "official_rules",
+            "official_results",
+            "tournament_report",
+            "player_deck_profile",
+            "card_database",
+            "editorial"
+          ]
+        },
+        "published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "locator": {
+          "type": "string",
+          "description": "Page, section, or video timestamp"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "product_type",
+        "releases",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_type": {
+          "type": "string",
+          "enum": [
+            "booster_pack",
+            "structure_deck",
+            "starter_deck",
+            "reprint_set",
+            "other"
+          ]
+        },
+        "releases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "format",
+              "region",
+              "release_date",
+              "source_ids"
+            ],
+            "properties": {
+              "format": {
+                "type": "string",
+                "enum": [
+                  "OCG",
+                  "TCG"
+                ]
+              },
+              "region": {
+                "type": "string",
+                "minLength": 1
+              },
+              "release_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "set_code": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "printing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_id",
+        "card_password",
+        "set_code",
+        "is_new_card",
+        "source_ids"
+      ],
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "card_password": {
+          "type": "string",
+          "pattern": "^[0-9]{1,10}$",
+          "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+        },
+        "set_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rarity": {
+          "type": "string"
+        },
+        "is_new_card": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "archetype": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "aliases",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "format",
+        "regions",
+        "effective_from",
+        "effective_until",
+        "banlist_id",
+        "ruleset",
+        "product_pool_cutoff",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "OCG",
+            "TCG"
+          ]
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "effective_from": {
+          "type": "string",
+          "format": "date"
+        },
+        "effective_until": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "banlist_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ruleset": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_pool_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "deck_card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "card_password",
+        "source_passwords",
+        "quantity",
+        "roles"
+      ],
+      "properties": {
+        "card_password": {
+          "type": "string",
+          "pattern": "^[0-9]{1,10}$",
+          "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+        },
+        "source_passwords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{1,10}$",
+            "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "starter",
+              "extender",
+              "searcher",
+              "interaction",
+              "board_breaker",
+              "engine_requirement",
+              "finisher",
+              "resource_loop",
+              "other"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "mapping_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "decklist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "archetype_ids",
+        "context_id",
+        "main",
+        "extra",
+        "side",
+        "completeness",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "archetype_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "player": {
+          "type": "string"
+        },
+        "event_name": {
+          "type": "string"
+        },
+        "event_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "placement": {
+          "type": "string"
+        },
+        "ydk_path": {
+          "type": "string"
+        },
+        "ydk_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "main": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/deck_card"
+          }
+        },
+        "extra": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/deck_card"
+          }
+        },
+        "side": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/deck_card"
+          }
+        },
+        "completeness": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "main_only",
+            "side_missing",
+            "other_incomplete"
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assessment",
+        "source_ids"
+      ],
+      "properties": {
+        "assessment": {
+          "type": "string",
+          "enum": [
+            "prediction",
+            "observed",
+            "tested",
+            "reviewed"
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "number",
+        "action",
+        "card_passwords",
+        "costs",
+        "prerequisites",
+        "restrictions_added",
+        "source_ids"
+      ],
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "card_passwords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{1,10}$",
+            "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+          }
+        },
+        "costs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "restrictions_added": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "combo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "turn",
+        "required_hand",
+        "other_hand_requirements",
+        "starting_state",
+        "required_deck_cards",
+        "required_extra_cards",
+        "steps",
+        "end_state",
+        "interruptions",
+        "evidence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "turn": {
+          "type": "string",
+          "enum": [
+            "going_first",
+            "going_second",
+            "either"
+          ]
+        },
+        "required_hand": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "card_password",
+              "quantity"
+            ],
+            "properties": {
+              "card_password": {
+                "type": "string",
+                "pattern": "^[0-9]{1,10}$",
+                "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+              },
+              "quantity": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "other_hand_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "starting_state": {
+          "type": "string"
+        },
+        "required_deck_cards": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{1,10}$",
+            "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+          }
+        },
+        "required_extra_cards": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{1,10}$",
+            "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+          }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/step"
+          },
+          "minItems": 1
+        },
+        "end_state": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "field",
+            "hand",
+            "graveyard",
+            "banished",
+            "interactions",
+            "follow_up"
+          ],
+          "properties": {
+            "field": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "hand": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "graveyard": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "banished": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "interactions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "follow_up": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "interruptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "after_step",
+              "opponent_action",
+              "response",
+              "fallback_result",
+              "source_ids"
+            ],
+            "properties": {
+              "after_step": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "opponent_action": {
+                "type": "string"
+              },
+              "response": {
+                "type": "string"
+              },
+              "fallback_result": {
+                "type": "string"
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            }
+          }
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        }
+      }
+    },
+    "guide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "revision",
+        "language",
+        "context_id",
+        "decklist_id",
+        "related_product_ids",
+        "overview",
+        "win_conditions",
+        "going_first_plan",
+        "going_second_plan",
+        "combos",
+        "weaknesses",
+        "side_plans",
+        "evidence",
+        "review_status",
+        "updated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decklist_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "related_product_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "overview": {
+          "type": "string"
+        },
+        "win_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "going_first_plan": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "going_second_plan": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "combos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/combo"
+          }
+        },
+        "weaknesses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "side_plans": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "opponent_archetype_id",
+              "turn",
+              "cards_in",
+              "cards_out",
+              "reason",
+              "evidence"
+            ],
+            "properties": {
+              "opponent_archetype_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "turn": {
+                "type": "string",
+                "enum": [
+                  "going_first",
+                  "going_second",
+                  "either"
+                ]
+              },
+              "cards_in": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/deck_card"
+                }
+              },
+              "cards_out": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/deck_card"
+                }
+              },
+              "reason": {
+                "type": "string"
+              },
+              "evidence": {
+                "$ref": "#/$defs/evidence"
+              }
+            }
+          }
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "review_status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "needs_review",
+            "reviewed"
+          ]
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "metagame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "context_id",
+        "period_start",
+        "period_end",
+        "event_count",
+        "sample_basis",
+        "sample_size",
+        "sample_scope",
+        "archetypes",
+        "coverage_notes",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period_start": {
+          "type": "string",
+          "format": "date"
+        },
+        "period_end": {
+          "type": "string",
+          "format": "date"
+        },
+        "event_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sample_basis": {
+          "type": "string",
+          "enum": [
+            "all_entrants",
+            "top_cut_decks",
+            "published_decklists"
+          ]
+        },
+        "sample_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sample_scope": {
+          "type": "string",
+          "description": "Included events, geography, missing lists, exclusions and deduplication rules."
+        },
+        "archetypes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "archetype_id",
+              "deck_count",
+              "representative_decklist_ids"
+            ],
+            "properties": {
+              "archetype_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "deck_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "representative_decklist_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              }
+            }
+          }
+        },
+        "coverage_notes": {
+          "type": "string"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "release_analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "product_id",
+        "context_id",
+        "phase",
+        "before_snapshot_id",
+        "after_snapshot_id",
+        "observed_from",
+        "observed_until",
+        "impacts",
+        "confounders",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "pre_release",
+            "early_results",
+            "established_results"
+          ]
+        },
+        "before_snapshot_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "after_snapshot_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "observed_from": {
+          "type": "string",
+          "format": "date"
+        },
+        "observed_until": {
+          "type": "string",
+          "format": "date"
+        },
+        "impacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "archetype_id",
+              "change_type",
+              "key_card_passwords",
+              "explanation",
+              "guide_ids",
+              "decklist_ids",
+              "evidence"
+            ],
+            "properties": {
+              "archetype_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "change_type": {
+                "type": "string",
+                "enum": [
+                  "new_strategy",
+                  "existing_strategy_support",
+                  "generic_staple",
+                  "reprint_accessibility",
+                  "no_observed_impact"
+                ]
+              },
+              "key_card_passwords": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9]{1,10}$",
+                  "description": "Canonical decimal card password, as text. Original source passwords are preserved separately."
+                }
+              },
+              "explanation": {
+                "type": "string"
+              },
+              "guide_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "decklist_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "evidence": {
+                "$ref": "#/$defs/evidence"
+              }
+            }
+          }
+        },
+        "confounders": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Other product releases, banlist/rules changes or sampling changes."
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
