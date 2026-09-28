@@ -1,0 +1,1999 @@
+{
+  "schema_version": "historical-deck-sample-1",
+  "collected_at": "2026-09-28",
+  "generated_at": "2026-09-29",
+  "scope": "2016世界赛冠亚季军完整配方及编辑分析样例；不是历年卡组全集。",
+  "events": [
+    {
+      "id": "wcs2016",
+      "name": "Yu-Gi-Oh! World Championship 2016",
+      "year": 2016,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "rules_status": "event_specific_rules_not_fully_archived",
+      "rules_note": "世界赛历史配方；不等同于当年的普通OCG环境，也不代表现在合法。",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2016/"
+    }
+  ],
+  "sources": [
+    {
+      "id": "neuron-wcs2016-1",
+      "url": "https://www.db.yugioh-card.com/yugiohdb/member_deck.action?cgid=9376e8674b0347e5f68c553a67072a18&dno=1",
+      "retrieved_at": "2026-09-28",
+      "kind": "official_database_deck_page",
+      "locator": "WCS2016 一般の部; overview Main / Extra / Side tables",
+      "notes": "页面当前禁限提示不是2016年的规则；只提取原配方卡名和数量。"
+    },
+    {
+      "id": "neuron-wcs2016-2",
+      "url": "https://www.db.yugioh-card.com/yugiohdb/member_deck.action?cgid=9376e8674b0347e5f68c553a67072a18&dno=2",
+      "retrieved_at": "2026-09-28",
+      "kind": "official_database_deck_page",
+      "locator": "WCS2016 一般の部; overview Main / Extra / Side tables",
+      "notes": "页面当前禁限提示不是2016年的规则；只提取原配方卡名和数量。"
+    },
+    {
+      "id": "neuron-wcs2016-3",
+      "url": "https://www.db.yugioh-card.com/yugiohdb/member_deck.action?cgid=9376e8674b0347e5f68c553a67072a18&dno=3",
+      "retrieved_at": "2026-09-28",
+      "kind": "official_database_deck_page",
+      "locator": "WCS2016 一般の部; overview Main / Extra / Side tables",
+      "notes": "页面当前禁限提示不是2016年的规则；只提取原配方卡名和数量。"
+    }
+  ],
+  "cards": [
+    {
+      "password": "89631139",
+      "name_en": "Blue-Eyes White Dragon",
+      "name_zh": "青眼白龙",
+      "konami_id": 4007,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=4007&request_locale=ja"
+    },
+    {
+      "password": "38517737",
+      "name_en": "Blue-Eyes Alternative White Dragon",
+      "name_zh": "青眼亚白龙",
+      "konami_id": 12253,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12253&request_locale=ja"
+    },
+    {
+      "password": "45467446",
+      "name_en": "Dragon Spirit of White",
+      "name_zh": "白色灵龙",
+      "konami_id": 12290,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12290&request_locale=ja"
+    },
+    {
+      "password": "8240199",
+      "name_en": "Sage with Eyes of Blue",
+      "name_zh": "青色眼睛的贤士",
+      "konami_id": 12292,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12292&request_locale=ja"
+    },
+    {
+      "password": "45644898",
+      "name_en": "Master with Eyes of Blue",
+      "name_zh": "青色眼睛的祭司",
+      "konami_id": 12293,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12293&request_locale=ja"
+    },
+    {
+      "password": "71039903",
+      "name_en": "The White Stone of Ancients",
+      "name_zh": "太古的白石",
+      "konami_id": 12294,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12294&request_locale=ja"
+    },
+    {
+      "password": "79814787",
+      "name_en": "The White Stone of Legend",
+      "name_zh": "传说的白石",
+      "konami_id": 7850,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=7850&request_locale=ja"
+    },
+    {
+      "password": "97268402",
+      "name_en": "Effect Veiler",
+      "name_zh": "效果遮蒙者",
+      "konami_id": 8933,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=8933&request_locale=ja"
+    },
+    {
+      "password": "23434538",
+      "name_en": "Maxx \"C\"",
+      "name_zh": "增殖的G",
+      "konami_id": 9455,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=9455&request_locale=ja"
+    },
+    {
+      "password": "48800175",
+      "name_en": "The Melody of Awakening Dragon",
+      "name_zh": "龙觉醒旋律",
+      "konami_id": 7508,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=7508&request_locale=ja"
+    },
+    {
+      "password": "41620959",
+      "name_en": "Dragon Shrine",
+      "name_zh": "龙之灵庙",
+      "konami_id": 10590,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10590&request_locale=ja"
+    },
+    {
+      "password": "6853254",
+      "name_en": "Return of the Dragon Lords",
+      "name_zh": "复活之福音",
+      "konami_id": 12364,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12364&request_locale=ja"
+    },
+    {
+      "password": "39701395",
+      "name_en": "Cards of Consonance",
+      "name_zh": "调和的宝札",
+      "konami_id": 8656,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=8656&request_locale=ja"
+    },
+    {
+      "password": "38120068",
+      "name_en": "Trade-In",
+      "name_zh": "抵价购物",
+      "konami_id": 7248,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=7248&request_locale=ja"
+    },
+    {
+      "password": "43898403",
+      "name_en": "Twin Twisters",
+      "name_zh": "双龙卷",
+      "konami_id": 12175,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12175&request_locale=ja"
+    },
+    {
+      "password": "54447022",
+      "name_en": "Soul Charge",
+      "name_zh": "灵魂补充",
+      "konami_id": 11159,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11159&request_locale=ja"
+    },
+    {
+      "password": "63356631",
+      "name_en": "Phoenix Wing Wind Blast",
+      "name_zh": "凤翼的爆风",
+      "konami_id": 6279,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=6279&request_locale=ja"
+    },
+    {
+      "password": "5851097",
+      "name_en": "Vanity's Emptiness",
+      "name_zh": "虚无空间",
+      "konami_id": 9153,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=9153&request_locale=ja"
+    },
+    {
+      "password": "84749824",
+      "name_en": "Solemn Warning",
+      "name_zh": "神之警告",
+      "konami_id": 9008,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=9008&request_locale=ja"
+    },
+    {
+      "password": "59822133",
+      "name_en": "Blue-Eyes Spirit Dragon",
+      "name_zh": "青眼精灵龙",
+      "konami_id": 12324,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12324&request_locale=ja"
+    },
+    {
+      "password": "40908371",
+      "name_en": "Azure-Eyes Silver Dragon",
+      "name_zh": "苍眼银龙",
+      "konami_id": 10593,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10593&request_locale=ja"
+    },
+    {
+      "password": "50954680",
+      "name_en": "Crystal Wing Synchro Dragon",
+      "name_zh": "水晶翼同调龙",
+      "konami_id": 12321,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12321&request_locale=ja"
+    },
+    {
+      "password": "83994433",
+      "name_en": "Stardust Spark Dragon",
+      "name_zh": "闪珖龙 星尘",
+      "konami_id": 10479,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10479&request_locale=ja"
+    },
+    {
+      "password": "33698022",
+      "name_en": "Black Rose Moonlight Dragon",
+      "name_zh": "月华龙 黑蔷薇",
+      "konami_id": 11123,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11123&request_locale=ja"
+    },
+    {
+      "password": "58820923",
+      "name_en": "Number 95: Galaxy-Eyes Dark Matter Dragon",
+      "name_zh": "No.95银河眼暗物质龙",
+      "konami_id": 11651,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11651&request_locale=ja"
+    },
+    {
+      "password": "39030163",
+      "name_en": "Galaxy-Eyes Full Armor Photon Dragon",
+      "name_zh": "银河眼 重铠光子龙",
+      "konami_id": 11461,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11461&request_locale=ja"
+    },
+    {
+      "password": "31801517",
+      "name_en": "Number 62: Galaxy-Eyes Prime Photon Dragon",
+      "name_zh": "No.62银河眼光子龙皇",
+      "konami_id": 11069,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11069&request_locale=ja"
+    },
+    {
+      "password": "63767246",
+      "name_en": "Number 38: Hope Harbinger Dragon Titanic Galaxy",
+      "name_zh": "No.38希望魁龙 银河巨神",
+      "konami_id": 12260,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12260&request_locale=ja"
+    },
+    {
+      "password": "2978414",
+      "name_en": "Number 46: Dragluon",
+      "name_zh": "No.46 神影龙 胶子龙",
+      "konami_id": 10781,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10781&request_locale=ja"
+    },
+    {
+      "password": "10406322",
+      "name_en": "Alsei, the Sylvan High Protector",
+      "name_zh": "森罗的守神 森精",
+      "konami_id": 10938,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10938&request_locale=ja"
+    },
+    {
+      "password": "64332231",
+      "name_en": "Hieratic Sun Dragon Overlord of Heliopolis",
+      "name_zh": "圣刻神龙-九神龙",
+      "konami_id": 10071,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10071&request_locale=ja"
+    },
+    {
+      "password": "10443957",
+      "name_en": "Cyber Dragon Infinity",
+      "name_zh": "电子龙·无限",
+      "konami_id": 11765,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [
+        "10443958"
+      ],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11765&request_locale=ja"
+    },
+    {
+      "password": "8233522",
+      "name_en": "Ally of Justice Cycle Reader",
+      "name_zh": "正义盟军 周期解读虫",
+      "konami_id": 8409,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=8409&request_locale=ja"
+    },
+    {
+      "password": "56399890",
+      "name_en": "The Fabled Catsith",
+      "name_zh": "魔轰神兽 凯希",
+      "konami_id": 8555,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=8555&request_locale=ja"
+    },
+    {
+      "password": "25789292",
+      "name_en": "Forbidden Chalice",
+      "name_zh": "禁忌的圣杯",
+      "konami_id": 8213,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=8213&request_locale=ja"
+    },
+    {
+      "password": "53129443",
+      "name_en": "Dark Hole",
+      "name_zh": "黑洞",
+      "konami_id": 4342,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=4342&request_locale=ja"
+    },
+    {
+      "password": "43455065",
+      "name_en": "Magical Spring",
+      "name_zh": "魔力之泉",
+      "konami_id": 11274,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11274&request_locale=ja"
+    },
+    {
+      "password": "11109820",
+      "name_en": "Xyz Universe",
+      "name_zh": "XYZ宇宙",
+      "konami_id": 11107,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11107&request_locale=ja"
+    },
+    {
+      "password": "29549364",
+      "name_en": "Mask of Restrict",
+      "name_zh": "牲祭封印之假面",
+      "konami_id": 5106,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=5106&request_locale=ja"
+    },
+    {
+      "password": "46659709",
+      "name_en": "Galaxy Soldier",
+      "name_zh": "银河战士",
+      "konami_id": 11114,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11114&request_locale=ja"
+    },
+    {
+      "password": "87025064",
+      "name_en": "Silver's Cry",
+      "name_zh": "银龙的轰咆",
+      "konami_id": 10591,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10591&request_locale=ja"
+    },
+    {
+      "password": "70368879",
+      "name_en": "Upstart Goblin",
+      "name_zh": "哥布林暴发户",
+      "konami_id": 4895,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=4895&request_locale=ja"
+    },
+    {
+      "password": "63422098",
+      "name_en": "Giganticastle",
+      "name_zh": "鬼岩城",
+      "konami_id": 10789,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10789&request_locale=ja"
+    },
+    {
+      "password": "4779823",
+      "name_en": "Michael, the Arch-Lightsworn",
+      "name_zh": "光道方舟大天使 米迦勒",
+      "konami_id": 10884,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10884&request_locale=ja"
+    },
+    {
+      "password": "88177324",
+      "name_en": "Number 107: Galaxy-Eyes Tachyon Dragon",
+      "name_zh": "No.107银河眼时空龙",
+      "konami_id": 10525,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10525&request_locale=ja"
+    },
+    {
+      "password": "58069384",
+      "name_en": "Cyber Dragon Nova",
+      "name_zh": "电子龙·新星",
+      "konami_id": 10870,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10870&request_locale=ja"
+    },
+    {
+      "password": "62015408",
+      "name_en": "Ghost Reaper & Winter Cherries",
+      "name_zh": "浮幽樱",
+      "konami_id": 12312,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [
+        "62015409"
+      ],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12312&request_locale=ja"
+    },
+    {
+      "password": "28596933",
+      "name_en": "A Wingbeat of Giant Dragon",
+      "name_zh": "巨龙振翅",
+      "konami_id": 5343,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=5343&request_locale=ja"
+    },
+    {
+      "password": "97169186",
+      "name_en": "Smashing Ground",
+      "name_zh": "地碎",
+      "konami_id": 5905,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=5905&request_locale=ja"
+    },
+    {
+      "password": "58921041",
+      "name_en": "Anti-Spell Fragrance",
+      "name_zh": "魔封的芳香",
+      "konami_id": 5008,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=5008&request_locale=ja"
+    },
+    {
+      "password": "83531441",
+      "name_en": "Dante, Traveler of the Burning Abyss",
+      "name_zh": "彼岸的旅人 但丁",
+      "konami_id": 11320,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11320&request_locale=ja"
+    },
+    {
+      "password": "31178212",
+      "name_en": "Majespecter Unicorn - Kirin",
+      "name_zh": "威风妖怪·麒麟",
+      "konami_id": 11973,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11973&request_locale=ja"
+    },
+    {
+      "password": "68395509",
+      "name_en": "Majespecter Crow - Yata",
+      "name_zh": "威风妖怪·乌",
+      "konami_id": 11971,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11971&request_locale=ja"
+    },
+    {
+      "password": "94784213",
+      "name_en": "Majespecter Fox - Kyubi",
+      "name_zh": "威风妖怪·狐",
+      "konami_id": 11972,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11972&request_locale=ja"
+    },
+    {
+      "password": "645794",
+      "name_en": "Majespecter Toad - Ogama",
+      "name_zh": "威风妖怪·蛤蟆",
+      "konami_id": 12138,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12138&request_locale=ja"
+    },
+    {
+      "password": "5506791",
+      "name_en": "Majespecter Cat - Nekomata",
+      "name_zh": "威风妖怪·猫",
+      "konami_id": 11969,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11969&request_locale=ja"
+    },
+    {
+      "password": "31991800",
+      "name_en": "Majespecter Raccoon - Bunbuku",
+      "name_zh": "威风妖怪·狸",
+      "konami_id": 11970,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11970&request_locale=ja"
+    },
+    {
+      "password": "16178681",
+      "name_en": "Odd-Eyes Pendulum Dragon",
+      "name_zh": "异色眼灵摆龙",
+      "konami_id": 11213,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [
+        "16178683"
+      ],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11213&request_locale=ja"
+    },
+    {
+      "password": "86157908",
+      "name_en": "Performapal Odd-Eyes Unicorn",
+      "name_zh": "娱乐伙伴 异色眼独角兽",
+      "konami_id": 12276,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12276&request_locale=ja"
+    },
+    {
+      "password": "92746535",
+      "name_en": "Luster Pendulum, the Dracoslayer",
+      "name_zh": "龙剑士 光辉星·灵摆",
+      "konami_id": 11809,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11809&request_locale=ja"
+    },
+    {
+      "password": "57624336",
+      "name_en": "Archfiend Eccentrick",
+      "name_zh": "古怪恶魔",
+      "konami_id": 11826,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11826&request_locale=ja"
+    },
+    {
+      "password": "81275020",
+      "name_en": "Speedroid Terrortop",
+      "name_zh": "疾行机人 贝陀螺集合体",
+      "konami_id": 12047,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12047&request_locale=ja"
+    },
+    {
+      "password": "53932291",
+      "name_en": "Speedroid Taketomborg",
+      "name_zh": "疾行机人 竹蜻蜓电子人",
+      "konami_id": 12052,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12052&request_locale=ja"
+    },
+    {
+      "password": "13972452",
+      "name_en": "Majespecter Storm",
+      "name_zh": "威风妖怪风暴",
+      "konami_id": 12003,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12003&request_locale=ja"
+    },
+    {
+      "password": "49366157",
+      "name_en": "Majespecter Cyclone",
+      "name_zh": "威风妖怪旋风",
+      "konami_id": 12004,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12004&request_locale=ja"
+    },
+    {
+      "password": "13611090",
+      "name_en": "Majespecter Sonics",
+      "name_zh": "威风妖怪音波",
+      "konami_id": 12172,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12172&request_locale=ja"
+    },
+    {
+      "password": "76473843",
+      "name_en": "Majesty's Pegasus",
+      "name_zh": "威风阵·飞马",
+      "konami_id": 12002,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12002&request_locale=ja"
+    },
+    {
+      "password": "27813661",
+      "name_en": "Sky Iris",
+      "name_zh": "天空的虹彩",
+      "konami_id": 11939,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11939&request_locale=ja"
+    },
+    {
+      "password": "73628505",
+      "name_en": "Terraforming",
+      "name_zh": "星球改造",
+      "konami_id": 5537,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=5537&request_locale=ja"
+    },
+    {
+      "password": "36183881",
+      "name_en": "Majespecter Tornado",
+      "name_zh": "威风妖怪龙卷",
+      "konami_id": 12016,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12016&request_locale=ja"
+    },
+    {
+      "password": "2572890",
+      "name_en": "Majespecter Tempest",
+      "name_zh": "威风妖怪大暴风",
+      "konami_id": 12017,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12017&request_locale=ja"
+    },
+    {
+      "password": "22638495",
+      "name_en": "Dinoster Power, the Mighty Dracoslayer",
+      "name_zh": "刚龙剑士 雾动星·强力",
+      "konami_id": 12154,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12154&request_locale=ja"
+    },
+    {
+      "password": "18239909",
+      "name_en": "Ignister Prominence, the Blasting Dracoslayer",
+      "name_zh": "爆龙剑士 点火星·日珥",
+      "konami_id": 11834,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11834&request_locale=ja"
+    },
+    {
+      "password": "36898537",
+      "name_en": "Metaphys Horus",
+      "name_zh": "玄化黑炎龙",
+      "konami_id": 11569,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11569&request_locale=ja"
+    },
+    {
+      "password": "58600555",
+      "name_en": "Digital Bug Corebage",
+      "name_zh": "电子光虫-核心菜粉蝶",
+      "konami_id": 12327,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12327&request_locale=ja"
+    },
+    {
+      "password": "17016362",
+      "name_en": "Performage Trapeze Magician",
+      "name_zh": "娱乐法师 秋千魔术家",
+      "konami_id": 11837,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11837&request_locale=ja"
+    },
+    {
+      "password": "22653490",
+      "name_en": "Lightning Chidori",
+      "name_zh": "电光千鸟",
+      "konami_id": 10411,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10411&request_locale=ja"
+    },
+    {
+      "password": "85909450",
+      "name_en": "Harpie's Pet Phantasmal Dragon",
+      "name_zh": "鹰身女妖的宠物幻龙",
+      "konami_id": 10536,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10536&request_locale=ja"
+    },
+    {
+      "password": "21044178",
+      "name_en": "Abyss Dweller",
+      "name_zh": "深渊的潜伏者",
+      "konami_id": 10354,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10354&request_locale=ja"
+    },
+    {
+      "password": "93568288",
+      "name_en": "Number 80: Rhapsody in Berserk",
+      "name_zh": "No.80狂装霸王 狂想战曲王",
+      "konami_id": 11074,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=11074&request_locale=ja"
+    },
+    {
+      "password": "71068247",
+      "name_en": "Totem Bird",
+      "name_zh": "图腾鸟",
+      "konami_id": 10600,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=10600&request_locale=ja"
+    },
+    {
+      "password": "85252081",
+      "name_en": "Super Quantal Mech Beast Grampulse",
+      "name_zh": "超量机兽 脉冲虎鲸",
+      "konami_id": 12219,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12219&request_locale=ja"
+    },
+    {
+      "password": "62709239",
+      "name_en": "The Phantom Knights of Break Sword",
+      "name_zh": "幻影骑士团 断碎剑",
+      "konami_id": 12203,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12203&request_locale=ja"
+    },
+    {
+      "password": "47805931",
+      "name_en": "Number 20: Giga-Brilliant",
+      "name_zh": "No.20蚁岩土 辉蚁",
+      "konami_id": 9760,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=9760&request_locale=ja"
+    },
+    {
+      "password": "81330115",
+      "name_en": "Number 30: Acid Golem of Destruction",
+      "name_zh": "No.30破灭之酸液石人",
+      "konami_id": 9858,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=9858&request_locale=ja"
+    },
+    {
+      "password": "83461421",
+      "name_en": "Pendulum Storm",
+      "name_zh": "灵摆风暴",
+      "konami_id": 12165,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=12165&request_locale=ja"
+    },
+    {
+      "password": "5318639",
+      "name_en": "Mystical Space Typhoon",
+      "name_zh": "旋风",
+      "konami_id": 4909,
+      "name_zh_source": "local_newpro",
+      "alternate_local_ids": [],
+      "official_card_url": "https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&cid=4909&request_locale=ja"
+    }
+  ],
+  "decks": [
+    {
+      "id": "wcs2016-1",
+      "event_id": "wcs2016",
+      "placement": "1",
+      "player": {
+        "name": "Hiyama Shunsuke",
+        "name_ja": "檜山俊輔",
+        "country_region_zh": "日本"
+      },
+      "strategy_id": "blue-eyes",
+      "strategy_name_zh": "青眼",
+      "sections": {
+        "main": [
+          {
+            "card_password": "89631139",
+            "quantity": 3,
+            "source_name_en": "Blue-Eyes White Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "38517737",
+            "quantity": 3,
+            "source_name_en": "Blue-Eyes Alternative White Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "45467446",
+            "quantity": 1,
+            "source_name_en": "Dragon Spirit of White",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "8240199",
+            "quantity": 3,
+            "source_name_en": "Sage with Eyes of Blue",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "45644898",
+            "quantity": 2,
+            "source_name_en": "Master with Eyes of Blue",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "71039903",
+            "quantity": 3,
+            "source_name_en": "The White Stone of Ancients",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "79814787",
+            "quantity": 1,
+            "source_name_en": "The White Stone of Legend",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "97268402",
+            "quantity": 2,
+            "source_name_en": "Effect Veiler",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "23434538",
+            "quantity": 2,
+            "source_name_en": "Maxx \"C\"",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "48800175",
+            "quantity": 3,
+            "source_name_en": "The Melody of Awakening Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "41620959",
+            "quantity": 3,
+            "source_name_en": "Dragon Shrine",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "6853254",
+            "quantity": 3,
+            "source_name_en": "Return of the Dragon Lords",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "39701395",
+            "quantity": 3,
+            "source_name_en": "Cards of Consonance",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "38120068",
+            "quantity": 3,
+            "source_name_en": "Trade-In",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "43898403",
+            "quantity": 2,
+            "source_name_en": "Twin Twisters",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "54447022",
+            "quantity": 1,
+            "source_name_en": "Soul Charge",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "63356631",
+            "quantity": 2,
+            "source_name_en": "Phoenix Wing Wind Blast",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "5851097",
+            "quantity": 1,
+            "source_name_en": "Vanity's Emptiness",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "84749824",
+            "quantity": 1,
+            "source_name_en": "Solemn Warning",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ],
+        "extra": [
+          {
+            "card_password": "59822133",
+            "quantity": 2,
+            "source_name_en": "Blue-Eyes Spirit Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "40908371",
+            "quantity": 2,
+            "source_name_en": "Azure-Eyes Silver Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "50954680",
+            "quantity": 1,
+            "source_name_en": "Crystal Wing Synchro Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "83994433",
+            "quantity": 1,
+            "source_name_en": "Stardust Spark Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "33698022",
+            "quantity": 1,
+            "source_name_en": "Black Rose Moonlight Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "58820923",
+            "quantity": 1,
+            "source_name_en": "Number 95: Galaxy-Eyes Dark Matter Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "39030163",
+            "quantity": 1,
+            "source_name_en": "Galaxy-Eyes Full Armor Photon Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "31801517",
+            "quantity": 1,
+            "source_name_en": "Number 62: Galaxy-Eyes Prime Photon Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "63767246",
+            "quantity": 1,
+            "source_name_en": "Number 38: Hope Harbinger Dragon Titanic Galaxy",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "2978414",
+            "quantity": 1,
+            "source_name_en": "Number 46: Dragluon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "10406322",
+            "quantity": 1,
+            "source_name_en": "Alsei, the Sylvan High Protector",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "64332231",
+            "quantity": 1,
+            "source_name_en": "Hieratic Sun Dragon Overlord of Heliopolis",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "10443957",
+            "quantity": 1,
+            "source_name_en": "Cyber Dragon Infinity",
+            "mapping_method": "explicit_local_id_selection_same_name_and_konami_id"
+          }
+        ],
+        "side": [
+          {
+            "card_password": "8233522",
+            "quantity": 2,
+            "source_name_en": "Ally of Justice Cycle Reader",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "56399890",
+            "quantity": 1,
+            "source_name_en": "The Fabled Catsith",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "25789292",
+            "quantity": 2,
+            "source_name_en": "Forbidden Chalice",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "43898403",
+            "quantity": 1,
+            "source_name_en": "Twin Twisters",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "53129443",
+            "quantity": 1,
+            "source_name_en": "Dark Hole",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "43455065",
+            "quantity": 2,
+            "source_name_en": "Magical Spring",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "11109820",
+            "quantity": 3,
+            "source_name_en": "Xyz Universe",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "29549364",
+            "quantity": 3,
+            "source_name_en": "Mask of Restrict",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ]
+      },
+      "counts": {
+        "main": 42,
+        "extra": 15,
+        "side": 15
+      },
+      "source_ids": [
+        "neuron-wcs2016-1"
+      ],
+      "recipe_status": "complete_source_transcription",
+      "historical_legality_status": "not_independently_checked",
+      "analysis": {
+        "attribution": "editorial_inference",
+        "review_status": "draft",
+        "overview": "青眼的同调与高阶XYZ构筑。冠军采用42张主卡，用白石、堆墓与复活卡衔接资源，并保留少量陷阱。",
+        "construction_reasons": [
+          {
+            "title": "让墓地成为资源",
+            "text": "3张龙之灵庙配合白石和3张复活之福音，能把送墓转化为后续展开；2张青色眼睛的祭司提供回收和复活衔接。",
+            "card_names_en": [
+              "Dragon Shrine",
+              "The White Stone of Ancients",
+              "Return of the Dragon Lords",
+              "Master with Eyes of Blue"
+            ]
+          },
+          {
+            "title": "丢牌与抽牌互相配合",
+            "text": "3张调和的宝札、3张抵价购物分别利用龙族调整和8星怪兽换取手牌。白石进墓后仍有作用，因此丢牌不只是损失。",
+            "card_names_en": [
+              "Cards of Consonance",
+              "Trade-In",
+              "The White Stone of Ancients"
+            ]
+          },
+          {
+            "title": "用少量陷阱增加干扰",
+            "text": "主卡有2张凤翼的爆风、1张虚无空间和1张神之警告。爆风需要丢手牌，与白石形成配合。副卡的3张XYZ宇宙也为额外的电子龙·无限提供条件式登场路径；该配方没有电子龙·新星。",
+            "card_names_en": [
+              "Phoenix Wing Wind Blast",
+              "Vanity's Emptiness",
+              "Solemn Warning",
+              "Xyz Universe",
+              "Cyber Dragon Infinity"
+            ]
+          }
+        ],
+        "win_plan": "以青眼精灵龙等额外怪兽干扰对手，靠复活延续场面，再用高攻击力龙族结束对局。",
+        "limitations": "高星怪兽和需要配合的魔法可能同时上手；墓地资源被处理时续航会受影响。不能把42张或夺冠本身当作构筑最优的证明。"
+      },
+      "ydk": {
+        "path": "ydk/wcs2016-1.ydk",
+        "sha256": "fdea7f5b58abcfef898278bda92ff219591fd370e691d7f7f198c3c65af2a026",
+        "kind": "generated_from_transcription_not_original_download"
+      }
+    },
+    {
+      "id": "wcs2016-2",
+      "event_id": "wcs2016",
+      "placement": "2",
+      "player": {
+        "name": "Erik Godwin Christensen",
+        "name_ja": null,
+        "country_region_zh": "美国"
+      },
+      "strategy_id": "blue-eyes",
+      "strategy_name_zh": "青眼",
+      "sections": {
+        "main": [
+          {
+            "card_password": "38517737",
+            "quantity": 3,
+            "source_name_en": "Blue-Eyes Alternative White Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "89631139",
+            "quantity": 3,
+            "source_name_en": "Blue-Eyes White Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "45467446",
+            "quantity": 2,
+            "source_name_en": "Dragon Spirit of White",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "8240199",
+            "quantity": 3,
+            "source_name_en": "Sage with Eyes of Blue",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "71039903",
+            "quantity": 3,
+            "source_name_en": "The White Stone of Ancients",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "79814787",
+            "quantity": 1,
+            "source_name_en": "The White Stone of Legend",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "97268402",
+            "quantity": 2,
+            "source_name_en": "Effect Veiler",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "46659709",
+            "quantity": 3,
+            "source_name_en": "Galaxy Soldier",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "23434538",
+            "quantity": 3,
+            "source_name_en": "Maxx \"C\"",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "48800175",
+            "quantity": 3,
+            "source_name_en": "The Melody of Awakening Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "41620959",
+            "quantity": 1,
+            "source_name_en": "Dragon Shrine",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "6853254",
+            "quantity": 3,
+            "source_name_en": "Return of the Dragon Lords",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "87025064",
+            "quantity": 2,
+            "source_name_en": "Silver's Cry",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "39701395",
+            "quantity": 2,
+            "source_name_en": "Cards of Consonance",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "38120068",
+            "quantity": 3,
+            "source_name_en": "Trade-In",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "70368879",
+            "quantity": 1,
+            "source_name_en": "Upstart Goblin",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "53129443",
+            "quantity": 1,
+            "source_name_en": "Dark Hole",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "54447022",
+            "quantity": 1,
+            "source_name_en": "Soul Charge",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ],
+        "extra": [
+          {
+            "card_password": "59822133",
+            "quantity": 2,
+            "source_name_en": "Blue-Eyes Spirit Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "40908371",
+            "quantity": 1,
+            "source_name_en": "Azure-Eyes Silver Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "63422098",
+            "quantity": 1,
+            "source_name_en": "Giganticastle",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "83994433",
+            "quantity": 1,
+            "source_name_en": "Stardust Spark Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "33698022",
+            "quantity": 1,
+            "source_name_en": "Black Rose Moonlight Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "4779823",
+            "quantity": 1,
+            "source_name_en": "Michael, the Arch-Lightsworn",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "58820923",
+            "quantity": 1,
+            "source_name_en": "Number 95: Galaxy-Eyes Dark Matter Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "39030163",
+            "quantity": 1,
+            "source_name_en": "Galaxy-Eyes Full Armor Photon Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "88177324",
+            "quantity": 1,
+            "source_name_en": "Number 107: Galaxy-Eyes Tachyon Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "63767246",
+            "quantity": 1,
+            "source_name_en": "Number 38: Hope Harbinger Dragon Titanic Galaxy",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "2978414",
+            "quantity": 1,
+            "source_name_en": "Number 46: Dragluon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "64332231",
+            "quantity": 1,
+            "source_name_en": "Hieratic Sun Dragon Overlord of Heliopolis",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "10443957",
+            "quantity": 1,
+            "source_name_en": "Cyber Dragon Infinity",
+            "mapping_method": "explicit_local_id_selection_same_name_and_konami_id"
+          },
+          {
+            "card_password": "58069384",
+            "quantity": 1,
+            "source_name_en": "Cyber Dragon Nova",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ],
+        "side": [
+          {
+            "card_password": "62015408",
+            "quantity": 3,
+            "source_name_en": "Ghost Reaper & Winter Cherries",
+            "mapping_method": "explicit_local_id_selection_same_name_and_konami_id"
+          },
+          {
+            "card_password": "28596933",
+            "quantity": 2,
+            "source_name_en": "A Wingbeat of Giant Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "97169186",
+            "quantity": 2,
+            "source_name_en": "Smashing Ground",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "43898403",
+            "quantity": 3,
+            "source_name_en": "Twin Twisters",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "58921041",
+            "quantity": 3,
+            "source_name_en": "Anti-Spell Fragrance",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "5851097",
+            "quantity": 1,
+            "source_name_en": "Vanity's Emptiness",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "83531441",
+            "quantity": 1,
+            "source_name_en": "Dante, Traveler of the Burning Abyss",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ]
+      },
+      "counts": {
+        "main": 40,
+        "extra": 15,
+        "side": 15
+      },
+      "source_ids": [
+        "neuron-wcs2016-2"
+      ],
+      "recipe_status": "complete_source_transcription",
+      "historical_legality_status": "not_independently_checked",
+      "analysis": {
+        "attribution": "editorial_inference",
+        "review_status": "draft",
+        "overview": "同样是青眼，亚军采用40张主卡、23张怪兽且主卡不放陷阱，加入银河战士组件。它是同一主题下的另一个具体版本。",
+        "construction_reasons": [
+          {
+            "title": "银河战士带来另一条展开路线",
+            "text": "3张银河战士配合光属性手牌，可以凑出5阶XYZ素材，经电子龙·新星叠放电子龙·无限；白石被送墓也能继续产生资源。",
+            "card_names_en": [
+              "Galaxy Soldier",
+              "Cyber Dragon Nova",
+              "Cyber Dragon Infinity",
+              "The White Stone of Ancients"
+            ]
+          },
+          {
+            "title": "增加复活和处理后场的机会",
+            "text": "2张银龙的轰咆、3张复活之福音与2张白色灵龙配合；白色灵龙在墓地视为通常怪兽，复活时可以处理对方魔陷。",
+            "card_names_en": [
+              "Silver's Cry",
+              "Return of the Dragon Lords",
+              "Dragon Spirit of White"
+            ]
+          },
+          {
+            "title": "将部分干扰留在副卡",
+            "text": "主卡没有陷阱，但副卡保留魔封的芳香和虚无空间。由此能看出主卡与换备后的打法有区别；具体对局换入几张，仍需选手解释或比赛录像支持。",
+            "card_names_en": [
+              "Anti-Spell Fragrance",
+              "Vanity's Emptiness"
+            ]
+          }
+        ],
+        "win_plan": "青眼的同调、高阶XYZ与银河战士路线并行，利用大怪和效果干扰争取主动。",
+        "limitations": "银河战士需要额外的光属性手牌，不能当成完全无代价的单卡启动；不能仅凭配方确定选手每个对局的换备方案。"
+      },
+      "ydk": {
+        "path": "ydk/wcs2016-2.ydk",
+        "sha256": "3deff646cde66da9b075cad8162c379c8e98431eb704eccae13feaf06a035cf1",
+        "kind": "generated_from_transcription_not_original_download"
+      }
+    },
+    {
+      "id": "wcs2016-3",
+      "event_id": "wcs2016",
+      "placement": "3",
+      "player": {
+        "name": "Kajihara Soichiro",
+        "name_ja": "梶原壮一朗",
+        "country_region_zh": "日本"
+      },
+      "strategy_id": "majespecter",
+      "strategy_name_zh": "威风妖怪",
+      "sections": {
+        "main": [
+          {
+            "card_password": "31178212",
+            "quantity": 3,
+            "source_name_en": "Majespecter Unicorn - Kirin",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "68395509",
+            "quantity": 2,
+            "source_name_en": "Majespecter Crow - Yata",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "94784213",
+            "quantity": 3,
+            "source_name_en": "Majespecter Fox - Kyubi",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "645794",
+            "quantity": 3,
+            "source_name_en": "Majespecter Toad - Ogama",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "5506791",
+            "quantity": 3,
+            "source_name_en": "Majespecter Cat - Nekomata",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "31991800",
+            "quantity": 3,
+            "source_name_en": "Majespecter Raccoon - Bunbuku",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "16178681",
+            "quantity": 1,
+            "source_name_en": "Odd-Eyes Pendulum Dragon",
+            "mapping_method": "explicit_local_id_selection_same_name_and_konami_id"
+          },
+          {
+            "card_password": "86157908",
+            "quantity": 1,
+            "source_name_en": "Performapal Odd-Eyes Unicorn",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "92746535",
+            "quantity": 1,
+            "source_name_en": "Luster Pendulum, the Dracoslayer",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "57624336",
+            "quantity": 3,
+            "source_name_en": "Archfiend Eccentrick",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "81275020",
+            "quantity": 2,
+            "source_name_en": "Speedroid Terrortop",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "53932291",
+            "quantity": 1,
+            "source_name_en": "Speedroid Taketomborg",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "13972452",
+            "quantity": 1,
+            "source_name_en": "Majespecter Storm",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "49366157",
+            "quantity": 1,
+            "source_name_en": "Majespecter Cyclone",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "13611090",
+            "quantity": 1,
+            "source_name_en": "Majespecter Sonics",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "76473843",
+            "quantity": 3,
+            "source_name_en": "Majesty's Pegasus",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "27813661",
+            "quantity": 1,
+            "source_name_en": "Sky Iris",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "73628505",
+            "quantity": 3,
+            "source_name_en": "Terraforming",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "36183881",
+            "quantity": 2,
+            "source_name_en": "Majespecter Tornado",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "2572890",
+            "quantity": 2,
+            "source_name_en": "Majespecter Tempest",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "84749824",
+            "quantity": 1,
+            "source_name_en": "Solemn Warning",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ],
+        "extra": [
+          {
+            "card_password": "22638495",
+            "quantity": 1,
+            "source_name_en": "Dinoster Power, the Mighty Dracoslayer",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "18239909",
+            "quantity": 1,
+            "source_name_en": "Ignister Prominence, the Blasting Dracoslayer",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "36898537",
+            "quantity": 1,
+            "source_name_en": "Metaphys Horus",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "58600555",
+            "quantity": 1,
+            "source_name_en": "Digital Bug Corebage",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "17016362",
+            "quantity": 1,
+            "source_name_en": "Performage Trapeze Magician",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "22653490",
+            "quantity": 1,
+            "source_name_en": "Lightning Chidori",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "85909450",
+            "quantity": 1,
+            "source_name_en": "Harpie's Pet Phantasmal Dragon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "21044178",
+            "quantity": 1,
+            "source_name_en": "Abyss Dweller",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "93568288",
+            "quantity": 1,
+            "source_name_en": "Number 80: Rhapsody in Berserk",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "71068247",
+            "quantity": 2,
+            "source_name_en": "Totem Bird",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "85252081",
+            "quantity": 1,
+            "source_name_en": "Super Quantal Mech Beast Grampulse",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "62709239",
+            "quantity": 1,
+            "source_name_en": "The Phantom Knights of Break Sword",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "47805931",
+            "quantity": 1,
+            "source_name_en": "Number 20: Giga-Brilliant",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "81330115",
+            "quantity": 1,
+            "source_name_en": "Number 30: Acid Golem of Destruction",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ],
+        "side": [
+          {
+            "card_password": "8233522",
+            "quantity": 3,
+            "source_name_en": "Ally of Justice Cycle Reader",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "23434538",
+            "quantity": 2,
+            "source_name_en": "Maxx \"C\"",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "97268402",
+            "quantity": 2,
+            "source_name_en": "Effect Veiler",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "83461421",
+            "quantity": 1,
+            "source_name_en": "Pendulum Storm",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "5318639",
+            "quantity": 3,
+            "source_name_en": "Mystical Space Typhoon",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "53129443",
+            "quantity": 1,
+            "source_name_en": "Dark Hole",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          },
+          {
+            "card_password": "29549364",
+            "quantity": 3,
+            "source_name_en": "Mask of Restrict",
+            "mapping_method": "exact_unique_enName_in_local_newpro"
+          }
+        ]
+      },
+      "counts": {
+        "main": 41,
+        "extra": 15,
+        "side": 15
+      },
+      "source_ids": [
+        "neuron-wcs2016-3"
+      ],
+      "recipe_status": "complete_source_transcription",
+      "historical_legality_status": "not_independently_checked",
+      "analysis": {
+        "attribution": "editorial_inference",
+        "review_status": "draft",
+        "overview": "威风妖怪走的是灵摆检索和持续干扰路线。季军配方有41张主卡，其中26张怪兽，与青眼的大型龙族路线明显不同。",
+        "construction_reasons": [
+          {
+            "title": "提高取得核心组件的机会",
+            "text": "3张威风妖怪·狸能寻找本家怪兽；3张威风阵·飞马与3张星球改造增加取得场地的机会，再由场地把风属性魔法师转换为所需的下级威风妖怪。",
+            "card_names_en": [
+              "Majespecter Raccoon - Bunbuku",
+              "Majesty's Pegasus",
+              "Terraforming"
+            ]
+          },
+          {
+            "title": "把场上怪兽转化为干扰",
+            "text": "3张麒麟提供回手手段，龙卷和大暴风各2张，用风属性魔法师作解放代价处理对手行动。要兼顾场面留存和魔陷可用条件。",
+            "card_names_en": [
+              "Majespecter Unicorn - Kirin",
+              "Majespecter Tornado",
+              "Majespecter Tempest"
+            ]
+          },
+          {
+            "title": "用疾行机人补充3阶选择",
+            "text": "2张疾行机人 贝陀螺集合体与1张竹蜻蜓电子人，可以提供3阶XYZ素材；额外的2张图腾鸟与风属性素材形成配合。",
+            "card_names_en": [
+              "Speedroid Terrortop",
+              "Speedroid Taketomborg",
+              "Totem Bird"
+            ]
+          }
+        ],
+        "win_plan": "检索资源、建立灵摆运作，再以回手和本家魔陷反复干扰，在多回合交换中积累优势。",
+        "limitations": "这份配方属于2016年的灵摆规则背景，不能直接套用今天的额外卡组灵摆召唤流程。缺少刻度、可解放怪兽或检索被阻断时，运作会受到影响。"
+      },
+      "ydk": {
+        "path": "ydk/wcs2016-3.ydk",
+        "sha256": "a138a739e2fbe14ec21334749e9bb15e9036029bbc545b11dcde2d907e9a3ba4",
+        "kind": "generated_from_transcription_not_original_download"
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "deck_ids": [
+        "wcs2016-1",
+        "wcs2016-2"
+      ],
+      "differences": [
+        {
+          "section": "main",
+          "card_password": "5851097",
+          "champion_count": 1,
+          "runner_up_count": 0
+        },
+        {
+          "section": "main",
+          "card_password": "23434538",
+          "champion_count": 2,
+          "runner_up_count": 3
+        },
+        {
+          "section": "main",
+          "card_password": "39701395",
+          "champion_count": 3,
+          "runner_up_count": 2
+        },
+        {
+          "section": "main",
+          "card_password": "41620959",
+          "champion_count": 3,
+          "runner_up_count": 1
+        },
+        {
+          "section": "main",
+          "card_password": "43898403",
+          "champion_count": 2,
+          "runner_up_count": 0
+        },
+        {
+          "section": "main",
+          "card_password": "45467446",
+          "champion_count": 1,
+          "runner_up_count": 2
+        },
+        {
+          "section": "main",
+          "card_password": "45644898",
+          "champion_count": 2,
+          "runner_up_count": 0
+        },
+        {
+          "section": "main",
+          "card_password": "46659709",
+          "champion_count": 0,
+          "runner_up_count": 3
+        },
+        {
+          "section": "main",
+          "card_password": "53129443",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "main",
+          "card_password": "63356631",
+          "champion_count": 2,
+          "runner_up_count": 0
+        },
+        {
+          "section": "main",
+          "card_password": "70368879",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "main",
+          "card_password": "84749824",
+          "champion_count": 1,
+          "runner_up_count": 0
+        },
+        {
+          "section": "main",
+          "card_password": "87025064",
+          "champion_count": 0,
+          "runner_up_count": 2
+        },
+        {
+          "section": "extra",
+          "card_password": "4779823",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "extra",
+          "card_password": "10406322",
+          "champion_count": 1,
+          "runner_up_count": 0
+        },
+        {
+          "section": "extra",
+          "card_password": "31801517",
+          "champion_count": 1,
+          "runner_up_count": 0
+        },
+        {
+          "section": "extra",
+          "card_password": "40908371",
+          "champion_count": 2,
+          "runner_up_count": 1
+        },
+        {
+          "section": "extra",
+          "card_password": "50954680",
+          "champion_count": 1,
+          "runner_up_count": 0
+        },
+        {
+          "section": "extra",
+          "card_password": "58069384",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "extra",
+          "card_password": "63422098",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "extra",
+          "card_password": "88177324",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "side",
+          "card_password": "5851097",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "side",
+          "card_password": "8233522",
+          "champion_count": 2,
+          "runner_up_count": 0
+        },
+        {
+          "section": "side",
+          "card_password": "11109820",
+          "champion_count": 3,
+          "runner_up_count": 0
+        },
+        {
+          "section": "side",
+          "card_password": "25789292",
+          "champion_count": 2,
+          "runner_up_count": 0
+        },
+        {
+          "section": "side",
+          "card_password": "28596933",
+          "champion_count": 0,
+          "runner_up_count": 2
+        },
+        {
+          "section": "side",
+          "card_password": "29549364",
+          "champion_count": 3,
+          "runner_up_count": 0
+        },
+        {
+          "section": "side",
+          "card_password": "43455065",
+          "champion_count": 2,
+          "runner_up_count": 0
+        },
+        {
+          "section": "side",
+          "card_password": "43898403",
+          "champion_count": 1,
+          "runner_up_count": 3
+        },
+        {
+          "section": "side",
+          "card_password": "53129443",
+          "champion_count": 1,
+          "runner_up_count": 0
+        },
+        {
+          "section": "side",
+          "card_password": "56399890",
+          "champion_count": 1,
+          "runner_up_count": 0
+        },
+        {
+          "section": "side",
+          "card_password": "58921041",
+          "champion_count": 0,
+          "runner_up_count": 3
+        },
+        {
+          "section": "side",
+          "card_password": "62015408",
+          "champion_count": 0,
+          "runner_up_count": 3
+        },
+        {
+          "section": "side",
+          "card_password": "83531441",
+          "champion_count": 0,
+          "runner_up_count": 1
+        },
+        {
+          "section": "side",
+          "card_password": "97169186",
+          "champion_count": 0,
+          "runner_up_count": 2
+        }
+      ]
+    }
+  ]
+}

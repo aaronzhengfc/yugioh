@@ -81,7 +81,7 @@ final class DeckTableCell: UITableViewCell {
         subtitle.textColor = .secondaryLabel
         card.backgroundColor = isCancelled ? .systemGray5 : .secondarySystemGroupedBackground
         accessibilityTraits = isCancelled ? [.staticText, .notEnabled] : .button
-        badge.isHidden = deck.type == "worldchampionship"
+        badge.isHidden = deck.type == "worldchampionship" || deck.type == "history"
         labelsLeading.constant = badge.isHidden ? 12 : 58
         heading.text = deck.title
         switch deck.type {
@@ -108,8 +108,11 @@ final class DeckTableCell: UITableViewCell {
             subtitle.text = deck.introduction == deck.title || deck.introduction.isEmpty
                 ? "探索卡牌搭配与构筑" : deck.introduction
         }
-        if isCancelled {
-            subtitle.text = "世界赛停办"
+        if let history = deck.history {
+            heading.text = "\(history.placement)  ·  \(deck.title)"
+            subtitle.text = [deck.champion + " · " + deck.championRegion, detail].filter { !$0.isEmpty }.joined(separator: "\n")
+        } else if isCancelled {
+            subtitle.text = "2020—2022 年未举办世界锦标赛"
         } else if deck.type == "worldchampionship", !deck.champion.isEmpty {
             let championLine = ["冠军", deck.champion, deck.championRegion]
                 .filter { !$0.isEmpty }.joined(separator: " · ")

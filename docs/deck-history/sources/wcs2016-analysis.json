@@ -1,0 +1,38 @@
+{
+  "1": {
+    "attribution": "editorial_inference",
+    "review_status": "draft",
+    "overview": "青眼的同调与高阶XYZ构筑。冠军采用42张主卡，用白石、堆墓与复活卡衔接资源，并保留少量陷阱。",
+    "construction_reasons": [
+      {"title": "让墓地成为资源", "text": "3张龙之灵庙配合白石和3张复活之福音，能把送墓转化为后续展开；2张青色眼睛的祭司提供回收和复活衔接。", "card_names_en": ["Dragon Shrine", "The White Stone of Ancients", "Return of the Dragon Lords", "Master with Eyes of Blue"]},
+      {"title": "丢牌与抽牌互相配合", "text": "3张调和的宝札、3张抵价购物分别利用龙族调整和8星怪兽换取手牌。白石进墓后仍有作用，因此丢牌不只是损失。", "card_names_en": ["Cards of Consonance", "Trade-In", "The White Stone of Ancients"]},
+      {"title": "用少量陷阱增加干扰", "text": "主卡有2张凤翼的爆风、1张虚无空间和1张神之警告。爆风需要丢手牌，与白石形成配合。副卡的3张XYZ宇宙也为额外的电子龙·无限提供条件式登场路径；该配方没有电子龙·新星。", "card_names_en": ["Phoenix Wing Wind Blast", "Vanity's Emptiness", "Solemn Warning", "Xyz Universe", "Cyber Dragon Infinity"]}
+    ],
+    "win_plan": "以青眼精灵龙等额外怪兽干扰对手，靠复活延续场面，再用高攻击力龙族结束对局。",
+    "limitations": "高星怪兽和需要配合的魔法可能同时上手；墓地资源被处理时续航会受影响。不能把42张或夺冠本身当作构筑最优的证明。"
+  },
+  "2": {
+    "attribution": "editorial_inference",
+    "review_status": "draft",
+    "overview": "同样是青眼，亚军采用40张主卡、23张怪兽且主卡不放陷阱，加入银河战士组件。它是同一主题下的另一个具体版本。",
+    "construction_reasons": [
+      {"title": "银河战士带来另一条展开路线", "text": "3张银河战士配合光属性手牌，可以凑出5阶XYZ素材，经电子龙·新星叠放电子龙·无限；白石被送墓也能继续产生资源。", "card_names_en": ["Galaxy Soldier", "Cyber Dragon Nova", "Cyber Dragon Infinity", "The White Stone of Ancients"]},
+      {"title": "增加复活和处理后场的机会", "text": "2张银龙的轰咆、3张复活之福音与2张白色灵龙配合；白色灵龙在墓地视为通常怪兽，复活时可以处理对方魔陷。", "card_names_en": ["Silver's Cry", "Return of the Dragon Lords", "Dragon Spirit of White"]},
+      {"title": "将部分干扰留在副卡", "text": "主卡没有陷阱，但副卡保留魔封的芳香和虚无空间。由此能看出主卡与换备后的打法有区别；具体对局换入几张，仍需选手解释或比赛录像支持。", "card_names_en": ["Anti-Spell Fragrance", "Vanity's Emptiness"]}
+    ],
+    "win_plan": "青眼的同调、高阶XYZ与银河战士路线并行，利用大怪和效果干扰争取主动。",
+    "limitations": "银河战士需要额外的光属性手牌，不能当成完全无代价的单卡启动；不能仅凭配方确定选手每个对局的换备方案。"
+  },
+  "3": {
+    "attribution": "editorial_inference",
+    "review_status": "draft",
+    "overview": "威风妖怪走的是灵摆检索和持续干扰路线。季军配方有41张主卡，其中26张怪兽，与青眼的大型龙族路线明显不同。",
+    "construction_reasons": [
+      {"title": "提高取得核心组件的机会", "text": "3张威风妖怪·狸能寻找本家怪兽；3张威风阵·飞马与3张星球改造增加取得场地的机会，再由场地把风属性魔法师转换为所需的下级威风妖怪。", "card_names_en": ["Majespecter Raccoon - Bunbuku", "Majesty's Pegasus", "Terraforming"]},
+      {"title": "把场上怪兽转化为干扰", "text": "3张麒麟提供回手手段，龙卷和大暴风各2张，用风属性魔法师作解放代价处理对手行动。要兼顾场面留存和魔陷可用条件。", "card_names_en": ["Majespecter Unicorn - Kirin", "Majespecter Tornado", "Majespecter Tempest"]},
+      {"title": "用疾行机人补充3阶选择", "text": "2张疾行机人 贝陀螺集合体与1张竹蜻蜓电子人，可以提供3阶XYZ素材；额外的2张图腾鸟与风属性素材形成配合。", "card_names_en": ["Speedroid Terrortop", "Speedroid Taketomborg", "Totem Bird"]}
+    ],
+    "win_plan": "检索资源、建立灵摆运作，再以回手和本家魔陷反复干扰，在多回合交换中积累优势。",
+    "limitations": "这份配方属于2016年的灵摆规则背景，不能直接套用今天的额外卡组灵摆召唤流程。缺少刻度、可解放怪兽或检索被阻断时，运作会受到影响。"
+  }
+}

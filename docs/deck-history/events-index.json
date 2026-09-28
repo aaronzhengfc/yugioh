@@ -1,0 +1,1126 @@
+{
+  "schema_version": "historical-events-index-1",
+  "updated_at": "2026-09-29",
+  "scope": "2003—2026世界赛一般组名次与卡组类型来源索引；不是完整配方全集。",
+  "translation_note": "中文类型为编辑译名，保留来源原名；中文卡牌名以配方文件中的本地数据库名称为准。",
+  "events": [
+    {
+      "id": "wcs2003",
+      "year": 2003,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2003/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Ng Yu Leung (吳雨良)",
+          "country_region_source": "Hong Kong",
+          "country_region_zh": "中国香港",
+          "strategy_name_source": "Hand Destruction",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "手牌破坏"
+        },
+        {
+          "placement": "2nd",
+          "player": "Kitamura Shigeki (北村重樹)",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Hand Destruction",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "手牌破坏"
+        },
+        {
+          "placement": "3rd",
+          "player": "Mike Rosenberg",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Hand Destruction",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "手牌破坏"
+        },
+        {
+          "placement": "4th",
+          "player": "Huai Tao Sun",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Hand Destruction",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "手牌破坏"
+        }
+      ]
+    },
+    {
+      "id": "wcs2004",
+      "year": 2004,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2004/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Togawa Masatoshi",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "混沌"
+        },
+        {
+          "placement": "2nd",
+          "player": "Chan Wan Hang",
+          "country_region_source": "Hong Kong",
+          "country_region_zh": "中国香港",
+          "strategy_name_source": "Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "混沌"
+        },
+        {
+          "placement": "3rd",
+          "player": "Suekane Yoshinobu",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "混沌"
+        },
+        {
+          "placement": "4th",
+          "player": "Ryan Pugh",
+          "country_region_source": "United Kingdom",
+          "country_region_zh": "英国",
+          "strategy_name_source": "Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "混沌"
+        }
+      ]
+    },
+    {
+      "id": "wcs2005",
+      "year": 2005,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2005/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Miltiadis Markou",
+          "country_region_source": "Greece",
+          "country_region_zh": "希腊",
+          "strategy_name_source": "Nephthys Metamorphosis Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "凤凰神变异混沌"
+        },
+        {
+          "placement": "2nd",
+          "player": "Jorge Fabian Pina Lizarraga",
+          "country_region_source": "Mexico",
+          "country_region_zh": "墨西哥",
+          "strategy_name_source": "Deck Destruction",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "卡组破坏"
+        },
+        {
+          "placement": "3rd",
+          "player": "David Kretschmer",
+          "country_region_source": "Germany",
+          "country_region_zh": "德国",
+          "strategy_name_source": "Machine Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "机械混沌"
+        },
+        {
+          "placement": "4th",
+          "player": "Li Guan Sian (李冠賢)",
+          "country_region_source": "Taiwan",
+          "country_region_zh": "中国台湾",
+          "strategy_name_source": "Warrior Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "战士混沌"
+        }
+      ]
+    },
+    {
+      "id": "wcs2006",
+      "year": 2006,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2006/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Dario Longo",
+          "country_region_source": "Italy",
+          "country_region_zh": "意大利",
+          "strategy_name_source": "Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "混沌"
+        },
+        {
+          "placement": "2nd",
+          "player": "Shum King Hang (岑競亨)",
+          "country_region_source": "Hong Kong",
+          "country_region_zh": "中国香港",
+          "strategy_name_source": "Dark World Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "暗黑界混沌"
+        },
+        {
+          "placement": "3rd",
+          "player": "Adrian Madaj",
+          "country_region_source": "Poland",
+          "country_region_zh": "波兰",
+          "strategy_name_source": "Recruiter Chaos",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "遗言怪混沌"
+        },
+        {
+          "placement": "4th",
+          "player": "Miltiadis Markou",
+          "country_region_source": "Greece",
+          "country_region_zh": "希腊",
+          "strategy_name_source": null,
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": null
+        }
+      ]
+    },
+    {
+      "id": "wcs2007",
+      "year": 2007,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2007/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Andres Toro",
+          "country_region_source": "Chile",
+          "country_region_zh": "智利",
+          "strategy_name_source": "Trooper Monarch",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "炮击士帝"
+        },
+        {
+          "placement": "2nd",
+          "player": "Mattia Sarpa",
+          "country_region_source": "Italy",
+          "country_region_zh": "意大利",
+          "strategy_name_source": "Machine",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "机械"
+        },
+        {
+          "placement": "3rd",
+          "player": "Adam Corn",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Burn",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "效果伤害（烧血）"
+        },
+        {
+          "placement": "4th",
+          "player": "Dexter Dalit",
+          "country_region_source": "Canada",
+          "country_region_zh": "加拿大",
+          "strategy_name_source": "Monarch",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "帝"
+        }
+      ]
+    },
+    {
+      "id": "wcs2008",
+      "year": 2008,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2008/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Mutsuoka Kazuki (六岡一輝)",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Gladiator Beast",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "剑斗兽"
+        },
+        {
+          "placement": "2nd",
+          "player": "Robert Ackerman",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Gladiator Beast",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "剑斗兽"
+        },
+        {
+          "placement": "3rd",
+          "player": "Norihama Takeru (乗浜健)",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Lightsworn",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "光道"
+        },
+        {
+          "placement": "4th",
+          "player": "Claudio Kirchmair",
+          "country_region_source": "Austria",
+          "country_region_zh": null,
+          "strategy_name_source": "Gladiator Beast",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "剑斗兽"
+        }
+      ]
+    },
+    {
+      "id": "wcs2009",
+      "year": 2009,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2009/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Benjamin Tan Hong Hwee (陈宏晖)",
+          "country_region_source": "Singapore",
+          "country_region_zh": "新加坡",
+          "strategy_name_source": "Blackwing",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "黑羽"
+        },
+        {
+          "placement": "2nd",
+          "player": "Chien Yen Jui (錢彥瑞)",
+          "country_region_source": "Taiwan",
+          "country_region_zh": "中国台湾",
+          "strategy_name_source": "Cat Gladiator Beast",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "救援猫剑斗兽"
+        },
+        {
+          "placement": "3rd",
+          "player": "Roy St. Clair",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Blackwing",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "黑羽"
+        },
+        {
+          "placement": "4th",
+          "player": "Lee Hong-Kyu",
+          "country_region_source": "Korea",
+          "country_region_zh": "韩国",
+          "strategy_name_source": "Gladiator Beast",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "剑斗兽"
+        }
+      ]
+    },
+    {
+      "id": "wcs2010",
+      "year": 2010,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2010/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Galileo De Obaldia",
+          "country_region_source": "Panama",
+          "country_region_zh": "巴拿马",
+          "strategy_name_source": "Frog FTK",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "青蛙先攻一回杀"
+        },
+        {
+          "placement": "2nd",
+          "player": "Vincent Paglia",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Blackwing",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "黑羽"
+        },
+        {
+          "placement": "3rd",
+          "player": "Kuwano Kei",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Herald of Perfection",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "神光之宣告者"
+        },
+        {
+          "placement": "4th",
+          "player": "Kim Tae-Woo",
+          "country_region_source": "Korea",
+          "country_region_zh": "韩国",
+          "strategy_name_source": "Blackwing",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "黑羽"
+        }
+      ]
+    },
+    {
+      "id": "wcs2011",
+      "year": 2011,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2011/",
+      "retrieved_at": "2026-09-28",
+      "verification": "search_excerpt_only_page_fetch_failed",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Ogawa Takashi (小川貴士)",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Agent Fairy",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "代行天使"
+        },
+        {
+          "placement": "2nd",
+          "player": "Murakoshi Kei (村越敬)",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Junk Doppel",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "废品二重身"
+        },
+        {
+          "placement": "3rd",
+          "player": "Galileo De Obaldia",
+          "country_region_source": "Panama",
+          "country_region_zh": "巴拿马",
+          "strategy_name_source": "Junk Doppel",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "废品二重身"
+        }
+      ]
+    },
+    {
+      "id": "wcs2012",
+      "year": 2012,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2012/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Saito Akikazu",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Inzektor",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "甲虫装机"
+        },
+        {
+          "placement": "2nd",
+          "player": "Stefano Memoli",
+          "country_region_source": "Italy",
+          "country_region_zh": "意大利",
+          "strategy_name_source": "Inzektor",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "甲虫装机"
+        },
+        {
+          "placement": "3rd",
+          "player": "Joshua Schmidt",
+          "country_region_source": "Germany",
+          "country_region_zh": "德国",
+          "strategy_name_source": "Inzektor",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "甲虫装机"
+        },
+        {
+          "placement": "4th",
+          "player": "Wesley Seek En Wei",
+          "country_region_source": "Singapore",
+          "country_region_zh": "新加坡",
+          "strategy_name_source": "Inzektor",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "甲虫装机"
+        }
+      ]
+    },
+    {
+      "id": "wcs2013",
+      "year": 2013,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2013/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Huang Shin En",
+          "country_region_source": "Taiwan",
+          "country_region_zh": "中国台湾",
+          "strategy_name_source": "Dragon Ruler",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "征龙"
+        },
+        {
+          "placement": "2nd",
+          "player": "David Keener III",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Prophecy",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "魔导／魔导书"
+        },
+        {
+          "placement": "3rd",
+          "player": "Weerapun Suebyoubol",
+          "country_region_source": "Thailand",
+          "country_region_zh": "泰国",
+          "strategy_name_source": "Dragon Ruler",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "征龙"
+        },
+        {
+          "placement": "4th",
+          "player": "Kudou Hiromi",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Dragon Ruler",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "征龙"
+        }
+      ]
+    },
+    {
+      "id": "wcs2014",
+      "year": 2014,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2014/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Sehabi Kheireddine",
+          "country_region_source": "Canada",
+          "country_region_zh": "加拿大",
+          "strategy_name_source": "Infernity",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "永火"
+        },
+        {
+          "placement": "2nd",
+          "player": "Hiyama Shunsuke",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Artifact Traptrix",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "古遗物虫惑魔"
+        },
+        {
+          "placement": "3rd",
+          "player": "Oliver Tomajko",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Infernity",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "永火"
+        },
+        {
+          "placement": "4th",
+          "player": "Niccoló Mazzoleni",
+          "country_region_source": "Italy",
+          "country_region_zh": "意大利",
+          "strategy_name_source": "Bujin",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "武神"
+        }
+      ]
+    },
+    {
+      "id": "wcs2015",
+      "year": 2015,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2015/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Hiyama Shunsuke",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Tellarknight",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "星因士"
+        },
+        {
+          "placement": "2nd",
+          "player": "Galileo De Obaldia",
+          "country_region_source": "Panama",
+          "country_region_zh": "巴拿马",
+          "strategy_name_source": "Nekroz",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "影灵衣"
+        },
+        {
+          "placement": "3rd",
+          "player": "Hasegawa Akira",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Nekroz",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "影灵衣"
+        },
+        {
+          "placement": "4th",
+          "player": "Chase Robert Cunningham",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Artifact Tellarknight",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "古遗物星因士"
+        }
+      ]
+    },
+    {
+      "id": "wcs2016",
+      "year": 2016,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2016/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Hiyama Shunsuke",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Blue-Eyes",
+          "recipe_status": "complete_source_transcription",
+          "sample_deck_id": "wcs2016-1",
+          "strategy_name_zh": "青眼"
+        },
+        {
+          "placement": "2nd",
+          "player": "Erik Godwin Christensen",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Blue-Eyes",
+          "recipe_status": "complete_source_transcription",
+          "sample_deck_id": "wcs2016-2",
+          "strategy_name_zh": "青眼"
+        },
+        {
+          "placement": "3rd",
+          "player": "Kajihara Soichiro",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Majespecter",
+          "recipe_status": "complete_source_transcription",
+          "sample_deck_id": "wcs2016-3",
+          "strategy_name_zh": "威风妖怪"
+        },
+        {
+          "placement": "4th",
+          "player": "Matthew Adam Casiero",
+          "country_region_source": "Australia",
+          "country_region_zh": "澳大利亚",
+          "strategy_name_source": "Monarch",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "帝"
+        }
+      ]
+    },
+    {
+      "id": "wcs2017",
+      "year": 2017,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2017/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Tsujimura Ryosuke",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "True King Yang Zing Dinosaur",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "真龙皇龙星恐龙"
+        },
+        {
+          "placement": "2nd",
+          "player": "Milton Chua Shen Fei",
+          "country_region_source": "Singapore",
+          "country_region_zh": "新加坡",
+          "strategy_name_source": "True King Yang Zing Dinosaur",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "真龙皇龙星恐龙"
+        },
+        {
+          "placement": "3rd",
+          "player": "Marcello Barberi",
+          "country_region_source": "Italy",
+          "country_region_zh": "意大利",
+          "strategy_name_source": "Demise True Draco",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "削命真龙"
+        },
+        {
+          "placement": "4th",
+          "player": "Michael Forner",
+          "country_region_source": "Italy",
+          "country_region_zh": "意大利",
+          "strategy_name_source": "Windwitch Invoked",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "风魔女召唤兽"
+        }
+      ]
+    },
+    {
+      "id": "wcs2018",
+      "year": 2018,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2018/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Wang Chia-Ching",
+          "country_region_source": "Taiwan",
+          "country_region_zh": "中国台湾",
+          "strategy_name_source": "Trickstar",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "淘气仙星"
+        },
+        {
+          "placement": "2nd",
+          "player": "Bohdan Temnyk",
+          "country_region_source": "Australia",
+          "country_region_zh": "澳大利亚",
+          "strategy_name_source": "Altergeist",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "幻变骚灵"
+        },
+        {
+          "placement": "3rd",
+          "player": "Francesco Simoncelli",
+          "country_region_source": "Italy",
+          "country_region_zh": "意大利",
+          "strategy_name_source": "Gouki",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "刚鬼"
+        },
+        {
+          "placement": "4th",
+          "player": "Jung Seung-Chul",
+          "country_region_source": "Korea",
+          "country_region_zh": "韩国",
+          "strategy_name_source": "Sky Striker",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "闪刀姬"
+        }
+      ]
+    },
+    {
+      "id": "wcs2019",
+      "year": 2019,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2019/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Kosaka Kouki",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Salamangreat",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "转生炎兽"
+        },
+        {
+          "placement": "2nd",
+          "player": "Wang Chia-Ching",
+          "country_region_source": "Taiwan",
+          "country_region_zh": "中国台湾",
+          "strategy_name_source": "Salamangreat",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "转生炎兽"
+        },
+        {
+          "placement": "3rd",
+          "player": "Angel Fernando Ovalle Rivera",
+          "country_region_source": "Panama",
+          "country_region_zh": "巴拿马",
+          "strategy_name_source": "Salamangreat",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "转生炎兽"
+        },
+        {
+          "placement": "4th",
+          "player": "Dakota Clint Angeloff",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Crusadia Chaos Thunder Dragon",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "圣像骑士混沌雷龙"
+        }
+      ]
+    },
+    {
+      "id": "wcs2020",
+      "year": 2020,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "not_held",
+      "source_url": "https://www.yugioh-card.com/eu/konami-announces-the-return-of-the-yu-gi-oh-world-championship-for-2023/",
+      "retrieved_at": "2026-09-29",
+      "verification": "official_return_announcement",
+      "results": [],
+      "notes": "仅世界赛停办；不代表这一年没有卡组、地区比赛或其他玩法。"
+    },
+    {
+      "id": "wcs2021",
+      "year": 2021,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "not_held",
+      "source_url": "https://www.yugioh-card.com/eu/konami-announces-the-return-of-the-yu-gi-oh-world-championship-for-2023/",
+      "retrieved_at": "2026-09-29",
+      "verification": "official_return_announcement",
+      "results": [],
+      "notes": "仅世界赛停办；不代表这一年没有卡组、地区比赛或其他玩法。"
+    },
+    {
+      "id": "wcs2022",
+      "year": 2022,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "not_held",
+      "source_url": "https://www.yugioh-card.com/eu/konami-announces-the-return-of-the-yu-gi-oh-world-championship-for-2023/",
+      "retrieved_at": "2026-09-29",
+      "verification": "official_return_announcement",
+      "results": [],
+      "notes": "仅世界赛停办；不代表这一年没有卡组、地区比赛或其他玩法。"
+    },
+    {
+      "id": "wcs2023",
+      "year": 2023,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2023/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Paul Stephen Aronson",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Bystial Dragon Link",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "深渊之兽龙连接"
+        },
+        {
+          "placement": "2nd",
+          "player": "Juan Mateo Augusto Renteria Pastor",
+          "country_region_source": "Peru",
+          "country_region_zh": "秘鲁",
+          "strategy_name_source": "Tenyi Swordsoul",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "天威相剑"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Jeremy Taeron Mitchell",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Vanquish Soul",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "征服斗魂"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Santiago Marin Lopez",
+          "country_region_source": "Colombia",
+          "country_region_zh": null,
+          "strategy_name_source": "Bystial Dragon Link",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "深渊之兽龙连接"
+        }
+      ]
+    },
+    {
+      "id": "wcs2024",
+      "year": 2024,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2024/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Ruben Andres Penaranda",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Fiendsmith Yubel",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "刻魔尤贝尔"
+        },
+        {
+          "placement": "2nd",
+          "player": "Mark Solis",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Fiendsmith Snake-Eye",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "刻魔蛇眼"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Jose Luis Santiago Torres",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Fiendsmith Snake-Eye",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "刻魔蛇眼"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Kondo Yuto",
+          "country_region_source": "Japan",
+          "country_region_zh": "日本",
+          "strategy_name_source": "Fiendsmith Snake-Eye Fire King",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "刻魔蛇眼炎王"
+        }
+      ]
+    },
+    {
+      "id": "wcs2025",
+      "year": 2025,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2025/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Julien Leo Kehon",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "K9 Vanquish Soul",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "K9征服斗魂"
+        },
+        {
+          "placement": "2nd",
+          "player": "Tom Kleinegraeber",
+          "country_region_source": "Germany",
+          "country_region_zh": "德国",
+          "strategy_name_source": "Lunalight",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "月光"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Wilfredo Michael Flores",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Yummy",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "Yummy"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Roselle Thorkildsen",
+          "country_region_source": "Norway",
+          "country_region_zh": "挪威",
+          "strategy_name_source": "Sky Striker",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "闪刀姬"
+        }
+      ]
+    },
+    {
+      "id": "wcs2026",
+      "year": 2026,
+      "format": "WCS",
+      "division": "一般组／实体卡",
+      "status": "held",
+      "source_url": "https://roadoftheking.com/yu-gi-oh-world-championship-2026/",
+      "retrieved_at": "2026-09-28",
+      "verification": "report_results_table_read",
+      "results": [
+        {
+          "placement": "1st",
+          "player": "Mario Angelo De Micco",
+          "country_region_source": "Canada",
+          "country_region_zh": "加拿大",
+          "strategy_name_source": "Kewl Tune",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "杀手级调整曲"
+        },
+        {
+          "placement": "2nd",
+          "player": "Josh Kelly",
+          "country_region_source": "United Kingdom",
+          "country_region_zh": "英国",
+          "strategy_name_source": "Fallen Light and Darkness Ritual",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "Fallen Light and Darkness Ritual"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Tsang Hin Fung",
+          "country_region_source": "Hong Kong SAR",
+          "country_region_zh": "中国香港",
+          "strategy_name_source": "Sky Striker",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "闪刀姬"
+        },
+        {
+          "placement": "3-4th",
+          "player": "Logan Patrick Johnson",
+          "country_region_source": "United States",
+          "country_region_zh": "美国",
+          "strategy_name_source": "Kewl Tune",
+          "recipe_status": "source_link_only",
+          "sample_deck_id": null,
+          "strategy_name_zh": "杀手级调整曲"
+        }
+      ]
+    }
+  ]
+}

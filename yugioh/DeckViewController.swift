@@ -18,9 +18,15 @@ class DeckViewController: UIViewController {
             if deck.type == "star" {
                 summaries[key] = "已收藏 \(CardService().list().count) 张卡牌"
             } else if deck.type == "self" || summaries[key] == nil {
-                let cards = deck.type == "self" ? DeckService().list() : getDeckEntity(deckFormat: deck.type, deckName: deck.id)
+                if let history = deck.history, !history.hasRecipe {
+                    summaries[key] = history.recipeLabel
+                    continue
+                }
+                let cards = deck.type == "history" ? loadHistoryCards(id: deck.id)
+                    : (deck.type == "self" ? DeckService().list() : getDeckEntity(deckFormat: deck.type, deckName: deck.id))
                 let counts = (0...2).map { (cards[String($0)] ?? []).reduce(0) { $0 + $1.number } }
-                summaries[key] = "主 \(counts[0])   ·   副 \(counts[1])   ·   额外 \(counts[2])"
+                let side = deck.history?.recipeStatus == "partial" ? "待补" : String(counts[1])
+                summaries[key] = "主 \(counts[0])   ·   额外 \(counts[2])   ·   副 \(side)"
             }
         }
         tableView.reloadData()
@@ -29,19 +35,15 @@ class DeckViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let decks = getDeckViewEntity()
-        var champions = decks.filter { $0.type == "worldchampionship" }
-        for year in 2020...2022 {
-            let entry = DeckViewEntity(id: String(year), title: "\(year) 世界冠军卡组",
-                                       introduction: "世界赛停办", type: "worldchampionship")
-            entry.isCancelled = true
-            champions.append(entry)
+        let history = loadDeckHistory()
+        sections = [Section(title: "我的空间", decks: decks.filter { $0.type == "star" || $0.type == "self" })]
+        if history.isEmpty {
+            sections.append(Section(title: "历届世界冠军", decks: decks.filter { $0.type == "worldchampionship" }))
+        } else {
+            sections += history.map { Section(title: "\($0.year) 世界锦标赛", decks: $0.decks) }
         }
-        champions.sort { $0.id > $1.id }
-        sections = [
-            Section(title: "我的空间", decks: decks.filter { $0.type == "star" || $0.type == "self" }),
-            Section(title: "历届世界冠军", decks: champions),
-            Section(title: "经典卡组", decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) })
-        ].filter { !$0.decks.isEmpty }
+        sections.append(Section(title: "经典卡组", decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) }))
+        sections.removeAll { $0.decks.isEmpty }
         view.backgroundColor = .systemGroupedBackground
         tableView.backgroundColor = .systemGroupedBackground
         tableView.delegate = self
@@ -75,7 +77,7 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
         let header = UIView()
         header.backgroundColor = .systemGroupedBackground
         let label = UILabel()
-        label.text = sections[section].title + "  ·  " + String(sections[section].decks.filter { !$0.isCancelled }.count)
+        label.text = sections[section].title
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .secondaryLabel
         label.adjustsFontForContentSizeCategory = true

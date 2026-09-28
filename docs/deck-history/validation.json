@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-09-29",
+  "deck_counts": [
+    {
+      "main": 42,
+      "extra": 15,
+      "side": 15
+    },
+    {
+      "main": 40,
+      "extra": 15,
+      "side": 15
+    },
+    {
+      "main": 41,
+      "extra": 15,
+      "side": 15
+    }
+  ],
+  "unique_cards": 87,
+  "unresolved_cards": [],
+  "quantities_preserved": true,
+  "database_unchanged": true,
+  "champion_matches_existing_database": true,
+  "champion_differences": [],
+  "limits": [
+    "逐项名称、数量及本地映射核对；未独立审计2016禁限表。",
+    "玩法解释是编辑分析，未标记为选手原话或实战测试。"
+  ]
+}

@@ -1,0 +1,540 @@
+[
+  {
+    "rank": 1,
+    "url": "https://www.db.yugioh-card.com/yugiohdb/member_deck.action?cgid=9376e8674b0347e5f68c553a67072a18&dno=1",
+    "retrieved_at": "2026-09-28",
+    "sections": {
+      "main": [
+        {
+          "name_en": "Blue-Eyes White Dragon",
+          "quantity": 3
+        },
+        {
+          "name_en": "Blue-Eyes Alternative White Dragon",
+          "quantity": 3
+        },
+        {
+          "name_en": "Dragon Spirit of White",
+          "quantity": 1
+        },
+        {
+          "name_en": "Sage with Eyes of Blue",
+          "quantity": 3
+        },
+        {
+          "name_en": "Master with Eyes of Blue",
+          "quantity": 2
+        },
+        {
+          "name_en": "The White Stone of Ancients",
+          "quantity": 3
+        },
+        {
+          "name_en": "The White Stone of Legend",
+          "quantity": 1
+        },
+        {
+          "name_en": "Effect Veiler",
+          "quantity": 2
+        },
+        {
+          "name_en": "Maxx \"C\"",
+          "quantity": 2
+        },
+        {
+          "name_en": "The Melody of Awakening Dragon",
+          "quantity": 3
+        },
+        {
+          "name_en": "Dragon Shrine",
+          "quantity": 3
+        },
+        {
+          "name_en": "Return of the Dragon Lords",
+          "quantity": 3
+        },
+        {
+          "name_en": "Cards of Consonance",
+          "quantity": 3
+        },
+        {
+          "name_en": "Trade-In",
+          "quantity": 3
+        },
+        {
+          "name_en": "Twin Twisters",
+          "quantity": 2
+        },
+        {
+          "name_en": "Soul Charge",
+          "quantity": 1
+        },
+        {
+          "name_en": "Phoenix Wing Wind Blast",
+          "quantity": 2
+        },
+        {
+          "name_en": "Vanity's Emptiness",
+          "quantity": 1
+        },
+        {
+          "name_en": "Solemn Warning",
+          "quantity": 1
+        }
+      ],
+      "extra": [
+        {
+          "name_en": "Blue-Eyes Spirit Dragon",
+          "quantity": 2
+        },
+        {
+          "name_en": "Azure-Eyes Silver Dragon",
+          "quantity": 2
+        },
+        {
+          "name_en": "Crystal Wing Synchro Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Stardust Spark Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Black Rose Moonlight Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 95: Galaxy-Eyes Dark Matter Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Galaxy-Eyes Full Armor Photon Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 62: Galaxy-Eyes Prime Photon Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 38: Hope Harbinger Dragon Titanic Galaxy",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 46: Dragluon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Alsei, the Sylvan High Protector",
+          "quantity": 1
+        },
+        {
+          "name_en": "Hieratic Sun Dragon Overlord of Heliopolis",
+          "quantity": 1
+        },
+        {
+          "name_en": "Cyber Dragon Infinity",
+          "quantity": 1
+        }
+      ],
+      "side": [
+        {
+          "name_en": "Ally of Justice Cycle Reader",
+          "quantity": 2
+        },
+        {
+          "name_en": "The Fabled Catsith",
+          "quantity": 1
+        },
+        {
+          "name_en": "Forbidden Chalice",
+          "quantity": 2
+        },
+        {
+          "name_en": "Twin Twisters",
+          "quantity": 1
+        },
+        {
+          "name_en": "Dark Hole",
+          "quantity": 1
+        },
+        {
+          "name_en": "Magical Spring",
+          "quantity": 2
+        },
+        {
+          "name_en": "Xyz Universe",
+          "quantity": 3
+        },
+        {
+          "name_en": "Mask of Restrict",
+          "quantity": 3
+        }
+      ]
+    },
+    "counts": {
+      "main": 42,
+      "extra": 15,
+      "side": 15
+    }
+  },
+  {
+    "rank": 2,
+    "url": "https://www.db.yugioh-card.com/yugiohdb/member_deck.action?cgid=9376e8674b0347e5f68c553a67072a18&dno=2",
+    "retrieved_at": "2026-09-28",
+    "sections": {
+      "main": [
+        {
+          "name_en": "Blue-Eyes Alternative White Dragon",
+          "quantity": 3
+        },
+        {
+          "name_en": "Blue-Eyes White Dragon",
+          "quantity": 3
+        },
+        {
+          "name_en": "Dragon Spirit of White",
+          "quantity": 2
+        },
+        {
+          "name_en": "Sage with Eyes of Blue",
+          "quantity": 3
+        },
+        {
+          "name_en": "The White Stone of Ancients",
+          "quantity": 3
+        },
+        {
+          "name_en": "The White Stone of Legend",
+          "quantity": 1
+        },
+        {
+          "name_en": "Effect Veiler",
+          "quantity": 2
+        },
+        {
+          "name_en": "Galaxy Soldier",
+          "quantity": 3
+        },
+        {
+          "name_en": "Maxx \"C\"",
+          "quantity": 3
+        },
+        {
+          "name_en": "The Melody of Awakening Dragon",
+          "quantity": 3
+        },
+        {
+          "name_en": "Dragon Shrine",
+          "quantity": 1
+        },
+        {
+          "name_en": "Return of the Dragon Lords",
+          "quantity": 3
+        },
+        {
+          "name_en": "Silver's Cry",
+          "quantity": 2
+        },
+        {
+          "name_en": "Cards of Consonance",
+          "quantity": 2
+        },
+        {
+          "name_en": "Trade-In",
+          "quantity": 3
+        },
+        {
+          "name_en": "Upstart Goblin",
+          "quantity": 1
+        },
+        {
+          "name_en": "Dark Hole",
+          "quantity": 1
+        },
+        {
+          "name_en": "Soul Charge",
+          "quantity": 1
+        }
+      ],
+      "extra": [
+        {
+          "name_en": "Blue-Eyes Spirit Dragon",
+          "quantity": 2
+        },
+        {
+          "name_en": "Azure-Eyes Silver Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Giganticastle",
+          "quantity": 1
+        },
+        {
+          "name_en": "Stardust Spark Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Black Rose Moonlight Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Michael, the Arch-Lightsworn",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 95: Galaxy-Eyes Dark Matter Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Galaxy-Eyes Full Armor Photon Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 107: Galaxy-Eyes Tachyon Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 38: Hope Harbinger Dragon Titanic Galaxy",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 46: Dragluon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Hieratic Sun Dragon Overlord of Heliopolis",
+          "quantity": 1
+        },
+        {
+          "name_en": "Cyber Dragon Infinity",
+          "quantity": 1
+        },
+        {
+          "name_en": "Cyber Dragon Nova",
+          "quantity": 1
+        }
+      ],
+      "side": [
+        {
+          "name_en": "Ghost Reaper & Winter Cherries",
+          "quantity": 3
+        },
+        {
+          "name_en": "A Wingbeat of Giant Dragon",
+          "quantity": 2
+        },
+        {
+          "name_en": "Smashing Ground",
+          "quantity": 2
+        },
+        {
+          "name_en": "Twin Twisters",
+          "quantity": 3
+        },
+        {
+          "name_en": "Anti-Spell Fragrance",
+          "quantity": 3
+        },
+        {
+          "name_en": "Vanity's Emptiness",
+          "quantity": 1
+        },
+        {
+          "name_en": "Dante, Traveler of the Burning Abyss",
+          "quantity": 1
+        }
+      ]
+    },
+    "counts": {
+      "main": 40,
+      "extra": 15,
+      "side": 15
+    }
+  },
+  {
+    "rank": 3,
+    "url": "https://www.db.yugioh-card.com/yugiohdb/member_deck.action?cgid=9376e8674b0347e5f68c553a67072a18&dno=3",
+    "retrieved_at": "2026-09-28",
+    "sections": {
+      "main": [
+        {
+          "name_en": "Majespecter Unicorn - Kirin",
+          "quantity": 3
+        },
+        {
+          "name_en": "Majespecter Crow - Yata",
+          "quantity": 2
+        },
+        {
+          "name_en": "Majespecter Fox - Kyubi",
+          "quantity": 3
+        },
+        {
+          "name_en": "Majespecter Toad - Ogama",
+          "quantity": 3
+        },
+        {
+          "name_en": "Majespecter Cat - Nekomata",
+          "quantity": 3
+        },
+        {
+          "name_en": "Majespecter Raccoon - Bunbuku",
+          "quantity": 3
+        },
+        {
+          "name_en": "Odd-Eyes Pendulum Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Performapal Odd-Eyes Unicorn",
+          "quantity": 1
+        },
+        {
+          "name_en": "Luster Pendulum, the Dracoslayer",
+          "quantity": 1
+        },
+        {
+          "name_en": "Archfiend Eccentrick",
+          "quantity": 3
+        },
+        {
+          "name_en": "Speedroid Terrortop",
+          "quantity": 2
+        },
+        {
+          "name_en": "Speedroid Taketomborg",
+          "quantity": 1
+        },
+        {
+          "name_en": "Majespecter Storm",
+          "quantity": 1
+        },
+        {
+          "name_en": "Majespecter Cyclone",
+          "quantity": 1
+        },
+        {
+          "name_en": "Majespecter Sonics",
+          "quantity": 1
+        },
+        {
+          "name_en": "Majesty's Pegasus",
+          "quantity": 3
+        },
+        {
+          "name_en": "Sky Iris",
+          "quantity": 1
+        },
+        {
+          "name_en": "Terraforming",
+          "quantity": 3
+        },
+        {
+          "name_en": "Majespecter Tornado",
+          "quantity": 2
+        },
+        {
+          "name_en": "Majespecter Tempest",
+          "quantity": 2
+        },
+        {
+          "name_en": "Solemn Warning",
+          "quantity": 1
+        }
+      ],
+      "extra": [
+        {
+          "name_en": "Dinoster Power, the Mighty Dracoslayer",
+          "quantity": 1
+        },
+        {
+          "name_en": "Ignister Prominence, the Blasting Dracoslayer",
+          "quantity": 1
+        },
+        {
+          "name_en": "Metaphys Horus",
+          "quantity": 1
+        },
+        {
+          "name_en": "Digital Bug Corebage",
+          "quantity": 1
+        },
+        {
+          "name_en": "Performage Trapeze Magician",
+          "quantity": 1
+        },
+        {
+          "name_en": "Lightning Chidori",
+          "quantity": 1
+        },
+        {
+          "name_en": "Harpie's Pet Phantasmal Dragon",
+          "quantity": 1
+        },
+        {
+          "name_en": "Abyss Dweller",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 80: Rhapsody in Berserk",
+          "quantity": 1
+        },
+        {
+          "name_en": "Totem Bird",
+          "quantity": 2
+        },
+        {
+          "name_en": "Super Quantal Mech Beast Grampulse",
+          "quantity": 1
+        },
+        {
+          "name_en": "The Phantom Knights of Break Sword",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 20: Giga-Brilliant",
+          "quantity": 1
+        },
+        {
+          "name_en": "Number 30: Acid Golem of Destruction",
+          "quantity": 1
+        }
+      ],
+      "side": [
+        {
+          "name_en": "Ally of Justice Cycle Reader",
+          "quantity": 3
+        },
+        {
+          "name_en": "Maxx \"C\"",
+          "quantity": 2
+        },
+        {
+          "name_en": "Effect Veiler",
+          "quantity": 2
+        },
+        {
+          "name_en": "Pendulum Storm",
+          "quantity": 1
+        },
+        {
+          "name_en": "Mystical Space Typhoon",
+          "quantity": 3
+        },
+        {
+          "name_en": "Dark Hole",
+          "quantity": 1
+        },
+        {
+          "name_en": "Mask of Restrict",
+          "quantity": 3
+        }
+      ]
+    },
+    "counts": {
+      "main": 41,
+      "extra": 15,
+      "side": 15
+    }
+  }
+]
