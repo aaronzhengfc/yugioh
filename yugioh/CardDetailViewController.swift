@@ -132,13 +132,23 @@ class CardDetailViewController: UIViewController {
         spacer.setContentHuggingPriority(.init(1), for: .vertical)
         spacer.setContentCompressionResistancePriority(.init(1), for: .vertical)
         summary.addArrangedSubview(spacer)
-        let details = [cardEntity.getBanlistInfoText(), "ID \(cardEntity.getId())", cardEntity.getStartDate()]
-            .filter { !$0.isEmpty }
-        let detailsLabel = label(details.joined(separator: " · "), style: .caption2, color: .secondaryLabel)
-        detailsLabel.numberOfLines = 1
-        detailsLabel.adjustsFontSizeToFitWidth = true
-        detailsLabel.minimumScaleFactor = 0.75
-        summary.addArrangedSubview(detailsLabel)
+        let banlist = label(cardEntity.getBanlistInfoText(), style: .caption2, color: .secondaryLabel)
+        let cardID = label("ID \(cardEntity.getId())", style: .caption2, color: .secondaryLabel)
+        let date = label(cardEntity.getStartDate(), style: .caption2, color: .secondaryLabel)
+        banlist.textAlignment = .left
+        cardID.textAlignment = .center
+        date.textAlignment = .right
+        let footer = UIStackView(arrangedSubviews: [banlist, cardID, date])
+        footer.distribution = .fillEqually
+        footer.spacing = 4
+        [banlist, cardID, date].forEach {
+            $0.font = UIFontMetrics(forTextStyle: .caption1).scaledFont(for: .systemFont(ofSize: 10, weight: .regular))
+            $0.numberOfLines = 1
+            $0.adjustsFontSizeToFitWidth = true
+            $0.minimumScaleFactor = 0.75
+            $0.setContentCompressionResistancePriority(.required, for: .vertical)
+        }
+        summary.addArrangedSubview(footer)
         let header = UIStackView(arrangedSubviews: [cardImage, summary])
         header.spacing = 12
         header.alignment = .top
