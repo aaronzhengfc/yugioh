@@ -108,14 +108,11 @@ class CardSearchViewController: UIViewController {
         self.view.backgroundColor = darkColor
         self.searchBarView.backgroundColor = darkColor
         self.cancelButton.tintColor = UIColor.white
+        self.cancelButton.setTitle(L10n.text("取消", "Cancel"), for: .normal)
+        self.cancelButton.titleLabel?.adjustsFontSizeToFitWidth = true
         self.cancelButton.addTarget(self, action: #selector(CardSearchViewController.clickCancelButton), for: .touchUpInside)
         
-        var inputKeyWordText = "输入搜索（名称，效果，编号）";
-        
-        if language != "cn" {
-            inputKeyWordText = "search for (name, effect, id)"
-        }
-        
+        let inputKeyWordText = L10n.text("搜索名称、效果或编号", "Search name, effect or ID")
         self.inputField.attributedPlaceholder = NSAttributedString(string: inputKeyWordText, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         self.inputField.textColor = UIColor.white
         self.inputField.text = nil
@@ -140,15 +137,15 @@ class CardSearchViewController: UIViewController {
         //types
         var defaultHeight = 120
         let types = getValues(inputKey: "type")
-        defaultHeight = self.addButtons(datas: types, selector: #selector(clickTypeButton), dataWidth: 64, dataHeight: 32, dataDefaultHeight: defaultHeight)
+        defaultHeight = self.addButtons(datas: types, selector: #selector(clickTypeButton), dataWidth: language == "cn" ? 64 : 108, dataHeight: 32, dataDefaultHeight: defaultHeight)
         
         //propertys
         let propertys = getValues(inputKey: "attribute")
-        defaultHeight = self.addButtons(datas: propertys, selector: #selector(clickPropertyButton), dataWidth: 60, dataHeight: 32, dataDefaultHeight: defaultHeight + 32 + 8 + 4)
+        defaultHeight = self.addButtons(datas: propertys, selector: #selector(clickPropertyButton), dataWidth: language == "cn" ? 60 : 84, dataHeight: 32, dataDefaultHeight: defaultHeight + 32 + 8 + 4)
         
         //races
         let races = getValues(inputKey: "race")
-        defaultHeight = self.addButtons(datas: races, selector: #selector(clickRaceButton), dataWidth: 56, dataHeight: 32, dataDefaultHeight: defaultHeight + 32 + 8 + 4)
+        defaultHeight = self.addButtons(datas: races, selector: #selector(clickRaceButton), dataWidth: language == "cn" ? 56 : 108, dataHeight: 32, dataDefaultHeight: defaultHeight + 32 + 8 + 4)
         
         
         self.contentHeight = CGFloat(defaultHeight + 32 + 16)
@@ -184,7 +181,8 @@ class CardSearchViewController: UIViewController {
             button.backgroundColor = greyColor.withAlphaComponent(0.12)
             button.data = data
             button.setTitle(data, for: .normal)
-            button.titleLabel?.lineBreakMode = .byTruncatingTail
+            button.titleLabel?.adjustsFontSizeToFitWidth = true
+            button.titleLabel?.minimumScaleFactor = 0.7
             button.addTarget(self, action: selector, for: .touchUpInside)
             self.searchBarView.addSubview(button)
             
@@ -331,7 +329,6 @@ extension CardSearchViewController: UITextFieldDelegate {
                 let inputArray = input?.split(separator: " ")
                 var inputFound = true
                 for inputTmp in inputArray! {
-                    // TODO 这里需要找寻日文和英文
                     if !c.getName().lowercased().contains(inputTmp.description)
                         && !c.getDesc().lowercased().contains(inputTmp.description)
                         && !c.getId().lowercased().contains(inputTmp.description) {

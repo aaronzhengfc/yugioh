@@ -48,7 +48,7 @@ class CardTableViewCell: UITableViewCell {
         favorite.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(font: nameLabel.font, scale: .small), forImageIn: .normal)
         favorite.tintColor = .secondaryLabel
         favorite.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
-        favorite.accessibilityLabel = "收藏卡牌"
+        favorite.accessibilityLabel = L10n.text("收藏卡牌", "Favorite card")
         let titleRow = UIStackView(arrangedSubviews: [nameLabel, UIView()])
         titleRow.arrangedSubviews[1].widthAnchor.constraint(equalToConstant: 30).isActive = true
         let text = UIStackView(arrangedSubviews: [titleRow, metadata, stats, effect])
@@ -121,7 +121,7 @@ class CardTableViewCell: UITableViewCell {
         let selected = entity?.isSelected == true
         favorite.setImage(UIImage(systemName: selected ? "star.fill" : "star"), for: .normal)
         favorite.tintColor = selected ? .systemOrange : .tertiaryLabel
-        favorite.accessibilityLabel = selected ? "取消收藏" : "收藏卡牌"
+        favorite.accessibilityLabel = selected ? L10n.text("取消收藏", "Remove from favorites") : L10n.text("收藏卡牌", "Favorite card")
     }
 
     @objc private func toggleFavorite() {

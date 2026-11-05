@@ -25,6 +25,11 @@ class ToolViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGroupedBackground
+        for (index, title) in [L10n.text("计分器", "Life Points"),
+                               L10n.text("模拟对战", "Draw Test"),
+                               L10n.text("关于", "About")].enumerated() {
+            segmentedControl.setTitle(title, forSegmentAt: index)
+        }
         segmentedControl.selectedSegmentTintColor = .secondarySystemGroupedBackground
         segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.label,
                                                 .font: UIFont.systemFont(ofSize: 14, weight: .medium)], for: .normal)

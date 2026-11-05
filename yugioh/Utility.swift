@@ -92,7 +92,7 @@ func getCardEntity() -> Array<CardEntity> {
     
     if keyValueMap.count <= 0 {
         do {
-            for each in try getDB().prepare("select * from newmap ") {
+            for each in try getDB().prepare("select key, subKey, cnValue from newmap ") {
                 keyValueMap.append(buildKeyValueMap(element: each))
             }
         } catch {
@@ -102,7 +102,7 @@ func getCardEntity() -> Array<CardEntity> {
     
     do {
         cardEntitys = []
-        for each in try getDB().prepare("select id, enName,frName,deName,itName,ptName,cnName,jpName,enDesc,frDesc,deDesc,itDesc,ptDesc,cnDesc,jpDesc,archetype,frameType,race,type,attribute,cardImages,cardPrices,cardSets,atk,def,level,scale,linkval,linkmarkers,banlistInfo, miscInfo, startDate from  newpro order by id desc") {
+        for each in try getDB().prepare("select id,enName,cnName,enDesc,cnDesc,archetype,frameType,race,type,attribute,cardImages,cardPrices,cardSets,atk,def,level,scale,linkval,linkmarkers,banlistInfo,miscInfo,startDate from  newpro order by id desc") {
             cardEntitys.append(buildCardEntity(element: each))
         }
         cardEntitys.sort { (c1, c2) -> Bool in
@@ -120,14 +120,22 @@ func getCardEntity() -> Array<CardEntity> {
 }
 
 
-var language: String = "cn"
+var language: String {
+    get { return AppLanguage.current.rawValue }
+    set {
+        guard let selected = AppLanguage(rawValue: newValue) else { return }
+        AppLanguage.current = selected
+        UserDefaults.standard.set(newValue, forKey: AppLanguage.preferenceKey)
+        deckViewEntitysConstant = []
+    }
+}
 var preLanuage: String = "cn"
 var keyValueMap: Array<KeyValueEntryEntity> = [];
 
 //获取卡牌详情
 func getCardEntity(id: String) -> CardEntity {
     do {
-        for each in try getDB().prepare("select id, enName,frName,deName,itName,ptName,cnName,jpName,enDesc,frDesc,deDesc,itDesc,ptDesc,cnDesc,jpDesc,archetype,frameType,race,type,attribute,cardImages,cardPrices,cardSets,atk,def,level,scale,linkval,linkmarkers,banlistInfo, miscInfo, startDate from  newpro where id = \"\(id)\"") {
+        for each in try getDB().prepare("select id,enName,cnName,enDesc,cnDesc,archetype,frameType,race,type,attribute,cardImages,cardPrices,cardSets,atk,def,level,scale,linkval,linkmarkers,banlistInfo,miscInfo,startDate from  newpro where id = \"\(id)\"") {
             return buildCardEntity(element: each)
         }
     } catch {
@@ -157,18 +165,18 @@ func getDeckViewEntity() -> [DeckViewEntity] {
     }
     
     var tmp: [DeckViewEntity] = [
-        DeckViewEntity(id: "1", title: "我的收藏", introduction: "我的收藏", type: "star"),
-        DeckViewEntity(id: "0", title: "我的卡组", introduction: "我的卡组", type: "self")
+        DeckViewEntity(id: "1", title: L10n.text("我的收藏", "Favorites"), introduction: "", type: "star"),
+        DeckViewEntity(id: "0", title: L10n.text("我的卡组", "My Deck"), introduction: "", type: "self")
     ]
     // "游戏王世界锦标赛冠军卡组"
     let championDecks: [DeckViewEntity] = getDecksByDeckFormat(deckFormat: "worldchampionship")
     var championNames: [String: String] = [:]
     var championRegions: [String: String] = [:]
     do {
-        for row in try getDB().prepare("SELECT deckCode, champion, countryRegionZh FROM newdeck_metadata WHERE deckFormat = 'worldchampionship'") {
+        for row in try getDB().prepare("SELECT deckCode, champion, countryRegionZh, countryRegion FROM newdeck_metadata WHERE deckFormat = 'worldchampionship'") {
             if let year = row[0] as? String, let name = row[1] as? String {
                 championNames[year] = name
-                championRegions[year] = row[2] as? String ?? ""
+                championRegions[year] = row[language == "cn" ? 2 : 3] as? String ?? ""
             }
         }
     } catch {
@@ -177,7 +185,7 @@ func getDeckViewEntity() -> [DeckViewEntity] {
     for each in championDecks {
         each.champion = championNames[each.id] ?? ""
         each.championRegion = championRegions[each.id] ?? ""
-        each.title = each.title + "游戏王世界锦标赛冠军卡组"
+        each.title += L10n.text(" 世界锦标赛冠军卡组", " World Championship Deck")
         tmp.append(each)
     }
     let dm1: [DeckViewEntity] = getDecksByDeckFormat(deckFormat: "1-dm")
@@ -252,12 +260,7 @@ func buildKeyValueMap(element: [Binding?]) -> KeyValueEntryEntity {
     let keyValueEntryEntity = KeyValueEntryEntity()
     keyValueEntryEntity.key = String(element[0] as? String ?? "")
     keyValueEntryEntity.subKey = String(element[1] as? String ?? "")
-    keyValueEntryEntity.frValue = String(element[2] as? String ?? "")
-    keyValueEntryEntity.deValue = String(element[3] as? String ?? "")
-    keyValueEntryEntity.itValue = String(element[4] as? String ?? "")
-    keyValueEntryEntity.ptValue = String(element[5] as? String ?? "")
-    keyValueEntryEntity.cnValue = String(element[6] as? String ?? "")
-    keyValueEntryEntity.jpValue = String(element[7] as? String ?? "")
+    keyValueEntryEntity.cnValue = String(element[2] as? String ?? "")
     return keyValueEntryEntity;
 }
 
@@ -287,36 +290,26 @@ func buildCardEntity(element: [Binding?]) -> CardEntity {
     //password
     cardEntity.id = String(element[0] as! Int64)
     cardEntity.enName = String(element[1] as? String ?? "")
-    cardEntity.frName  = String(element[2] as? String ?? "")
-    cardEntity.deName  = String(element[3] as? String ?? "")
-    cardEntity.itName  = String(element[4] as? String ?? "")
-    cardEntity.ptName  = String(element[5] as? String ?? "")
-    cardEntity.cnName  = String(element[6] as? String ?? "")
-    cardEntity.jpName  = String(element[7] as? String ?? "")
-    cardEntity.enDesc  = String(element[8] as? String ?? "")
-    cardEntity.frDesc  = String(element[9] as? String ?? "")
-    cardEntity.deDesc  = String(element[10] as? String ?? "")
-    cardEntity.itDesc  = String(element[11] as? String ?? "")
-    cardEntity.ptDesc  = String(element[12] as? String ?? "")
-    cardEntity.cnDesc  = String(element[13] as? String ?? "")
-    cardEntity.jpDesc  = String(element[14] as? String ?? "")
-    cardEntity.archetype = String(element[15] as? String ?? "")
-    cardEntity.frameType = String(element[16] as? String ?? "")
-    cardEntity.race = String(element[17] as? String ?? "")
-    cardEntity.type = String(element[18] as? String ?? "")
-    cardEntity.attribute = String(element[19] as? String ?? "")
-    cardEntity.cardImages = String(element[20] as? String ?? "")
-    cardEntity.cardPrices = String(element[21] as? String ?? "")
-    cardEntity.cardSets = String(element[22] as? String ?? "")
-    cardEntity.atk = String(element[23] as? String ?? "")
-    cardEntity.def = String(element[24] as? String ?? "")
-    cardEntity.level = String(element[25] as? String ?? "")
-    cardEntity.scale = String(element[26] as? String ?? "")
-    cardEntity.linkval = String(element[27] as? String ?? "")
-    cardEntity.linkmarkers = String(element[28] as? String ?? "")
-    cardEntity.banlistInfo = String(element[29] as? String ?? "")
-    cardEntity.miscInfo = String(element[30] as? String ?? "")
-    cardEntity.startDate = String(element[31] as? String ?? "")
+    cardEntity.cnName = String(element[2] as? String ?? "")
+    cardEntity.enDesc = String(element[3] as? String ?? "")
+    cardEntity.cnDesc = String(element[4] as? String ?? "")
+    cardEntity.archetype = String(element[5] as? String ?? "")
+    cardEntity.frameType = String(element[6] as? String ?? "")
+    cardEntity.race = String(element[7] as? String ?? "")
+    cardEntity.type = String(element[8] as? String ?? "")
+    cardEntity.attribute = String(element[9] as? String ?? "")
+    cardEntity.cardImages = String(element[10] as? String ?? "")
+    cardEntity.cardPrices = String(element[11] as? String ?? "")
+    cardEntity.cardSets = String(element[12] as? String ?? "")
+    cardEntity.atk = String(element[13] as? String ?? "")
+    cardEntity.def = String(element[14] as? String ?? "")
+    cardEntity.level = String(element[15] as? String ?? "")
+    cardEntity.scale = String(element[16] as? String ?? "")
+    cardEntity.linkval = String(element[17] as? String ?? "")
+    cardEntity.linkmarkers = String(element[18] as? String ?? "")
+    cardEntity.banlistInfo = String(element[19] as? String ?? "")
+    cardEntity.miscInfo = String(element[20] as? String ?? "")
+    cardEntity.startDate = String(element[21] as? String ?? "")
     //
     return cardEntity
 }
@@ -378,40 +371,14 @@ func isIPhoneX() -> Bool {
 
 
 func getValue(entry: KeyValueEntryEntity) -> String {
-    if language == "fr" {
-        return entry.frValue
-    }
-    if language == "de" {
-        return entry.deValue
-    }
-    if language == "it" {
-        return entry.itValue
-    }
-    if language == "pt" {
-        return entry.ptValue
-    }
-    if language == "cn" {
-        return entry.cnValue
-    }
-    if language == "jp" {
-        return entry.jpValue
-    }
-    if language == "en" {
-        return entry.subKey
-    }
-    return ""
+    return language == "cn" && !entry.cnValue.isEmpty ? entry.cnValue : entry.subKey
 }
 
 func getValue(key: String, subKey: String, language: String) -> String {
-    for entry in keyValueMap {
-        if entry.key == key && entry.subKey == subKey {
-            let v = getValue(entry: entry);
-            return v;
-        }
-    }
-    return ""
+    guard language == "cn" else { return subKey }
+    return keyValueMap.first { $0.key == key && $0.subKey == subKey }
+        .map { $0.cnValue.isEmpty ? subKey : $0.cnValue } ?? subKey
 }
-
 
 func getValues(inputKey: String) -> Array<String> {
     var values: Array<String>! = []

@@ -19,12 +19,12 @@ public let greyColor = UIColor(red: 238 / 255.0, green: 238 / 255.0, blue: 238 /
 public let darkColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
 
 
-public let navigationBarTitleText = "游戏王卡牌"
+public var navigationBarTitleText: String { L10n.text("游戏王卡牌", "Card Guide") }
 
 
-public let tabBarItemCard = "卡牌"
-public let tabBarItemStar = "收藏"
-public let tabBarItemSetting = "关于"
+public var tabBarItemCard: String { L10n.text("卡牌", "Cards") }
+public var tabBarItemStar: String { L10n.text("收藏", "Favorites") }
+public var tabBarItemSetting: String { L10n.text("关于", "About") }
 
 public let qiniuUrlPrefix: String = "http://yugioh.oss-cn-beijing.aliyuncs.com/yugiohnewpro/en/"
 public let qiniuUrlSuffix: String = ".jpg"
@@ -71,14 +71,14 @@ enum WeChatSharing {
     static func shareButton(target: Any, action: Selector) -> UIBarButtonItem {
         let button = UIButton(type: .system)
         var style = UIButton.Configuration.plain()
-        style.title = "分享"
+        style.title = L10n.text("分享", "Share")
         style.image = UIImage(systemName: "square.and.arrow.up")
         style.imagePadding = 6
         style.baseForegroundColor = .label
         style.cornerStyle = .capsule
         style.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
         button.configuration = style
-        button.accessibilityLabel = "分享到微信"
+        button.accessibilityLabel = L10n.text("分享到微信", "Share to WeChat")
         button.addTarget(target, action: action, for: .touchUpInside)
         return UIBarButtonItem(customView: button)
     }
@@ -88,7 +88,7 @@ enum WeChatSharing {
         guard let png = image.pngData(),
               let data = png.count <= 25 * 1024 * 1024 ? png : image.jpegData(compressionQuality: 0.95),
               data.count <= 25 * 1024 * 1024 else {
-            showError("分享图片过大，请减少卡组中的卡牌后重试。", from: presenter)
+            showError(L10n.text("分享图片过大，请减少卡组中的卡牌后重试。", "The image is too large to share. Remove some cards from the deck and try again."), from: presenter)
             return
         }
         let object = WXImageObject()
@@ -124,26 +124,26 @@ enum WeChatSharing {
 
     static func send(_ request: SendMessageToWXReq, from presenter: UIViewController) {
         guard WXApi.isWXAppInstalled() else {
-            showError("请先安装微信，再使用微信分享。", from: presenter)
+            showError(L10n.text("请先安装微信，再使用微信分享。", "Install WeChat to share this image."), from: presenter)
             return
         }
         guard isRegistered else {
-            showError("微信分享配置未完成，请配置微信开放平台的 Universal Link 后重新打包。", from: presenter)
+            showError(L10n.text("此版本暂时无法使用微信分享。", "WeChat sharing is unavailable in this version of the app."), from: presenter)
             return
         }
         WXApi.send(request) { [weak presenter] success in
             guard !success else { return }
             DispatchQueue.main.async {
                 guard let presenter = presenter else { return }
-                showError("无法发起微信分享，请检查微信版本及应用的微信开放平台配置。", from: presenter)
+                showError(L10n.text("无法发起微信分享，请更新微信后重试。", "Unable to open WeChat sharing. Check that WeChat is up to date and try again."), from: presenter)
             }
         }
     }
 
     static func showError(_ message: String, from presenter: UIViewController) {
         guard presenter.presentedViewController == nil else { return }
-        let alert = UIAlertController(title: "微信分享", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "好", style: .default))
+        let alert = UIAlertController(title: L10n.text("微信分享", "WeChat Sharing"), message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: L10n.text("好", "OK"), style: .default))
         presenter.present(alert, animated: true)
     }
 }

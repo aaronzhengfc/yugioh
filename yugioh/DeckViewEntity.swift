@@ -52,17 +52,17 @@ struct DeckHistory {
     var hasRecipe: Bool { recipeStatus != "missing" }
     var recipeLabel: String {
         switch recipeStatus {
-        case "missing": return "配方待补充"
-        case "partial": return "配方缺项"
-        case "verified_transcription": return "已核对配方"
-        default: return "历史配方"
+        case "missing": return L10n.text("配方待补充", "Deck list pending")
+        case "partial": return L10n.text("配方缺项", "Incomplete deck list")
+        case "verified_transcription": return L10n.text("已核对配方", "Verified deck list")
+        default: return L10n.text("历史配方", "Historical deck list")
         }
     }
     var analysisLabel: String {
         switch analysisKind {
-        case "recipe_editorial": return "基于配方的编辑解读 · 非选手自述"
-        case "recipe_observation": return "类型介绍与配比观察 · 非选手自述"
-        default: return "卡组类型介绍 · 选手配方待补充"
+        case "recipe_editorial": return L10n.text("基于配方的编辑解读 · 非选手自述", "Editorial analysis of the deck list · Not a player statement")
+        case "recipe_observation": return L10n.text("类型介绍与配比观察 · 非选手自述", "Strategy overview and card ratios · Not a player statement")
+        default: return L10n.text("卡组类型介绍 · 选手配方待补充", "Strategy overview · Player deck list pending")
         }
     }
 }
@@ -79,21 +79,23 @@ func loadDeckHistory() -> [DeckHistoryYear] {
             guard let eventID = event[0] as? String, let yearValue = event[1] as? Int64 else { continue }
             let year = Int(yearValue)
             if event[2] as? String == "not_held" {
-                let deck = DeckViewEntity(id: eventID, title: "世界赛停办", introduction: "", type: "history")
+                let deck = DeckViewEntity(id: eventID, title: L10n.text("世界赛停办", "World Championship not held"), introduction: "", type: "history")
                 deck.isCancelled = true
                 years.append(DeckHistoryYear(year: year, decks: [deck]))
                 continue
             }
             var decks: [DeckViewEntity] = []
             // Show the podium, or both semifinalists when the event awards joint third place.
-            for row in try getDB().prepare("SELECT id,placementLabel,player,region,strategy,recipeStatus,recipeSourceUrl,analysisKind,analysisJson FROM history_deck WHERE eventId = ? AND placement IN ('1st', '2nd', '3rd', '3-4th') ORDER BY sortOrder", eventID) {
+            for row in try getDB().prepare("SELECT id,placementLabel,player,region,strategy,recipeStatus,recipeSourceUrl,analysisKind,analysisJson,strategyOriginal,placement FROM history_deck WHERE eventId = ? AND placement IN ('1st', '2nd', '3rd', '3-4th') ORDER BY sortOrder", eventID) {
                 guard let id = row[0] as? String, let json = row[8] as? String,
                       let data = json.data(using: .utf8) else { continue }
                 let paragraphs = try JSONDecoder().decode([DeckHistoryParagraph].self, from: data)
-                let deck = DeckViewEntity(id: id, title: row[4] as? String ?? "卡组类型待考证", introduction: "", type: "history")
+                let originalStrategy = row[9] as? String ?? ""
+                let title = L10n.text(row[4] as? String ?? "卡组类型待考证", originalStrategy.isEmpty ? "Strategy unconfirmed" : originalStrategy)
+                let deck = DeckViewEntity(id: id, title: title, introduction: "", type: "history")
                 deck.champion = row[2] as? String ?? ""
-                deck.championRegion = row[3] as? String ?? ""
-                deck.history = DeckHistory(year: year, placement: row[1] as? String ?? "", sourceURL: event[3] as? String ?? "",
+                deck.championRegion = localizedDeckRegion(row[3] as? String ?? "")
+                deck.history = DeckHistory(year: year, placement: L10n.text(row[1] as? String ?? "", localizedDeckPlacement(row[10] as? String ?? "")), sourceURL: event[3] as? String ?? "",
                                            recipeSourceURL: row[6] as? String ?? "", recipeStatus: row[5] as? String ?? "missing",
                                            analysisKind: row[7] as? String ?? "type_overview", paragraphs: paragraphs)
                 decks.append(deck)
@@ -118,4 +120,27 @@ func loadHistoryCards(id: String) -> [String: [DeckEntity]] {
         }
     } catch { print("Unable to load historical recipe: \(error.localizedDescription)") }
     return cards
+}
+
+// Preserve source names while translating the region labels stored by the historical importer.
+private func localizedDeckRegion(_ region: String) -> String {
+    let englishNames = [
+        "中国香港": "Hong Kong, China", "日本": "Japan", "美国": "United States",
+        "英国": "United Kingdom", "希腊": "Greece", "墨西哥": "Mexico", "德国": "Germany",
+        "中国台湾": "Taiwan", "意大利": "Italy", "波兰": "Poland", "智利": "Chile",
+        "加拿大": "Canada", "新加坡": "Singapore", "韩国": "South Korea", "巴拿马": "Panama",
+        "泰国": "Thailand", "澳大利亚": "Australia", "秘鲁": "Peru", "挪威": "Norway"
+    ]
+    return L10n.text(region, englishNames[region] ?? region)
+}
+
+private func localizedDeckPlacement(_ placement: String) -> String {
+    switch placement {
+    case "1st": return "Champion"
+    case "2nd": return "Runner-up"
+    case "3rd": return "Third place"
+    case "4th": return "Fourth place"
+    case "3-4th": return "Semifinalist"
+    default: return placement
+    }
 }

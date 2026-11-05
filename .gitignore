@@ -66,3 +66,7 @@ fastlane/test_output
 
 # Local signing/service configuration (never commit real values)
 /Config/Local.xcconfig
+
+# Local AI-generated documentation, research records, and store copy
+/docs/
+/fastlane/metadata/

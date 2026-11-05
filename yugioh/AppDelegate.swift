@@ -73,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         DispatchQueue.main.async {
             guard var presenter = self.window?.rootViewController else { return }
             while let presented = presenter.presentedViewController { presenter = presented }
-            WeChatSharing.showError("微信分享失败，请稍后重试。", from: presenter)
+            WeChatSharing.showError(L10n.text("微信分享失败，请稍后重试。", "WeChat sharing failed. Please try again later."), from: presenter)
         }
     }
 

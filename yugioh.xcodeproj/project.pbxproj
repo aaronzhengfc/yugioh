@@ -58,6 +58,13 @@
 		A0F93DCB1DC941550001289D /* CardSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0F93DCA1DC941550001289D /* CardSearchViewController.xib */; };
 		AFBA00992D282BFF0036C1B3 /* BattleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBA00982D282BFF0036C1B3 /* BattleView.swift */; };
 		AFF95309306027CD001F0FC2 /* cards.cdb in Resources */ = {isa = PBXBuildFile; fileRef = AFF95308306027CD001F0FC2 /* cards.cdb */; };
+		C0DE10000000000000000001 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000002 /* AppLanguage.swift */; };
+		C0DE10000000000000000003 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000004 /* InfoPlist.strings */; };
+		C0DE20000000000000000001 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A039AE741D973CA3009ABFD1 /* Roboto-Bold.ttf */; };
+		C0DE20000000000000000002 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A039AE751D973CA3009ABFD1 /* Roboto-Light.ttf */; };
+		C0DE20000000000000000003 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A039AE761D973CA3009ABFD1 /* Roboto-Medium.ttf */; };
+		C0DE20000000000000000004 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A039AE771D973CA3009ABFD1 /* Roboto-Regular.ttf */; };
+		C0DE20000000000000000005 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A039AE781D973CA3009ABFD1 /* Roboto-Thin.ttf */; };
 		C7E28034866CB4189C5C8DE5 /* Pods_yugioh.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0305D7B0B45950B42C0C6634 /* Pods_yugioh.framework */; };
 /* End PBXBuildFile section */
 
@@ -149,6 +156,9 @@
 		C0DE00000000000000000001 /* Config/Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		C0DE00000000000000000002 /* Config/Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Release.xcconfig; sourceTree = SOURCE_ROOT; };
 		C0DE00000000000000000003 /* Config/Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Production.xcconfig; sourceTree = SOURCE_ROOT; };
+		C0DE10000000000000000002 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
+		C0DE10000000000000000005 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C0DE10000000000000000006 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		F277A06B470FF8C64E06C9BB /* Pods-yugioh.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yugioh.debug.xcconfig"; path = "Pods/Target Support Files/Pods-yugioh/Pods-yugioh.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -264,6 +274,8 @@
 				A039AE5A1D95F934009ABFD1 /* Resource */,
 				A039AE591D95F92E009ABFD1 /* Datasource */,
 				A039AE281D95F17E009ABFD1 /* AppDelegate.swift */,
+				C0DE10000000000000000002 /* AppLanguage.swift */,
+				C0DE10000000000000000004 /* InfoPlist.strings */,
 				A039AE2A1D95F17E009ABFD1 /* ViewController.swift */,
 				A039AE2C1D95F17F009ABFD1 /* Main.storyboard */,
 				A039AE321D95F17F009ABFD1 /* Assets.xcassets */,
@@ -479,6 +491,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
 				Base,
 			);
 			mainGroup = A039AE1C1D95F17E009ABFD1;
@@ -498,6 +511,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0DE20000000000000000001 /* Roboto-Bold.ttf in Resources */,
+				C0DE20000000000000000002 /* Roboto-Light.ttf in Resources */,
+				C0DE20000000000000000003 /* Roboto-Medium.ttf in Resources */,
+				C0DE20000000000000000004 /* Roboto-Regular.ttf in Resources */,
+				C0DE20000000000000000005 /* Roboto-Thin.ttf in Resources */,
+				C0DE10000000000000000003 /* InfoPlist.strings in Resources */,
 				A059F8FF1F68470600D019F7 /* GoogleService-Info.plist in Resources */,
 				A0AB33091F079830005211BA /* CardDeckCollectionViewCell.xib in Resources */,
 				A00EAA0A1DBE8A60001FD546 /* CardDetailViewController.xib in Resources */,
@@ -587,6 +606,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0DE10000000000000000001 /* AppLanguage.swift in Sources */,
 				A00EAA061DBE862F001FD546 /* Utility.swift in Sources */,
 				A0EDEEFA1E55E75C00401416 /* LoadableFromXibView.swift in Sources */,
 				A0AB33071F079820005211BA /* CardDeckCollectionViewCell.swift in Sources */,
@@ -669,6 +689,15 @@
 				A039AE351D95F17F009ABFD1 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		C0DE10000000000000000004 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C0DE10000000000000000005 /* en */,
+				C0DE10000000000000000006 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -808,7 +837,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.52.1;
+				MARKETING_VERSION = 1.54;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -836,7 +865,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.52.1;
+				MARKETING_VERSION = 1.54;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -853,7 +882,21 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = LW783GQGY7;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/Agrume",
+					"$(BUILT_PRODUCTS_DIR)/Floaty",
+					"$(BUILT_PRODUCTS_DIR)/Kingfisher",
+					"$(BUILT_PRODUCTS_DIR)/SQLite.swift",
+					"$(BUILT_PRODUCTS_DIR)/SwiftyGif",
+					"$(BUILT_PRODUCTS_DIR)/SwiftyJSON",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/XCFrameworkIntermediates/WechatOpenSDK-XCFramework/Headers",
+				);
 				INFOPLIST_FILE = yugiohTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugiohTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -869,7 +912,21 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = LW783GQGY7;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/Agrume",
+					"$(BUILT_PRODUCTS_DIR)/Floaty",
+					"$(BUILT_PRODUCTS_DIR)/Kingfisher",
+					"$(BUILT_PRODUCTS_DIR)/SQLite.swift",
+					"$(BUILT_PRODUCTS_DIR)/SwiftyGif",
+					"$(BUILT_PRODUCTS_DIR)/SwiftyJSON",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/XCFrameworkIntermediates/WechatOpenSDK-XCFramework/Headers",
+				);
 				INFOPLIST_FILE = yugiohTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugiohTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -885,6 +942,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = LW783GQGY7;
 				INFOPLIST_FILE = yugiohUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugiohUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -900,6 +958,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = LW783GQGY7;
 				INFOPLIST_FILE = yugiohUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugiohUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -981,7 +1040,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.52.1;
+				MARKETING_VERSION = 1.54;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -998,7 +1057,21 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = LW783GQGY7;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/Agrume",
+					"$(BUILT_PRODUCTS_DIR)/Floaty",
+					"$(BUILT_PRODUCTS_DIR)/Kingfisher",
+					"$(BUILT_PRODUCTS_DIR)/SQLite.swift",
+					"$(BUILT_PRODUCTS_DIR)/SwiftyGif",
+					"$(BUILT_PRODUCTS_DIR)/SwiftyJSON",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/XCFrameworkIntermediates/WechatOpenSDK-XCFramework/Headers",
+				);
 				INFOPLIST_FILE = yugiohTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugiohTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1014,6 +1087,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = LW783GQGY7;
 				INFOPLIST_FILE = yugiohUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugiohUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

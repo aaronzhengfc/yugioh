@@ -1,36 +1,51 @@
-//
-//  yugiohUITests.swift
-//  yugiohUITests
-//
-//  Created by Aaron on 24/9/2016.
-//  Copyright © 2016 sightcorner. All rights reserved.
-//
-
 import XCTest
 
 class yugiohUITests: XCTestCase {
-        
     override func setUp() {
         super.setUp()
-        
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
-        XCUIApplication().launch()
+    }
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+    func testLanguageSwitchPersistsAndUpdatesScreens() {
+        let app = XCUIApplication()
+        // An unsupported saved value must fall back to the system language.
+        app.launchArguments = ["-appLanguage", "removed-language", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launch()
+        XCTAssertTrue(app.navigationBars.buttons["languageButton"].firstMatch.waitForExistence(timeout: 15))
+        XCTAssertEqual(app.buttons["cardsTab"].firstMatch.label, "Cards")
+        app.navigationBars.buttons["languageButton"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["English"].firstMatch.exists)
+        XCTAssertTrue(app.buttons["简体中文"].firstMatch.exists)
+        XCTAssertFalse(app.buttons["Français"].firstMatch.exists)
+        XCTAssertFalse(app.buttons["Italian"].firstMatch.exists)
+        XCTAssertFalse(app.buttons["Português"].firstMatch.exists)
+        app.buttons["简体中文"].firstMatch.tap()
+        XCTAssertTrue(app.navigationBars.buttons["搜索"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.buttons["cardsTab"].firstMatch.label, "卡牌")
+        app.buttons["decksTab"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["我的收藏"].firstMatch.exists)
+
+        app.terminate()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launch()
+        XCTAssertTrue(app.navigationBars.buttons["搜索"].firstMatch.waitForExistence(timeout: 15))
+        XCTAssertEqual(app.buttons["cardsTab"].firstMatch.label, "卡牌")
+        app.navigationBars.buttons["languageButton"].firstMatch.tap()
+        app.buttons["English"].firstMatch.tap()
+        XCTAssertTrue(app.navigationBars.buttons["Search"].firstMatch.waitForExistence(timeout: 10))
+        app.buttons["decksTab"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Favorites"].firstMatch.exists)
+        app.buttons["toolsTab"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Life Points"].firstMatch.exists)
+        app.buttons["Player 1, Half"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["4000"].firstMatch.exists)
+        app.buttons["Draw Test"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Shuffle"].firstMatch.exists)
+        app.buttons["About"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Card Guide"].firstMatch.exists)
+        app.buttons["cardsTab"].firstMatch.tap()
+        app.navigationBars.buttons["Search"].firstMatch.tap()
+        XCTAssertTrue(app.textFields["Search name, effect or ID"].firstMatch.exists)
+        XCTAssertTrue(app.buttons["Cancel"].firstMatch.exists)
     }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
 }

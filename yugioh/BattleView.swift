@@ -40,18 +40,20 @@ class BattleView: UIView {
         let toolbar = UIStackView()
         toolbar.spacing = 10
         toolbar.alignment = .center
-        status.font = .monospacedDigitSystemFont(ofSize: 15, weight: .semibold)
+        status.font = .monospacedDigitSystemFont(ofSize: 13, weight: .semibold)
+        status.numberOfLines = 2
+        status.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         toolbar.addArrangedSubview(status)
         toolbar.addArrangedSubview(UIView())
         let reset = UIButton(type: .system)
-        reset.setTitle("重洗", for: .normal)
+        reset.setTitle(L10n.text("重洗", "Shuffle"), for: .normal)
         reset.setTitleColor(.label, for: .normal)
         reset.addTarget(self, action: #selector(reshuffle), for: .touchUpInside)
-        reset.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        reset.widthAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
         toolbar.addArrangedSubview(reset)
         let draw = UIButton(type: .system)
         var style = UIButton.Configuration.filled()
-        style.title = "抽一张"
+        style.title = L10n.text("抽一张", "Draw")
         style.image = UIImage(systemName: "rectangle.stack")
         style.imagePadding = 6
         style.baseBackgroundColor = .label
@@ -79,11 +81,11 @@ class BattleView: UIView {
     @objc private func reshuffle() { initialCard() }
 
     private func updateStatus() {
-        status.text = "剩余 \(original.count) · 已抽 \(imgArray.count)"
+        status.text = L10n.text("剩余 \(original.count) · 已抽 \(imgArray.count)", "Left \(original.count) · Drawn \(imgArray.count)")
         button.isEnabled = !original.isEmpty
         hint.text = original.isEmpty && imgArray.isEmpty
-            ? "先在卡组页将卡牌加入我的主卡组，即可模拟抽卡。"
-            : "点击抽卡，拖动卡牌可自由摆放；重洗可重新开始。"
+            ? L10n.text("先在卡组页将卡牌加入我的主卡组，即可模拟抽卡。", "Add cards to your Main Deck from a card's detail page to test your draws.")
+            : L10n.text("点击抽卡，拖动卡牌可自由摆放；重洗可重新开始。", "Tap Draw, then drag cards to arrange them. Tap Shuffle to start again.")
     }
 
     func initialCard() {

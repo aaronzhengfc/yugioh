@@ -88,33 +88,33 @@ final class DeckTableCell: UITableViewCell {
         case "star":
             accent = .systemOrange
             icon.image = UIImage(systemName: "star.fill")
-            subtitle.text = "喜欢的卡牌，随时回顾"
+            subtitle.text = L10n.text("喜欢的卡牌，随时回顾", "Keep your favorite cards close")
         case "self":
             accent = .systemGreen
             icon.image = UIImage(systemName: "rectangle.stack.fill")
-            subtitle.text = "管理你的专属卡组"
+            subtitle.text = L10n.text("管理你的专属卡组", "Manage your own deck")
         case "worldchampionship":
             accent = .systemIndigo
             let digits = String(deck.title.prefix(4))
             if Int(digits) != nil {
-                heading.text = "\(digits) 世界冠军卡组"
+                heading.text = L10n.text("\(digits) 世界冠军卡组", "\(digits) World Champion Deck")
             } else {
                 icon.image = UIImage(systemName: "trophy.fill")
             }
-            subtitle.text = "世界锦标赛 · 冠军构筑"
+            subtitle.text = L10n.text("世界锦标赛 · 冠军构筑", "World Championship · Winning deck")
         default:
             accent = .systemTeal
             icon.image = UIImage(systemName: "square.stack.3d.up.fill")
             subtitle.text = deck.introduction == deck.title || deck.introduction.isEmpty
-                ? "探索卡牌搭配与构筑" : deck.introduction
+                ? L10n.text("探索卡牌搭配与构筑", "Explore cards and deck builds") : deck.introduction
         }
         if let history = deck.history {
             heading.text = "\(history.placement)  ·  \(deck.title)"
             subtitle.text = [deck.champion + " · " + deck.championRegion, detail].filter { !$0.isEmpty }.joined(separator: "\n")
         } else if isCancelled {
-            subtitle.text = "2020—2022 年未举办世界锦标赛"
+            subtitle.text = L10n.text("2020—2022 年未举办世界锦标赛", "No World Championship was held in 2020–2022")
         } else if deck.type == "worldchampionship", !deck.champion.isEmpty {
-            let championLine = ["冠军", deck.champion, deck.championRegion]
+            let championLine = [L10n.text("冠军", "Champion"), deck.champion, deck.championRegion]
                 .filter { !$0.isEmpty }.joined(separator: " · ")
             subtitle.text = [championLine, detail].filter { !$0.isEmpty }.joined(separator: "\n")
         } else {
@@ -122,7 +122,7 @@ final class DeckTableCell: UITableViewCell {
         }
         icon.tintColor = accent
         badge.backgroundColor = accent.withAlphaComponent(0.10)
-        accessibilityLabel = [heading.text, subtitle.text].compactMap { $0 }.joined(separator: "，")
+        accessibilityLabel = [heading.text, subtitle.text].compactMap { $0 }.joined(separator: L10n.text("，", ", "))
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {

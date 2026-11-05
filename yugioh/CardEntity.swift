@@ -14,20 +14,10 @@ class CardEntity {
     var id: String! = ""
     //
     var enName: String! = ""
-    var frName: String! = ""
-    var deName: String! = ""
-    var itName: String! = ""
-    var ptName: String! = ""
     var cnName: String! = ""
-    var jpName: String! = ""
     //
     var enDesc: String! = ""
-    var frDesc: String! = ""
-    var deDesc: String! = ""
-    var itDesc: String! = ""
-    var ptDesc: String! = ""
     var cnDesc: String! = ""
-    var jpDesc: String! = ""
     
     //
     var archetype: String! = ""
@@ -92,61 +82,19 @@ class CardEntity {
     
     
     func getName() -> String! {
-        var r = "";
-        if(language == "en") {
-            r = enName;
-        }
-        if(language == "cn") {
-            r = cnName;
-        }
-        if(language == "fr") {
-            r = frName;
-        }
-        if(language == "it") {
-            r = itName
-        }
-        if(language == "pt") {
-            r = ptName
-        }
-        if r == "" {
-            if language == "cn" {
-                r = "[待译] " + enName
-            } else {
-                r = "[To be translated]  " + enName
-            }
-        }
-        return r;
+        if language == "cn", !cnName.isEmpty { return cnName }
+        if !enName.isEmpty { return language == "cn" ? "[待译] " + enName : enName }
+        if !cnName.isEmpty { return "[English unavailable] " + cnName }
+        return id
     }
-    
+
     func getDesc() -> String! {
-        var r = ""
-        if(language == "en") {
-            r = enDesc;
-        }
-        if(language == "cn") {
-            r = cnDesc
-        }
-        if(language == "fr") {
-            r = frDesc;
-        }
-        if(language == "it") {
-            r = itDesc
-        }
-        if(language == "pt") {
-            r = ptDesc
-        }
-        
-        if r == "" {
-            if language == "cn" {
-                r = "[待译] " + enDesc
-            } else {
-                r = "[To be translated]  " + enDesc
-            }
-        }
-        return r;
+        if language == "cn", !cnDesc.isEmpty { return cnDesc }
+        if !enDesc.isEmpty { return language == "cn" ? "[待译] " + enDesc : enDesc }
+        if !cnDesc.isEmpty { return "[English unavailable] " + cnDesc }
+        return ""
     }
-    
-    
+
     func getArchetype() -> String! {
         var r = ""
         if(language == "en") {
@@ -195,7 +143,7 @@ class CardEntity {
         if !getLinkval().isEmpty { values.append("LINK " + getLinkval()) }
         if !getAtk().isEmpty { values.append("ATK " + getAtk()) }
         if !getDef().isEmpty { values.append("DEF " + getDef()) }
-        if !getScale().isEmpty { values.append("刻度 " + getScale()) }
+        if !getScale().isEmpty { values.append(L10n.text("刻度 ", "Scale ") + getScale()) }
         return values.joined(separator: "   ")
     }
 

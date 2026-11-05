@@ -31,12 +31,6 @@ class CalculateView: UIView {
     
     
     
-    let datas = ["", "", "", "清除", "",
-                 "-", "1", "2", "3", "-",
-                 "+", "4", "5", "6", "+",
-                 "减半", "7","8","9", "减半",
-                 "变成", "0", "00", "000", "变成"]
-    
     var calculateButton: DataButton!
     
     @IBOutlet weak var scoreLableOne: UILabel!
@@ -78,7 +72,7 @@ class CalculateView: UIView {
             panel.backgroundColor = .secondarySystemGroupedBackground
             panel.layer.cornerRadius = 14
             let title = UILabel()
-            title.text = player == 0 ? "玩家 1 · LP" : "玩家 2 · LP"
+            title.text = L10n.text("玩家 \(player + 1) · LP", "Player \(player + 1) · LP")
             title.font = .systemFont(ofSize: 13, weight: .medium)
             title.textColor = .secondaryLabel
             title.textAlignment = .center
@@ -103,15 +97,15 @@ class CalculateView: UIView {
         calculateButton.backgroundColor = .secondarySystemGroupedBackground
         calculateButton.layer.cornerRadius = 12
         calculateButton.isUserInteractionEnabled = false
-        calculateButton.accessibilityLabel = "输入的生命值"
+        calculateButton.accessibilityLabel = L10n.text("输入的生命值", "Entered life points")
         inputRow.addArrangedSubview(calculateButton)
-        let clear = makeButton("清除", column: 3)
+        let clear = makeButton("clear", column: 3)
         clear.widthAnchor.constraint(equalToConstant: 68).isActive = true
         inputRow.addArrangedSubview(clear)
         inputRow.heightAnchor.constraint(equalToConstant: 52).isActive = true
         stack.addArrangedSubview(inputRow)
         for values in [["−", "1", "2", "3", "−"], ["+", "4", "5", "6", "+"],
-                       ["减半", "7", "8", "9", "减半"], ["变成", "0", "00", "000", "变成"]] {
+                       ["halve", "7", "8", "9", "halve"], ["set", "0", "00", "000", "set"]] {
             let row = UIStackView()
             row.spacing = 6
             row.distribution = .fillEqually
@@ -120,16 +114,25 @@ class CalculateView: UIView {
             stack.addArrangedSubview(row)
         }
         let hint = UILabel()
-        hint.text = "左侧操作玩家 1，右侧操作玩家 2"
+        hint.text = L10n.text("左侧操作玩家 1，右侧操作玩家 2", "Left: Player 1 · Right: Player 2")
+        hint.numberOfLines = 0
         hint.textAlignment = .center
         hint.textColor = .secondaryLabel
         hint.font = .systemFont(ofSize: 12)
         stack.addArrangedSubview(hint)
     }
 
-    private func makeButton(_ title: String, column: Int) -> DataButton {
+    private func makeButton(_ action: String, column: Int) -> DataButton {
+        // Keep action identifiers stable when the visible labels change language.
+        let title: String
+        switch action {
+        case "clear": title = L10n.text("清除", "Clear")
+        case "halve": title = L10n.text("减半", "Half")
+        case "set": title = L10n.text("变成", "Set")
+        default: title = action
+        }
         let button = DataButton(type: .system)
-        button.data = title == "−" ? "-" : title
+        button.data = action == "−" ? "-" : action
         button.index = column
         button.setTitle(title, for: .normal)
         button.setTitleColor(.label, for: .normal)
@@ -138,7 +141,7 @@ class CalculateView: UIView {
         button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(performButton), for: .touchUpInside)
         if column == 0 || column == 4 {
-            button.accessibilityLabel = "玩家 \(column == 0 ? 1 : 2) \(title)"
+            button.accessibilityLabel = L10n.text("玩家 \(column == 0 ? 1 : 2) \(title)", "Player \(column == 0 ? 1 : 2), \(title)")
         }
         return button
     }
@@ -180,7 +183,7 @@ class CalculateView: UIView {
             return
         }
         
-        if sender.data == "减半" {
+        if sender.data == "halve" {
             if sender.index == 0 {
                 let score = Int(self.scoreLableOne.text!)! / 2
                 self.scoreLableOne.text = score.description
@@ -191,7 +194,7 @@ class CalculateView: UIView {
             return
         }
         
-        if sender.data == "变成" {
+        if sender.data == "set" {
             if self.calculateButton.currentTitle == "" {
                 return
             }
@@ -203,7 +206,7 @@ class CalculateView: UIView {
             return
         }
         
-        if sender.data == "清除" {
+        if sender.data == "clear" {
             self.calculateButton.setTitle("", for: .normal)
         }
         

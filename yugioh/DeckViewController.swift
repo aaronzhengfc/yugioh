@@ -16,7 +16,8 @@ class DeckViewController: UIViewController {
             guard !deck.isCancelled else { continue }
             let key = deck.type + ":" + deck.id
             if deck.type == "star" {
-                summaries[key] = "已收藏 \(CardService().list().count) 张卡牌"
+                let count = CardService().list().count
+                summaries[key] = L10n.text("已收藏 \(count) 张卡牌", "\(count) favorite cards")
             } else if deck.type == "self" || summaries[key] == nil {
                 if let history = deck.history, !history.hasRecipe {
                     summaries[key] = history.recipeLabel
@@ -25,8 +26,8 @@ class DeckViewController: UIViewController {
                 let cards = deck.type == "history" ? loadHistoryCards(id: deck.id)
                     : (deck.type == "self" ? DeckService().list() : getDeckEntity(deckFormat: deck.type, deckName: deck.id))
                 let counts = (0...2).map { (cards[String($0)] ?? []).reduce(0) { $0 + $1.number } }
-                let side = deck.history?.recipeStatus == "partial" ? "待补" : String(counts[1])
-                summaries[key] = "主 \(counts[0])   ·   额外 \(counts[2])   ·   副 \(side)"
+                let side = deck.history?.recipeStatus == "partial" ? L10n.text("待补", "Pending") : String(counts[1])
+                summaries[key] = L10n.text("主 \(counts[0])   ·   额外 \(counts[2])   ·   副 \(side)", "Main \(counts[0]) · Extra \(counts[2]) · Side \(side)")
             }
         }
         tableView.reloadData()
@@ -36,13 +37,13 @@ class DeckViewController: UIViewController {
         super.viewDidLoad()
         let decks = getDeckViewEntity()
         let history = loadDeckHistory()
-        sections = [Section(title: "我的空间", decks: decks.filter { $0.type == "star" || $0.type == "self" })]
+        sections = [Section(title: L10n.text("我的空间", "My Collection"), decks: decks.filter { $0.type == "star" || $0.type == "self" })]
         if history.isEmpty {
-            sections.append(Section(title: "历届世界冠军", decks: decks.filter { $0.type == "worldchampionship" }))
+            sections.append(Section(title: L10n.text("历届世界冠军", "World Champions"), decks: decks.filter { $0.type == "worldchampionship" }))
         } else {
-            sections += history.map { Section(title: "\($0.year) 世界锦标赛", decks: $0.decks) }
+            sections += history.map { Section(title: L10n.text("\($0.year) 世界锦标赛", "\($0.year) World Championship"), decks: $0.decks) }
         }
-        sections.append(Section(title: "经典卡组", decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) }))
+        sections.append(Section(title: L10n.text("经典卡组", "Classic Decks"), decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) }))
         sections.removeAll { $0.decks.isEmpty }
         view.backgroundColor = .systemGroupedBackground
         tableView.backgroundColor = .systemGroupedBackground

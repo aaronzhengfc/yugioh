@@ -12,10 +12,5 @@ class KeyValueEntryEntity {
     var key: String! = ""
     var subKey: String! = ""
     //
-    var frValue: String! = ""
-    var deValue: String! = ""
-    var itValue: String! = ""
-    var ptValue: String! = ""
     var cnValue: String! = ""
-    var jpValue: String! = ""
 }

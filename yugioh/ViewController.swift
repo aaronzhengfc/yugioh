@@ -51,6 +51,12 @@ class ViewController: UITabBarController {
         self.setNeedsStatusBarAppearanceUpdate()
         self.conversion()
         self.setupData()
+        navigationItem.title = navigationBarTitleText
+        packButton.title = L10n.text("搜索", "Search")
+        let titles = [L10n.text("卡牌", "Cards"), L10n.text("卡组", "Decks"), L10n.text("工具", "Tools")]
+        for (index, controller) in (viewControllers ?? []).enumerated() {
+            controller.tabBarItem.title = titles[index]
+        }
         self.setupTabBarStyle()
         
         self.languageButton = UIBarButtonItem.init(
@@ -59,7 +65,8 @@ class ViewController: UITabBarController {
             target: self,
             action: #selector(ViewController.clickLanguageButton(_:))
         )
-        self.languageButton.accessibilityLabel = "切换语言"
+        self.languageButton.accessibilityLabel = L10n.text("切换语言", "Change language")
+        self.languageButton.accessibilityIdentifier = "languageButton"
         self.navigationItem.leftBarButtonItem = self.languageButton
     }
     
@@ -101,6 +108,7 @@ class ViewController: UITabBarController {
             }
             let button = UIButton(configuration: configuration)
             button.tag = index
+            button.accessibilityIdentifier = ["cardsTab", "decksTab", "toolsTab"][index]
             button.accessibilityLabel = controller.tabBarItem.title
             button.addTarget(self, action: #selector(selectMenu(_:)), for: .touchUpInside)
             stack.addArrangedSubview(button)
@@ -139,42 +147,24 @@ class ViewController: UITabBarController {
         cardEntitys = getCardEntity()
     }
     @IBAction func clickLanguageButton(_ sender: UIBarButtonItem) {
-        let alertController = UIAlertController(title: "选择语言", message: nil, preferredStyle: .actionSheet)
-        let chinese = UIAlertAction(title: "中文", style: .default, handler: {(action) -> Void in
-            language = "cn"
-            nc.post(name: Notification.Name.NOTIFICATION_NAME_LANGUAGE_CHANGE, object: nil)
-        })
-        let english = UIAlertAction(title: "English", style: .default, handler: {(action) -> Void in
-            language = "en"
-            nc.post(name: Notification.Name.NOTIFICATION_NAME_LANGUAGE_CHANGE, object: nil)
-        })
-        let fr = UIAlertAction(title: "Français", style: .default, handler: {(action) -> Void in
-            language = "fr"
-            nc.post(name: Notification.Name.NOTIFICATION_NAME_LANGUAGE_CHANGE, object: nil)
-        })
-        let it = UIAlertAction(title: "Italian", style: .default, handler: {(action) -> Void in
-            language = "it"
-            nc.post(name: Notification.Name.NOTIFICATION_NAME_LANGUAGE_CHANGE, object: nil)
-        })
-        let pt = UIAlertAction(title: "Português", style: .default, handler: {(action) -> Void in
-            language = "pt"
-            nc.post(name: Notification.Name.NOTIFICATION_NAME_LANGUAGE_CHANGE, object: nil)
-        })
-        let cancelButton = UIAlertAction(title: "取消", style: .cancel, handler: { (action) -> Void in
-            print("Cancel button tapped")
-        })
-        alertController.addAction(chinese)
-        alertController.addAction(english)
-        alertController.addAction(fr)
-        alertController.addAction(it)
-        alertController.addAction(pt)
-        alertController.addAction(cancelButton)
-        
-        
+        let alertController = UIAlertController(title: L10n.text("选择语言", "Choose language"), message: nil, preferredStyle: .actionSheet)
+        for option in AppLanguage.allCases {
+            let action = UIAlertAction(title: option.displayName, style: .default) { [weak self] _ in
+                guard let self = self else { return }
+                let changed = language != option.rawValue
+                language = option.rawValue
+                guard changed else { return }
+                // Recreate the screens so labels, filters and cached deck titles all agree.
+                let window = self.view.window
+                self.dismiss(animated: true) {
+                    window?.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+                    window?.makeKeyAndVisible()
+                }
+            }
+            alertController.addAction(action)
+        }
+        alertController.addAction(UIAlertAction(title: L10n.text("取消", "Cancel"), style: .cancel))
         alertController.popoverPresentationController?.barButtonItem = sender
-        self.present(alertController, animated: true, completion: nil)
+        present(alertController, animated: true)
     }
-    
-    
 }
-

@@ -31,7 +31,7 @@ class CardDeckViewController: UIViewController {
     var deckEntitys:[String: [DeckEntity]] = [:]
     
     
-    private let modeControl = UISegmentedControl(items: ["构筑解读", "卡牌配方"])
+    private let modeControl = UISegmentedControl(items: [L10n.text("构筑解读", "Analysis"), L10n.text("卡牌配方", "Deck List")])
     private let readingView = UIScrollView()
     private let recipeSummary = UILabel()
 
@@ -46,11 +46,11 @@ class CardDeckViewController: UIViewController {
         let name = makeLabel(deckViewEntity.title, style: .headline, color: .label)
         heading.addArrangedSubview(name)
         if let history = deckViewEntity.history {
-            heading.addArrangedSubview(makeLabel("\(history.year) 世界锦标赛 · \(history.placement)", style: .caption1))
+            heading.addArrangedSubview(makeLabel(L10n.text("\(history.year) 世界锦标赛 · \(history.placement)", "\(history.year) World Championship · \(history.placement)"), style: .caption1))
             heading.addArrangedSubview(makeLabel(deckViewEntity.champion + " · " + deckViewEntity.championRegion, style: .subheadline))
-            modeControl.selectedSegmentIndex = 0
+            modeControl.selectedSegmentIndex = language == "en" && history.hasRecipe ? 1 : 0
             modeControl.setEnabled(history.hasRecipe, forSegmentAt: 1)
-            if !history.hasRecipe { modeControl.setTitle("配方待补充", forSegmentAt: 1) }
+            if !history.hasRecipe { modeControl.setTitle(L10n.text("配方待补充", "List pending"), forSegmentAt: 1) }
             modeControl.addTarget(self, action: #selector(changeMode), for: .valueChanged)
             heading.addArrangedSubview(modeControl)
             heading.setCustomSpacing(12, after: heading.arrangedSubviews[heading.arrangedSubviews.count - 2])
@@ -72,8 +72,16 @@ class CardDeckViewController: UIViewController {
         readingView.translatesAutoresizingMaskIntoConstraints = false
         readingView.alwaysBounceVertical = true
         view.addSubview(readingView)
-        let guideImage = UIImageView(image: UIImage(named: "guide"))
-        guideImage.contentMode = .scaleAspectFit
+        let guideImage = UIImageView()
+        let emptyMessage = makeLabel(L10n.text("你的卡组还是空的。打开任意卡牌详情，点击“卡组操作”即可添加卡牌。", "Your deck is empty. Open a card's details and use Deck Actions to add it."), style: .body)
+        emptyMessage.textAlignment = .center
+        emptyMessage.translatesAutoresizingMaskIntoConstraints = false
+        guideImage.addSubview(emptyMessage)
+        NSLayoutConstraint.activate([
+            emptyMessage.centerYAnchor.constraint(equalTo: guideImage.centerYAnchor),
+            emptyMessage.leadingAnchor.constraint(equalTo: guideImage.leadingAnchor),
+            emptyMessage.trailingAnchor.constraint(equalTo: guideImage.trailingAnchor)
+        ])
         guideImage.translatesAutoresizingMaskIntoConstraints = false
         collection.addSubview(guideImage)
         guide = guideImage
@@ -122,6 +130,9 @@ class CardDeckViewController: UIViewController {
             stack.widthAnchor.constraint(equalTo: readingView.frameLayoutGuide.widthAnchor, constant: -24)
         ])
         stack.addArrangedSubview(makeLabel(history.analysisLabel, style: .caption1))
+        if language == "en" {
+            stack.addArrangedSubview(makeLabel("Historical commentary below is currently available in Simplified Chinese. Card lists and card details are available in English.", style: .subheadline))
+        }
         for paragraph in history.paragraphs {
             let panel = UIStackView(arrangedSubviews: [makeLabel(paragraph.title, style: .subheadline, color: .label), makeLabel(paragraph.text, style: .subheadline)])
             panel.axis = .vertical
@@ -133,11 +144,11 @@ class CardDeckViewController: UIViewController {
             panel.layer.cornerCurve = .continuous
             stack.addArrangedSubview(panel)
         }
-        stack.addArrangedSubview(makeLabel("世界赛历史构筑 · 采用当届赛事规则，不等同于普通 OCG / TCG 环境或现行合法配方。", style: .caption1))
+        stack.addArrangedSubview(makeLabel(L10n.text("世界赛历史构筑 · 采用当届赛事规则，不等同于普通 OCG / TCG 环境或现行合法配方。", "Historical World Championship decks used the rules of their event. They may differ from regular OCG / TCG formats and may not be legal today."), style: .caption1))
         let links = UIStackView()
         links.distribution = .fillEqually
         links.spacing = 10
-        for (index, title) in ["赛事来源", "配方来源"].enumerated() {
+        for (index, title) in [L10n.text("赛事来源", "Event Source"), L10n.text("配方来源", "Deck Source")].enumerated() {
             guard index == 0 || !history.recipeSourceURL.isEmpty else { continue }
             let button = UIButton(type: .system)
             var configuration = UIButton.Configuration.plain()
@@ -189,8 +200,8 @@ class CardDeckViewController: UIViewController {
         }
 
         let counts = (0...2).map { (deckEntitys[String($0)] ?? []).reduce(0) { $0 + $1.number } }
-        let side = deckViewEntity.history?.recipeStatus == "partial" ? "待补充" : "\(counts[1]) 张"
-        recipeSummary.text = "主卡 \(counts[0]) 张  ·  额外 \(counts[2]) 张  ·  副卡 \(side)"
+        let side = deckViewEntity.history?.recipeStatus == "partial" ? L10n.text("待补充", "Pending") : L10n.text("\(counts[1]) 张", "\(counts[1]) cards")
+        recipeSummary.text = L10n.text("主卡 \(counts[0]) 张  ·  额外 \(counts[2]) 张  ·  副卡 \(side)", "Main \(counts[0]) · Extra \(counts[2]) · Side \(side)")
         navigationItem.rightBarButtonItem = counts.reduce(0, +) > 0
             ? WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler)) : nil
         self.tableView.reloadData()
@@ -200,7 +211,7 @@ class CardDeckViewController: UIViewController {
     override func viewDidLoad() {
         //
         super.viewDidLoad()
-        navigationItem.title = deckViewEntity.history == nil ? "卡组" : "赛事卡组"
+        navigationItem.title = deckViewEntity.history == nil ? L10n.text("卡组", "Deck") : L10n.text("赛事卡组", "Tournament Deck")
         self.cardEntitys = rootController?.cardEntitys ?? []
         //
         self.tableView.backgroundColor = .systemGroupedBackground
@@ -217,7 +228,7 @@ class CardDeckViewController: UIViewController {
         let sections = (0...2).map { deckEntitys[String($0)] ?? [] }
         let cards = sections.flatMap { $0 }
         guard !cards.isEmpty else {
-            WeChatSharing.showError("请先向卡组添加卡牌，再分享。", from: self)
+            WeChatSharing.showError(L10n.text("请先向卡组添加卡牌，再分享。", "Add cards to your deck before sharing it."), from: self)
             return
         }
         navigationItem.rightBarButtonItem?.customView?.isUserInteractionEnabled = false
@@ -270,12 +281,12 @@ class CardDeckViewController: UIViewController {
         let detailAttributes = attributes(18, secondary)
         let titleHeight = measuredHeight(deckViewEntity.title, width: width - margin * 2, attributes: titleAttributes)
         let detail = deckViewEntity.history.map { history in
-            "\(history.year) 世界锦标赛 · \(history.placement)\n" + deckViewEntity.champion + " · " + deckViewEntity.championRegion
+            L10n.text("\(history.year) 世界锦标赛 · \(history.placement)\n", "\(history.year) World Championship · \(history.placement)\n") + deckViewEntity.champion + " · " + deckViewEntity.championRegion
         } ?? ""
         let detailHeight = detail.isEmpty ? 0 : measuredHeight(detail, width: width - margin * 2, attributes: detailAttributes)
         let counts = sections.map { $0.reduce(0) { $0 + $1.number } }
-        let side = deckViewEntity.history?.recipeStatus == "partial" ? "资料缺失" : "\(counts[1]) 张"
-        let summary = "主卡 \(counts[0]) 张  ·  额外 \(counts[2]) 张  ·  副卡 \(side)"
+        let side = deckViewEntity.history?.recipeStatus == "partial" ? L10n.text("资料缺失", "Unavailable") : L10n.text("\(counts[1]) 张", "\(counts[1]) cards")
+        let summary = L10n.text("主卡 \(counts[0]) 张  ·  额外 \(counts[2]) 张  ·  副卡 \(side)", "Main \(counts[0]) · Extra \(counts[2]) · Side \(side)")
         let summaryHeight = measuredHeight(summary, width: width - margin * 2, attributes: detailAttributes)
         let contentTop = margin + titleHeight + (detail.isEmpty ? 0 : detailHeight + 8) + 12 + summaryHeight + 24
         let height = sections.filter { !$0.isEmpty }.reduce(contentTop) {
@@ -301,7 +312,7 @@ class CardDeckViewController: UIViewController {
             y = contentTop
             // Only the recipe is exported, even when sharing from the analysis tab.
             for (index, entries) in sections.enumerated() where !entries.isEmpty {
-                text(["主卡组", "副卡组", "额外卡组"][index] + " · \(counts[index]) 张",
+                text([L10n.text("主卡组", "Main Deck"), L10n.text("副卡组", "Side Deck"), L10n.text("额外卡组", "Extra Deck")][index] + L10n.text(" · \(counts[index]) 张", " · \(counts[index]) cards"),
                      CGRect(x: margin, y: y, width: width - margin * 2, height: 30), attributes(20, secondary, bold: true))
                 y += 38
                 for (item, card) in entries.enumerated() {
@@ -367,8 +378,8 @@ extension CardDeckViewController: UICollectionViewDelegate {
         if kind == UICollectionView.elementKindSectionHeader {
             
             let count = (deckEntitys[String(indexPath.section)] ?? []).reduce(0) { $0 + $1.number }
-            let label = ["主卡组", "副卡组", "额外卡组"][indexPath.section]
-            v.sectionHeaderLabel.text = label + " · " + (indexPath.section == 1 && deckViewEntity.history?.recipeStatus == "partial" ? "待补充" : "\(count) 张")
+            let label = [L10n.text("主卡组", "Main Deck"), L10n.text("副卡组", "Side Deck"), L10n.text("额外卡组", "Extra Deck")][indexPath.section]
+            v.sectionHeaderLabel.text = label + " · " + (indexPath.section == 1 && deckViewEntity.history?.recipeStatus == "partial" ? L10n.text("待补充", "Pending") : L10n.text("\(count) 张", "\(count) cards"))
             v.sectionHeaderLabel.textColor = .secondaryLabel
             v.sectionHeaderLabel.font = .preferredFont(forTextStyle: .caption1)
 
@@ -412,7 +423,7 @@ extension CardDeckViewController: UICollectionViewDataSource {
         
         cell.titleLabel.text = cardEntity.getName()
         cell.quantityLabel.text = "× \(deckEntity.number)"
-        cell.accessibilityLabel = "\(cardEntity.getName() ?? deckEntity.id)，\(deckEntity.number) 张"
+        cell.accessibilityLabel = L10n.text("\(cardEntity.getName() ?? deckEntity.id)，\(deckEntity.number) 张", "\(cardEntity.getName() ?? deckEntity.id), \(deckEntity.number) copies")
 
         setImage(card: cell.cardImageView, id: cardEntity.id)
 

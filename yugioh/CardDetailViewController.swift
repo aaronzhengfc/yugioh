@@ -27,7 +27,7 @@ class CardDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "卡牌详情"
+        title = L10n.text("卡牌详情", "Card Details")
         view.tintColor = accent
         navigationItem.rightBarButtonItem = WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler))
         setupLayout()
@@ -83,7 +83,7 @@ class CardDetailViewController: UIViewController {
         ])
         favoriteButton.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
         var configuration = UIButton.Configuration.filled()
-        configuration.title = "卡组操作"
+        configuration.title = L10n.text("卡组操作", "Deck Actions")
         configuration.image = UIImage(systemName: "rectangle.stack.badge.plus")
         configuration.imagePadding = 8
         configuration.baseBackgroundColor = accent
@@ -91,10 +91,10 @@ class CardDetailViewController: UIViewController {
         configuration.cornerStyle = .large
         deckButton.configuration = configuration
         deckButton.menu = UIMenu(children: [
-            UIAction(title: "加入我的卡组", image: UIImage(systemName: "plus")) { [weak self] _ in
+            UIAction(title: L10n.text("加入我的卡组", "Add to My Deck"), image: UIImage(systemName: "plus")) { [weak self] _ in
                 self?.chooseDeck(isAdd: true)
             },
-            UIAction(title: "从我的卡组移除", image: UIImage(systemName: "minus")) { [weak self] _ in
+            UIAction(title: L10n.text("从我的卡组移除", "Remove from My Deck"), image: UIImage(systemName: "minus")) { [weak self] _ in
                 self?.chooseDeck(isAdd: false)
             }
         ])
@@ -105,7 +105,7 @@ class CardDetailViewController: UIViewController {
         cardImage.translatesAutoresizingMaskIntoConstraints = false
         cardImage.contentMode = .scaleAspectFit
         cardImage.isUserInteractionEnabled = true
-        cardImage.accessibilityLabel = "查看卡牌大图"
+        cardImage.accessibilityLabel = L10n.text("查看卡牌大图", "View full card image")
         cardImage.accessibilityTraits = .button
         cardImage.isAccessibilityElement = true
         cardImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showCardImage)))
@@ -159,7 +159,7 @@ class CardDetailViewController: UIViewController {
         header.layer.cornerRadius = 14
         header.layer.cornerCurve = .continuous
         content.addArrangedSubview(header)
-        addPanel(title: "卡牌效果", body: cardEntity.getDesc() ?? "")
+        addPanel(title: L10n.text("卡牌效果", "Card Effect"), body: cardEntity.getDesc() ?? "")
         addAlternateImages()
     }
 
@@ -186,7 +186,7 @@ class CardDetailViewController: UIViewController {
               let images = (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]] else { return }
         let ids = images.compactMap { ($0["id"] as? NSNumber)?.stringValue }.filter { $0 != cardEntity.id }
         guard !ids.isEmpty else { return }
-        content.addArrangedSubview(label("其他卡图", style: .headline))
+        content.addArrangedSubview(label(L10n.text("其他卡图", "Alternate Artwork"), style: .headline))
         let scroller = UIScrollView()
         let row = UIStackView()
         row.spacing = 12
@@ -234,7 +234,7 @@ class CardDetailViewController: UIViewController {
         let selected = cardService.isExist(id: cardEntity.id)
         cardEntity.isSelected = selected
         var configuration = UIButton.Configuration.tinted()
-        configuration.title = selected ? "已收藏" : "收藏"
+        configuration.title = selected ? L10n.text("已收藏", "Favorited") : L10n.text("收藏", "Favorite")
         configuration.image = UIImage(systemName: selected ? "star.fill" : "star")
         configuration.imagePadding = 8
         configuration.baseForegroundColor = selected ? .systemOrange : .tertiaryLabel
@@ -245,15 +245,15 @@ class CardDetailViewController: UIViewController {
     }
 
     private func chooseDeck(isAdd: Bool) {
-        let sheet = UIAlertController(title: isAdd ? "加入我的卡组" : "从我的卡组移除", message: "选择卡组区域", preferredStyle: .actionSheet)
-        for (title, type) in [("主卡组", "0"), ("副卡组", "1"), ("额外卡组", "2")] {
+        let sheet = UIAlertController(title: isAdd ? L10n.text("加入我的卡组", "Add to My Deck") : L10n.text("从我的卡组移除", "Remove from My Deck"), message: L10n.text("选择卡组区域", "Choose a deck section"), preferredStyle: .actionSheet)
+        for (title, type) in [(L10n.text("主卡组", "Main Deck"), "0"), (L10n.text("副卡组", "Side Deck"), "1"), (L10n.text("额外卡组", "Extra Deck"), "2")] {
             sheet.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
                 guard let self = self else { return }
                 if isAdd { self.deckService.save(id: self.cardEntity.id, type: type) }
                 else { self.deckService.delete(id: self.cardEntity.id, type: type) }
             })
         }
-        sheet.addAction(UIAlertAction(title: "取消", style: .cancel))
+        sheet.addAction(UIAlertAction(title: L10n.text("取消", "Cancel"), style: .cancel))
         sheet.popoverPresentationController?.sourceView = deckButton
         sheet.popoverPresentationController?.sourceRect = deckButton.bounds
         present(sheet, animated: true)
