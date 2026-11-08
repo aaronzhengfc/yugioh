@@ -67,6 +67,25 @@ fastlane/test_output
 # Local signing/service configuration (never commit real values)
 /Config/Local.xcconfig
 
-# Local AI-generated documentation, research records, and store copy
+# Local documentation, research records, and store copy
 /docs/
+__pycache__/
 /fastlane/metadata/
+
+# Local AI assistant directories
+.ai/
+.agent/
+.agents/
+.aider/
+.augment/
+.claude/
+.cline/
+.codex/
+.continue/
+.cursor/
+.gemini/
+.kiro/
+.opencode/
+.roo/
+.trae/
+.windsurf/

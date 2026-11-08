@@ -85,6 +85,9 @@ final class DeckTableCell: UITableViewCell {
         labelsLeading.constant = badge.isHidden ? 12 : 58
         heading.text = deck.title
         switch deck.type {
+        case "banlist":
+            accent = .systemRed
+            icon.image = UIImage(systemName: "list.bullet.rectangle")
         case "star":
             accent = .systemOrange
             icon.image = UIImage(systemName: "star.fill")

@@ -28,20 +28,10 @@ class CardViewWithStarController: CardViewBaseController {
     }
     
     func starAfterDeselect() {
-        self.tableView.reloadData()
+        refreshCards()
     }
-    
-    
-    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let ids = cardService.list()
-        self.cardEntitys = []
-        
-        for index in 0..<ids.count {
-            cardEntitys.append(getCardEntity(id: ids[index]))
-        }
-        
-        
-        
-        return self.cardEntitys.count
+
+    override func cardsForDisplay() -> [CardEntity] {
+        cardService.list().map { getCardEntity(id: $0) }
     }
 }

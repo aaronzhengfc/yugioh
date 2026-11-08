@@ -58,6 +58,13 @@
 		A0F93DCB1DC941550001289D /* CardSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0F93DCA1DC941550001289D /* CardSearchViewController.xib */; };
 		AFBA00992D282BFF0036C1B3 /* BattleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBA00982D282BFF0036C1B3 /* BattleView.swift */; };
 		AFF95309306027CD001F0FC2 /* cards.cdb in Resources */ = {isa = PBXBuildFile; fileRef = AFF95308306027CD001F0FC2 /* cards.cdb */; };
+		B176A0020000000000000000 /* BanlistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B176A0010000000000000000 /* BanlistService.swift */; };
+		B176A0020000000000000001 /* BanlistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B176A0010000000000000001 /* BanlistViewController.swift */; };
+		B176A0020000000000000002 /* DeckCardPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B176A0010000000000000002 /* DeckCardPickerViewController.swift */; };
+		B176A0020000000000000003 /* BanlistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B176A0010000000000000003 /* BanlistTests.swift */; };
+		B176A0020000000000000004 /* CardListPagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = B176A0010000000000000004 /* CardListPagination.swift */; };
+		B176A0020000000000000005 /* RestrictionBadgeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B176A0010000000000000005 /* RestrictionBadgeLabel.swift */; };
+		B176A0020000000000000006 /* CardMetadataRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B176A0010000000000000006 /* CardMetadataRow.swift */; };
 		C0DE10000000000000000001 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000002 /* AppLanguage.swift */; };
 		C0DE10000000000000000003 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000004 /* InfoPlist.strings */; };
 		C0DE20000000000000000001 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A039AE741D973CA3009ABFD1 /* Roboto-Bold.ttf */; };
@@ -153,6 +160,13 @@
 		A0F93DCA1DC941550001289D /* CardSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardSearchViewController.xib; sourceTree = "<group>"; };
 		AFBA00982D282BFF0036C1B3 /* BattleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleView.swift; sourceTree = "<group>"; };
 		AFF95308306027CD001F0FC2 /* cards.cdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = cards.cdb; sourceTree = "<group>"; };
+		B176A0010000000000000000 /* BanlistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanlistService.swift; sourceTree = "<group>"; };
+		B176A0010000000000000001 /* BanlistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanlistViewController.swift; sourceTree = "<group>"; };
+		B176A0010000000000000002 /* DeckCardPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckCardPickerViewController.swift; sourceTree = "<group>"; };
+		B176A0010000000000000003 /* BanlistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanlistTests.swift; sourceTree = "<group>"; };
+		B176A0010000000000000004 /* CardListPagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListPagination.swift; sourceTree = "<group>"; };
+		B176A0010000000000000005 /* RestrictionBadgeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictionBadgeLabel.swift; sourceTree = "<group>"; };
+		B176A0010000000000000006 /* CardMetadataRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMetadataRow.swift; sourceTree = "<group>"; };
 		C0DE00000000000000000001 /* Config/Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		C0DE00000000000000000002 /* Config/Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Release.xcconfig; sourceTree = SOURCE_ROOT; };
 		C0DE00000000000000000003 /* Config/Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Production.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -289,6 +303,7 @@
 		A039AE3F1D95F17F009ABFD1 /* yugiohTests */ = {
 			isa = PBXGroup;
 			children = (
+				B176A0010000000000000003 /* BanlistTests.swift */,
 				A039AE401D95F17F009ABFD1 /* yugiohTests.swift */,
 				A039AE421D95F17F009ABFD1 /* Info.plist */,
 			);
@@ -329,6 +344,12 @@
 			isa = PBXGroup;
 			children = (
 				A022E6E01DC343AA00E7D8EE /* CardPO.swift */,
+				B176A0010000000000000000 /* BanlistService.swift */,
+				B176A0010000000000000001 /* BanlistViewController.swift */,
+				B176A0010000000000000002 /* DeckCardPickerViewController.swift */,
+				B176A0010000000000000004 /* CardListPagination.swift */,
+				B176A0010000000000000005 /* RestrictionBadgeLabel.swift */,
+				B176A0010000000000000006 /* CardMetadataRow.swift */,
 				A00EAA031DB9FF73001FD546 /* CardEntity.swift */,
 				A03FDB561F19FCA3001EA6C2 /* DeckPO.swift */,
 				A03FDB5A1F1A1A0E001EA6C2 /* DeckEntity.swift */,
@@ -636,6 +657,12 @@
 				A039AE291D95F17E009ABFD1 /* AppDelegate.swift in Sources */,
 				A0A4F17A24E9199200121604 /* AboutView.swift in Sources */,
 				A0F93DC91DC9414B0001289D /* CardSearchViewController.swift in Sources */,
+				B176A0020000000000000000 /* BanlistService.swift in Sources */,
+				B176A0020000000000000001 /* BanlistViewController.swift in Sources */,
+				B176A0020000000000000002 /* DeckCardPickerViewController.swift in Sources */,
+				B176A0020000000000000004 /* CardListPagination.swift in Sources */,
+				B176A0020000000000000005 /* RestrictionBadgeLabel.swift in Sources */,
+				B176A0020000000000000006 /* CardMetadataRow.swift in Sources */,
 				A00EAA041DB9FF73001FD546 /* CardEntity.swift in Sources */,
 				A039AE711D9734D6009ABFD1 /* CardTableViewCell.swift in Sources */,
 				A0AB33051F079599005211BA /* CardDeckViewController.swift in Sources */,
@@ -647,6 +674,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B176A0020000000000000003 /* BanlistTests.swift in Sources */,
 				A039AE411D95F17F009ABFD1 /* yugiohTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -837,7 +865,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.54;
+				MARKETING_VERSION = 1.55;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -865,7 +893,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.54;
+				MARKETING_VERSION = 1.55;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1040,7 +1068,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/yugioh",
 				);
-				MARKETING_VERSION = 1.54;
+				MARKETING_VERSION = 1.55;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sightcorner.yugioh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

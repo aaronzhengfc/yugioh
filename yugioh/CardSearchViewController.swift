@@ -1,530 +1,347 @@
-//
-//  CardSearchViewController.swift
-//  yugioh
-//
-//  Created by Aaron on 2/11/2016.
-//  Copyright © 2016 sightcorner. All rights reserved.
-//
-
-import Foundation
 import UIKit
 
-
-class CardSearchViewController: UIViewController {
-    
-    @IBOutlet weak var searchBarView: UIScrollView!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var inputField: UITextField!
-    @IBOutlet weak var attackRangeSlider: RangeSlider!
-    @IBOutlet weak var attackRangeLabel: UILabel!
-    @IBOutlet weak var defenseRangeSlider: RangeSlider!
-    
-    @IBOutlet weak var defenseRangeLabel: UILabel!
-    @IBOutlet weak var searchBarViewHeightConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var starRangeLabel: UILabel!
-    @IBOutlet weak var starRangeSlider: RangeSlider!
-    
-    
-    @IBOutlet weak var searchBarViewTopConstraint: NSLayoutConstraint!
-    
-    
-    
-    var cardEntitys = Array<CardEntity>()
-    var searchResult = Array<CardEntity>()
-    var cardService = CardService()
-    
-    var attackLow: Int = 0
-    var attackUp: Int = 10000
-    
-    var defenseLow: Int = 0
-    var defenseUp: Int = 10000
-    
-    var starLow: Int = 0
-    var starUp: Int = 12
-    
-    var rootFrame: CGSize = CGSize.zero
-    var contentHeight: CGFloat = 0
-    
-    var searchType = NSMutableSet()
-    var searchProperty = NSMutableSet()
-    var searchRace = NSMutableSet()
-    
-    
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        Bundle.main.loadNibNamed("CardSearchViewController", owner: self, options: nil)
+/// A committed search is independent of the sheet that edits it.
+struct CardSearchCriteria {
+    static let maximums = [10000, 10000, 12]
+    static var empty: CardSearchCriteria {
+        CardSearchCriteria(query: "", selections: [[], [], []], ranges: [(0, 10000), (0, 10000), (0, 12)])
     }
 
-    fileprivate var searchBarViewHeightConstraintValue:CGFloat = 0;
-    
+    var query: String
+    var selections: [Set<String>]
+    var ranges: [(Int, Int)]
+
+    var isEmpty: Bool {
+        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selections.allSatisfy { $0.isEmpty }
+            && ranges.enumerated().allSatisfy { $0.element.0 == 0 && $0.element.1 == Self.maximums[$0.offset] }
+    }
+
+    func filter(_ cards: [CardEntity]) -> [CardEntity] {
+        guard !isEmpty else { return cards }
+        let words = query.lowercased().split(whereSeparator: { $0.isWhitespace }).map(String.init)
+        return cards.filter { card in
+            let searchable = [card.id ?? "", card.enName ?? "", card.cnName ?? "", card.enDesc ?? "", card.cnDesc ?? ""]
+                .joined(separator: " ").lowercased()
+            guard words.allSatisfy({ searchable.contains($0) }) else { return false }
+            if !selections[0].isEmpty && !selections[0].contains(where: { card.getType().contains($0) }) { return false }
+            if !selections[1].isEmpty && !selections[1].contains(card.getAttribute() ?? "") { return false }
+            if !selections[2].isEmpty && !selections[2].contains(card.getRace() ?? "") { return false }
+            let values = [card.getAtk(), card.getDef(), card.getLevel()]
+            for index in 0..<3 {
+                let (lower, upper) = ranges[index]
+                // An untouched range includes cards without that numeric stat.
+                guard lower != 0 || upper != Self.maximums[index] else { continue }
+                guard let value = Int(values[index]), value >= lower, value <= upper else { return false }
+            }
+            return true
+        }
+    }
+}
+
+/// Draft conditions are committed only when the user taps Search.
+final class CardSearchViewController: UIViewController {
+    var criteria: CardSearchCriteria = .empty
+    var onSearch: ((CardSearchCriteria) -> Void)?
+
+    private let searchBar = UISearchBar()
+    private let filtersScrollView = UIScrollView()
+    private let filterContent = UIStackView()
+    private var selections: [Set<String>] = [[], [], []]
+    private var chipGroups: [SearchFilterChipsView] = []
+    private var rangeSliders: [RangeSlider] = []
+    private var rangeLabels: [UILabel] = []
+    private let rangeMaximums = CardSearchCriteria.maximums
+    private let accent = UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.42, green: 0.78, blue: 0.65, alpha: 1)
+        : UIColor(red: 0.12, green: 0.36, blue: 0.29, alpha: 1) }
+
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = .systemGroupedBackground
+        view.accessibilityIdentifier = "cardSearchSheet"
+    }
+
     override func viewDidLoad() {
-        searchBarViewHeightConstraintValue = searchBarViewHeightConstraint.constant
-        setup()
+        super.viewDidLoad()
+        view.tintColor = accent
+        selections = criteria.selections
+        setupLayout()
+        setupFilters()
+        searchBar.text = criteria.query
+    }
 
-        if isIPhoneX() {
-            self.searchBarViewTopConstraint.constant = 24
-        }
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) { updateSliderColors() }
     }
-    
-    
-    override func viewDidLayoutSubviews() {
-        self.searchBarView.contentSize = CGSize.init(width: rootFrame.width, height: contentHeight)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.isNavigationBarHidden = true
-        nc.addObserver(self, selector: #selector(CardSearchViewController.keyboardWillShow), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-    }
-    
-    
-    
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            self.searchBarViewHeightConstraint.constant = self.rootFrame.height - 16
-            - keyboardSize.height
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.isNavigationBarHidden = false
-        nc.removeObserver(self)
-    }
-    
-    private func setup() {
-        self.cardEntitys = getCardEntity()
-        //
-        self.rootFrame = UIScreen.main.bounds.size
-        self.inputField.returnKeyType = UIReturnKeyType.search
-        self.searchBarView.contentSize.width = self.rootFrame.width
-        
-        
-        //
-        self.view.backgroundColor = darkColor
-        self.searchBarView.backgroundColor = darkColor
-        self.cancelButton.tintColor = UIColor.white
-        self.cancelButton.setTitle(L10n.text("取消", "Cancel"), for: .normal)
-        self.cancelButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        self.cancelButton.addTarget(self, action: #selector(CardSearchViewController.clickCancelButton), for: .touchUpInside)
-        
-        let inputKeyWordText = L10n.text("搜索名称、效果或编号", "Search name, effect or ID")
-        self.inputField.attributedPlaceholder = NSAttributedString(string: inputKeyWordText, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        self.inputField.textColor = UIColor.white
-        self.inputField.text = nil
-        self.inputField.becomeFirstResponder()
-        self.inputField.delegate = self
-        
-        
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.register(CardTableViewCell.self, forCellReuseIdentifier: CardTableViewCell.identifier())
-        self.tableView.backgroundColor = .systemGroupedBackground
-        self.tableView.separatorStyle = .none
-        self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
-        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
-        
-        setupRangeSlider()
-        setupTypeButtons()
-    }
-    
-    private func setupTypeButtons() {
-        
-        //types
-        var defaultHeight = 120
-        let types = getValues(inputKey: "type")
-        defaultHeight = self.addButtons(datas: types, selector: #selector(clickTypeButton), dataWidth: language == "cn" ? 64 : 108, dataHeight: 32, dataDefaultHeight: defaultHeight)
-        
-        //propertys
-        let propertys = getValues(inputKey: "attribute")
-        defaultHeight = self.addButtons(datas: propertys, selector: #selector(clickPropertyButton), dataWidth: language == "cn" ? 60 : 84, dataHeight: 32, dataDefaultHeight: defaultHeight + 32 + 8 + 4)
-        
-        //races
-        let races = getValues(inputKey: "race")
-        defaultHeight = self.addButtons(datas: races, selector: #selector(clickRaceButton), dataWidth: language == "cn" ? 56 : 108, dataHeight: 32, dataDefaultHeight: defaultHeight + 32 + 8 + 4)
-        
-        
-        self.contentHeight = CGFloat(defaultHeight + 32 + 16)
 
+    private func setupLayout() {
+        let heading = UILabel()
+        heading.text = L10n.text("搜索卡牌", "Search Cards")
+        heading.font = .preferredFont(forTextStyle: .headline)
+        heading.adjustsFontForContentSizeCategory = true
+        let cancel = UIButton(type: .system)
+        cancel.setTitle(L10n.text("取消", "Cancel"), for: .normal)
+        cancel.accessibilityIdentifier = "cardSearchCancel"
+        cancel.addTarget(self, action: #selector(cancelSearch), for: .touchUpInside)
+        let reset = UIButton(type: .system)
+        reset.setTitle(L10n.text("清除条件", "Clear"), for: .normal)
+        reset.accessibilityIdentifier = "cardSearchReset"
+        reset.addTarget(self, action: #selector(resetFilters), for: .touchUpInside)
+        let header = UIStackView(arrangedSubviews: [cancel, UIView(), heading, UIView(), reset])
+        header.alignment = .center
+        header.distribution = .equalSpacing
+        header.isLayoutMarginsRelativeArrangement = true
+        header.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 15, leading: 16, bottom: 4, trailing: 16)
+        cancel.heightAnchor.constraint(greaterThanOrEqualToConstant: 44).isActive = true
+        reset.heightAnchor.constraint(greaterThanOrEqualToConstant: 44).isActive = true
+
+        searchBar.searchBarStyle = .minimal
+        searchBar.placeholder = L10n.text("搜索名称、效果或编号", "Search name, effect or ID")
+        searchBar.delegate = self
+        searchBar.autocapitalizationType = .none
+        searchBar.autocorrectionType = .no
+        searchBar.searchTextField.font = .preferredFont(forTextStyle: .body)
+        searchBar.searchTextField.adjustsFontForContentSizeCategory = true
+        searchBar.searchTextField.accessibilityIdentifier = "cardSearchField"
+        searchBar.searchTextField.backgroundColor = .secondarySystemGroupedBackground
+
+        filterContent.axis = .vertical
+        filterContent.spacing = 16
+        filterContent.isLayoutMarginsRelativeArrangement = true
+        filterContent.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 14, bottom: 18, trailing: 14)
+        filterContent.backgroundColor = .secondarySystemGroupedBackground
+        filterContent.layer.cornerRadius = 14
+        filterContent.layer.cornerCurve = .continuous
+        filtersScrollView.addSubview(filterContent)
+        filterContent.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            filterContent.topAnchor.constraint(equalTo: filtersScrollView.contentLayoutGuide.topAnchor),
+            filterContent.leadingAnchor.constraint(equalTo: filtersScrollView.contentLayoutGuide.leadingAnchor, constant: 12),
+            filterContent.trailingAnchor.constraint(equalTo: filtersScrollView.contentLayoutGuide.trailingAnchor, constant: -12),
+            filterContent.bottomAnchor.constraint(equalTo: filtersScrollView.contentLayoutGuide.bottomAnchor, constant: -8),
+            filterContent.widthAnchor.constraint(equalTo: filtersScrollView.frameLayoutGuide.widthAnchor, constant: -24)
+        ])
+        filtersScrollView.alwaysBounceVertical = true
+        filtersScrollView.keyboardDismissMode = .onDrag
+        filtersScrollView.accessibilityIdentifier = "cardSearchConditions"
+
+        let submit = UIButton(type: .system)
+        var style = UIButton.Configuration.filled()
+        style.title = L10n.text("搜索", "Search")
+        style.baseBackgroundColor = accent
+        style.cornerStyle = .large
+        submit.configuration = style
+        submit.accessibilityIdentifier = "cardSearchSubmit"
+        submit.addTarget(self, action: #selector(submitSearch), for: .touchUpInside)
+        submit.heightAnchor.constraint(greaterThanOrEqualToConstant: 48).isActive = true
+        let footer = UIView()
+        footer.addSubview(submit)
+        submit.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            submit.leadingAnchor.constraint(equalTo: footer.leadingAnchor, constant: 16),
+            submit.trailingAnchor.constraint(equalTo: footer.trailingAnchor, constant: -16),
+            submit.topAnchor.constraint(equalTo: footer.topAnchor, constant: 8),
+            submit.bottomAnchor.constraint(equalTo: footer.bottomAnchor, constant: -8)
+        ])
+        let stack = UIStackView(arrangedSubviews: [header, searchBar, filtersScrollView, footer])
+        stack.axis = .vertical
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stack.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+        ])
     }
-    
-    private func addButtons(datas: [String], selector: Selector,
-                              dataWidth: Int, dataHeight: Int, dataDefaultHeight: Int
-                              ) -> Int {
-        let rootWidth = self.rootFrame.width
-        let columnGap: Int = 8
-        let rowGap: Int = 4
-        
-        var num = Int(rootWidth) / (dataWidth + columnGap)
-        if num > datas.count {
-            num = datas.count
+
+    private func setupFilters() {
+        let rangeNames = [L10n.text("攻击力", "ATK"), L10n.text("守备力", "DEF"), L10n.text("等级 / 阶级", "Level / Rank")]
+        for index in 0..<3 {
+            let label = makeHeading(rangeNames[index])
+            let slider = RangeSlider(frame: CGRect(x: 0, y: 0, width: 280, height: 32))
+            slider.maximumValue = Double(rangeMaximums[index])
+            slider.lowerValue = Double(criteria.ranges[index].0)
+            slider.upperValue = Double(criteria.ranges[index].1)
+            slider.tag = index
+            slider.heightAnchor.constraint(equalToConstant: 32).isActive = true
+            slider.addTarget(self, action: #selector(rangeChanged(_:)), for: .valueChanged)
+            slider.accessibilityLabel = rangeNames[index]
+            let row = UIStackView(arrangedSubviews: [label, slider])
+            row.axis = .vertical
+            row.spacing = 5
+            rangeSliders.append(slider)
+            rangeLabels.append(label)
+            filterContent.addArrangedSubview(row)
         }
-        let gap = (Int(rootWidth) - (dataWidth + columnGap) * num - columnGap) / 2 + columnGap
-        
-        var row = 0
-        var column = 0
-        
-        var lastHeight: Int = 0
-        
-        
-        for data in datas {
-            let f = CGRect(x: gap + column * (dataWidth + columnGap), y: dataDefaultHeight + row * (dataHeight + rowGap), width: dataWidth, height: dataHeight)
-            lastHeight = dataDefaultHeight + row * (dataHeight + rowGap)
-            let button = DataButton(frame: f)
-            button.layer.cornerRadius = 4
-            button.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .normal)
-            button.titleLabel?.font = attackRangeLabel.font
-            button.backgroundColor = greyColor.withAlphaComponent(0.12)
-            button.data = data
-            button.setTitle(data, for: .normal)
-            button.titleLabel?.adjustsFontSizeToFitWidth = true
-            button.titleLabel?.minimumScaleFactor = 0.7
-            button.addTarget(self, action: selector, for: .touchUpInside)
-            self.searchBarView.addSubview(button)
-            
-            column = column + 1
-            if column == num {
-                column = 0
-                row = row + 1
+        let titles = [L10n.text("类型", "Card Type"), L10n.text("属性", "Attribute"), L10n.text("种族", "Race")]
+        for (index, key) in ["type", "attribute", "race"].enumerated() {
+            let group = SearchFilterChipsView(values: getValues(inputKey: key), accent: accent)
+            group.setSelection(selections[index])
+            group.onToggle = { [weak self] value in
+                guard let self = self else { return }
+                if self.selections[index].contains(value) { self.selections[index].remove(value) }
+                else { self.selections[index].insert(value) }
             }
+            chipGroups.append(group)
+            let section = UIStackView(arrangedSubviews: [makeHeading(titles[index]), group])
+            section.axis = .vertical
+            section.spacing = 8
+            filterContent.addArrangedSubview(section)
         }
-        return lastHeight
-        
+        updateRangeLabels()
+        updateSliderColors()
     }
-    
-    private func clickButton(button: DataButton, set: NSMutableSet) {
-        if button.backgroundColor == greyColor.withAlphaComponent(0.12) {
-            button.backgroundColor = greyColor.withAlphaComponent(0.38)
-            set.add(button.data)
-        } else {
-            button.backgroundColor = greyColor.withAlphaComponent(0.12)
-            set.remove(button.data)
+
+    private func makeHeading(_ title: String) -> UILabel {
+        let label = UILabel()
+        label.text = title
+        label.font = .preferredFont(forTextStyle: .subheadline)
+        label.adjustsFontForContentSizeCategory = true
+        label.textColor = .label
+        label.numberOfLines = 0
+        return label
+    }
+
+    private func updateSliderColors() {
+        for slider in rangeSliders {
+            slider.trackTintColor = .tertiarySystemFill
+            slider.trackHighlightTintColor = accent.resolvedColor(with: traitCollection)
+            slider.thumbTintColor = .systemBackground
+            slider.thumbBorderColor = accent.resolvedColor(with: traitCollection)
+            slider.thumbBorderWidth = 1.5
         }
     }
-    
-    
-    @objc func clickTypeButton(button: DataButton) {
-        self.clickButton(button: button, set: searchType)
+
+    private func bounds(for index: Int) -> (Int, Int) {
+        let step = index == 2 ? 1 : 500
+        return (Int(rangeSliders[index].lowerValue) / step * step,
+                Int(rangeSliders[index].upperValue) / step * step)
     }
-    
-    @objc func clickPropertyButton(button: DataButton) {
-        self.clickButton(button: button, set: searchProperty)
-    }
-    
-    @objc func clickRaceButton(button: DataButton) {
-        self.clickButton(button: button, set: searchRace)
-    }
-    
-    
-    
-    private func setupRangeSlider() {
-        setupRangeSliderStyle(rangeSlider: self.attackRangeSlider)
-        self.attackRangeSlider.addTarget(self, action: #selector(CardSearchViewController.attackRangeSliderHandler), for: .valueChanged)
-        var atkText = "攻 "
-        var defText = "防 "
-        var starText = "星 "
-        if language != "cn" {
-            atkText = "atk "
-            defText = "def "
-            starText = "star "
+
+    private func updateRangeLabels() {
+        let names = [L10n.text("攻击力", "ATK"), L10n.text("守备力", "DEF"), L10n.text("等级 / 阶级", "Level / Rank")]
+        for index in 0..<3 {
+            let (lower, upper) = bounds(for: index)
+            rangeLabels[index].text = "\(names[index])  \(lower) – \(upper)"
+            rangeSliders[index].accessibilityValue = "\(lower) – \(upper)"
         }
-        self.attackRangeLabel.text = atkText + attackLow.description + " ~ " + attackUp.description
-        
-        setupRangeSliderStyle(rangeSlider: self.defenseRangeSlider)
-        self.defenseRangeSlider.addTarget(self, action: #selector(CardSearchViewController.defenseRangeSliderHandler), for: .valueChanged)
-        defenseRangeLabel.text = defText + defenseLow.description + " ~ " + defenseUp.description
-        
-        setupRangeSliderStyle(rangeSlider: self.starRangeSlider)
-        self.starRangeSlider.addTarget(self, action: #selector(CardSearchViewController.starRangeSliderHandler), for: .valueChanged)
-        starRangeLabel.text = starText + starLow.description + " ~ " + starUp.description
     }
-    
-    private func setupRangeSliderStyle(rangeSlider: RangeSlider) {
-        rangeSlider.trackTintColor = UIColor.clear
-        rangeSlider.trackHighlightTintColor = UIColor.white.withAlphaComponent(0.70)
-        rangeSlider.thumbBorderColor = UIColor.clear
-        rangeSlider.thumbTintColor = greyColor
-        
+
+    @objc private func cancelSearch() { dismiss(animated: true) }
+
+    @objc private func submitSearch() {
+        let selected = CardSearchCriteria(query: searchBar.text ?? "", selections: selections,
+                                          ranges: (0..<3).map { bounds(for: $0) })
+        view.endEditing(true)
+        dismiss(animated: true) { [onSearch] in onSearch?(selected) }
     }
-    
-    
-    @objc func clickCancelButton() {
-        _ = self.navigationController?.popViewController(animated: false)
-    }
-    
-    @objc func attackRangeSliderHandler(sender: RangeSlider) {
-        var atkText = "攻 "
-        if language != "cn" {
-            atkText = "atk "
+
+    @objc private func resetFilters() {
+        searchBar.text = ""
+        selections = [[], [], []]
+        chipGroups.forEach { $0.clearSelection() }
+        for index in 0..<3 {
+            rangeSliders[index].lowerValue = 0
+            rangeSliders[index].upperValue = Double(rangeMaximums[index])
         }
-        attackLow = Int(sender.lowerValue / 500) * 500
-        attackUp = Int(sender.upperValue / 500) * 500
-        attackRangeLabel.text = atkText + attackLow.description + " ~ " + attackUp.description
+        updateRangeLabels()
     }
-    
-    @objc func defenseRangeSliderHandler(sender: RangeSlider) {
-        var defText = "防 "
-        if language != "cn" {
-            defText = "def "
-        }
-        defenseLow = Int(sender.lowerValue / 500) * 500
-        defenseUp = Int(sender.upperValue / 500) * 500
-        defenseRangeLabel.text = defText + defenseLow.description + " ~ " + defenseUp.description
-    }
-    
-    @objc func starRangeSliderHandler(sender: RangeSlider) {
-        var starText = "星 "
-        if language != "cn" {
-            starText = "star "
-        }
-        starLow = Int(sender.lowerValue)
-        starUp = Int(sender.upperValue)
-        starRangeLabel.text = starText + starLow.description + " ~ " + starUp.description
-    }
-    
-    @objc(tableView:didSelectRowAtIndexPath:)
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.tableView.deselectRow(at: indexPath, animated: true)
-        let controller = CardDetailViewController()
-        controller.cardEntity = searchResult[indexPath.row]
-        controller.proxy = self.tableView
-        controller.hidesBottomBarWhenPushed = true
-        
-        let back = UIBarButtonItem()
-        back.title = navigationBarTitleText
-        self.navigationItem.backBarButtonItem = back
-        self.navigationController?.pushViewController(controller, animated: true)
-    }
+
+    @objc private func rangeChanged(_ slider: RangeSlider) { updateRangeLabels() }
 }
 
-
-extension CardSearchViewController: UITextFieldDelegate {
-    
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        
-        hideRangeSlider(flag: false)
-        
-        
-        return true
-    }
-    
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.searchBarView.isScrollEnabled = false
-        textField.resignFirstResponder()
-        var result: Array<CardEntity> = []
-        let input = textField.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        //setLog(event: AnalyticsEventSearch, description: input)
-    
-        
-        for i in 0 ..< cardEntitys.count {
-            let c = cardEntitys[i]
-            //input search
-            if input != "" {
-                let inputArray = input?.split(separator: " ")
-                var inputFound = true
-                for inputTmp in inputArray! {
-                    if !c.getName().lowercased().contains(inputTmp.description)
-                        && !c.getDesc().lowercased().contains(inputTmp.description)
-                        && !c.getId().lowercased().contains(inputTmp.description) {
-                        inputFound = false
-                        break
-                    }
-                }
-                if !inputFound {
-                    continue
-                }
-            }
-            
-            //type search
-            if searchType.count > 0 {
-                var searchTypeFound = false
-                
-                for case let t as String in searchType {
-                    if c.getType().contains(t) {
-                        searchTypeFound = true
-                    }
-                }
-                
-                if !searchTypeFound {
-                    continue
-                }
-                
-            }
-            
-            //race search
-            if searchRace.count > 0 {
-                if !searchRace.contains(c.getRace()!) {
-                    continue
-                }
-            }
-            
-            
-            //property search
-            if searchProperty.count > 0 {
-                if !searchProperty.contains(c.getAttribute()!) {
-                    continue
-                }
-            }
-            
-            
-            
-            //attack search
-            if attackLow != 0 {
-                if let attack = Int.init(c.getAtk()) {
-                    if attack < attackLow {
-                        continue
-                    }
-                } else {
-                    continue
-                }
-            }
-            if attackUp != 10000 {
-                if let attack = Int.init(c.getAtk()) {
-                    if attack > attackUp {
-                        continue
-                    }
-                } else {
-                    continue
-                }
-            }
-            
-            
-            //defense search
-            if defenseLow != 0 {
-                if let defense = Int.init(c.getDef()) {
-                    if defense < defenseLow {
-                        continue
-                    }
-                } else {
-                    continue
-                }
-            }
-            if defenseUp != 10000 {
-                if let defense = Int.init(c.getDef()) {
-                    if defense > defenseUp {
-                        continue
-                    }
-                } else {
-                    continue
-                }
-            }
-            
-            //star search
-            if starLow != 0 {
-                if let star = Int.init(c.getLevel()) {
-                    if star < starLow {
-                        continue
-                    }
-                } else {
-                    continue
-                }
-            }
-            if starUp != 12 {
-                if let star = Int.init(c.getLevel()) {
-                    if star > starUp {
-                        continue
-                    }
-                } else {
-                    continue
-                }
-            }
-            
-            
-            //
-            result.append(c)
-        }
-    
-        
-        
-        
-        if result.count > 0 {
-            self.searchResult = result
-            self.tableView.reloadData()
-        }
-            
-        
-        hideRangeSlider(flag: true)
-        self.searchBarViewHeightConstraint.constant = 56
-        self.searchBarView.setContentOffset(CGPoint.init(x: 0, y: -20), animated: false)
-        
-        return true
-    }
-    
-    func hideRangeSlider(flag: Bool) {
-        self.attackRangeSlider.isHidden = flag
-        self.defenseRangeSlider.isHidden = flag
-        self.starRangeSlider.isHidden = flag
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.searchResult = []
-        self.tableView.reloadData()
-        self.searchBarView.isScrollEnabled = true
-    }
-    
-    
-    
+extension CardSearchViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) { submitSearch() }
 }
 
+/// Self-sizing flow layout keeps translated filter chips readable at any width.
+private final class SearchFilterChipsView: UIView {
+    var onToggle: ((String) -> Void)?
+    private let values: [String]
+    private let accent: UIColor
+    private var buttons: [UIButton] = []
+    private var measuredHeight: CGFloat = 44
 
-extension CardSearchViewController: UITableViewDataSource {
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return searchResult.count
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: CardTableViewCell.identifier(), for: indexPath) as! CardTableViewCell
-        let cardEntity = searchResult[indexPath.row]
-        cardEntity.isSelected = false
-        let list = cardService.list()
-        for i in 0 ..< list.count {
-            if cardEntity.id == list[i] {
-                cardEntity.isSelected = true
-                break
-            }
+    init(values: [String], accent: UIColor) {
+        self.values = values
+        self.accent = accent
+        super.init(frame: .zero)
+        for (index, title) in values.enumerated() {
+            let button = UIButton(type: .system)
+            button.tag = index
+            button.accessibilityLabel = title
+            button.addTarget(self, action: #selector(toggle(_:)), for: .touchUpInside)
+            addSubview(button)
+            buttons.append(button)
+            updateStyle(button)
         }
-        
-        
-        cell.prepare(cardEntity: cardEntity, tableView: tableView, indexPath: indexPath)
-        return cell
-    }
-    
-    @objc(tableView:heightForRowAtIndexPath:)
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UIFontMetrics(forTextStyle: .caption1).scaledValue(for: 126) + 6
-    }
-   
-    
-    @objc(tableView:didEndDisplayingCell:forRowAtIndexPath:)
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        (cell as! CardTableViewCell).card.kf.cancelDownloadTask()
-    }
-    
-    @objc(tableView:willDisplayCell:forRowAtIndexPath:)
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        let cell = (cell as! CardTableViewCell)
-        
-        setImage(card: cell.card, id: searchResult[indexPath.row].id)
-        
-        
-        
     }
 
-    
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override var intrinsicContentSize: CGSize { CGSize(width: UIView.noIntrinsicMetric, height: measuredHeight) }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard bounds.width > 0 else { return }
+        var x: CGFloat = 0
+        var y: CGFloat = 0
+        var rowHeight: CGFloat = 0
+        for button in buttons {
+            let fitting = button.sizeThatFits(CGSize(width: bounds.width, height: .greatestFiniteMagnitude))
+            let width = min(bounds.width, ceil(fitting.width))
+            let height = max(44, ceil(fitting.height))
+            if x > 0 && x + width > bounds.width { x = 0; y += rowHeight + 6; rowHeight = 0 }
+            button.frame = CGRect(x: x, y: y, width: width, height: height)
+            x += width + 6
+            rowHeight = max(rowHeight, height)
+        }
+        let height = y + rowHeight
+        if measuredHeight != height { measuredHeight = height; invalidateIntrinsicContentSize() }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            buttons.forEach { updateStyle($0) }
+            setNeedsLayout()
+        }
+    }
+
+    func setSelection(_ selection: Set<String>) {
+        for (index, button) in buttons.enumerated() {
+            button.isSelected = selection.contains(values[index])
+            updateStyle(button)
+        }
+        setNeedsLayout()
+    }
+
+    func clearSelection() { setSelection([]) }
+
+    @objc private func toggle(_ button: UIButton) {
+        button.isSelected.toggle()
+        updateStyle(button)
+        setNeedsLayout()
+        onToggle?(values[button.tag])
+    }
+
+    private func updateStyle(_ button: UIButton) {
+        var configuration = button.isSelected ? UIButton.Configuration.filled() : .tinted()
+        configuration.title = values[button.tag]
+        let foreground: UIColor = button.isSelected ? .systemBackground : .secondaryLabel
+        configuration.baseForegroundColor = foreground
+        configuration.baseBackgroundColor = button.isSelected ? accent : .tertiarySystemFill
+        configuration.cornerStyle = .capsule
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
+        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
+            var updated = attributes
+            updated.font = .preferredFont(forTextStyle: .caption1)
+            updated.foregroundColor = foreground
+            return updated
+        }
+        button.configuration = configuration
+        button.accessibilityTraits = button.isSelected ? [.button, .selected] : [.button]
+    }
 }
-
-
-extension CardSearchViewController: UITableViewDelegate {
-    
-}
-

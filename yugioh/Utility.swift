@@ -82,6 +82,28 @@ func getCardUrl(id: String) -> String {
 fileprivate var cardEntitys: Array<CardEntity> = [];
 
 
+// AI-generated card text is marked separately from reviewed catalogue translations.
+private var aiTranslationFields: [String: Int]?
+func isAITranslated(cardID: String, field: Int) -> Bool {
+    guard !cardID.isEmpty else { return false }
+    if aiTranslationFields == nil {
+        var fields: [String: Int] = [:]
+        do {
+            let hasTable = try getDB().scalar("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='card_translation_ai'") as? Int64 ?? 0
+            if hasTable > 0 {
+                for row in try getDB().prepare("SELECT cardId,nameGenerated,descGenerated FROM card_translation_ai") {
+                    guard let id = row[0] as? Int64 else { continue }
+                    let name = (row[1] as? Int64 ?? 0) != 0 ? 1 : 0
+                    let description = (row[2] as? Int64 ?? 0) != 0 ? 2 : 0
+                    fields[String(id)] = name | description
+                }
+            }
+        } catch { print("Unable to load translation provenance: \(error.localizedDescription)") }
+        aiTranslationFields = fields
+    }
+    return (aiTranslationFields?[cardID] ?? 0) & field != 0
+}
+
 //获取所有卡牌列表
 func getCardEntity() -> Array<CardEntity> {
     if cardEntitys.count > 0 {

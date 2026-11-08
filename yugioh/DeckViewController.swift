@@ -15,7 +15,9 @@ class DeckViewController: UIViewController {
         for deck in sections.flatMap({ $0.decks }) {
             guard !deck.isCancelled else { continue }
             let key = deck.type + ":" + deck.id
-            if deck.type == "star" {
+            if deck.type == "banlist" {
+                summaries[key] = L10n.text("OCG / TCG · 按生效日期查看", "OCG / TCG · Browse by effective date")
+            } else if deck.type == "star" {
                 let count = CardService().list().count
                 summaries[key] = L10n.text("已收藏 \(count) 张卡牌", "\(count) favorite cards")
             } else if deck.type == "self" || summaries[key] == nil {
@@ -38,6 +40,9 @@ class DeckViewController: UIViewController {
         let decks = getDeckViewEntity()
         let history = loadDeckHistory()
         sections = [Section(title: L10n.text("我的空间", "My Collection"), decks: decks.filter { $0.type == "star" || $0.type == "self" })]
+        sections.append(Section(title: L10n.text("禁限卡档案", "Forbidden & Limited Archive"), decks: [
+            DeckViewEntity(id: "banlists", title: L10n.text("历期禁限表", "Forbidden & Limited Lists"), introduction: "", type: "banlist")
+        ]))
         if history.isEmpty {
             sections.append(Section(title: L10n.text("历届世界冠军", "World Champions"), decks: decks.filter { $0.type == "worldchampionship" }))
         } else {
@@ -112,7 +117,9 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         let deck = sections[indexPath.section].decks[indexPath.row]
         guard !deck.isCancelled else { return }
-        if deck.type == "star" {
+        if deck.type == "banlist" {
+            navigationController?.pushViewController(BanlistViewController(), animated: true)
+        } else if deck.type == "star" {
             navigationController?.pushViewController(CardViewWithStarController(), animated: true)
         } else {
             let controller = CardDeckViewController()

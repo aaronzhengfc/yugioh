@@ -2,15 +2,17 @@ import UIKit
 import Kingfisher
 
 class CardTableViewCell: UITableViewCell {
+    static var rowHeight: CGFloat {
+        max(122, UIFontMetrics(forTextStyle: .caption1).scaledValue(for: 130)) + 6
+    }
+
     let card = UIImageView()
     private let panel = UIView()
     private let nameLabel = UILabel()
     private let metadata = UILabel()
     private let stats = UILabel()
     private let effect = UILabel()
-    private let footnote = UILabel()
-    private let cardID = UILabel()
-    private let date = UILabel()
+    private let footer = CardMetadataRow()
     private let favorite = UIButton(type: .system)
     private var entity: CardEntity?
     private let cardService = CardService()
@@ -36,8 +38,7 @@ class CardTableViewCell: UITableViewCell {
         card.contentMode = .scaleAspectFit
         for (label, size, weight) in [(nameLabel, CGFloat(15), UIFont.Weight.semibold),
                                        (metadata, 11, .regular), (stats, 12, .regular),
-                                       (effect, 12, .regular), (footnote, 10, .regular),
-                                       (cardID, 10, .regular), (date, 10, .regular)] {
+                                       (effect, 12, .regular)] {
             label.font = UIFontMetrics(forTextStyle: .caption1).scaledFont(for: .systemFont(ofSize: size, weight: weight))
             label.adjustsFontForContentSizeCategory = true
             label.textColor = label == nameLabel ? .label : .secondaryLabel
@@ -54,14 +55,7 @@ class CardTableViewCell: UITableViewCell {
         let text = UIStackView(arrangedSubviews: [titleRow, metadata, stats, effect])
         text.axis = .vertical
         text.spacing = 3
-        let footer = UIStackView(arrangedSubviews: [footnote, cardID, date])
-        footer.distribution = .fillEqually
-        footer.spacing = 4
-        cardID.textAlignment = .center
-        date.textAlignment = .right
-        [footnote, cardID, date].forEach {
-            $0.setContentCompressionResistancePriority(.required, for: .vertical)
-        }
+        footer.setContentCompressionResistancePriority(.required, for: .vertical)
         [card, text, footer, favorite].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             panel.addSubview($0)
@@ -72,10 +66,9 @@ class CardTableViewCell: UITableViewCell {
             panel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
             panel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3),
             card.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 12),
-            card.topAnchor.constraint(equalTo: panel.topAnchor, constant: 9),
+            card.centerYAnchor.constraint(equalTo: panel.centerYAnchor),
             card.widthAnchor.constraint(equalToConstant: 72),
             card.heightAnchor.constraint(equalToConstant: 104),
-            card.bottomAnchor.constraint(lessThanOrEqualTo: panel.bottomAnchor, constant: -9),
             text.leadingAnchor.constraint(equalTo: card.trailingAnchor, constant: 10),
             text.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -14),
             text.topAnchor.constraint(equalTo: panel.topAnchor, constant: 9),
@@ -103,7 +96,7 @@ class CardTableViewCell: UITableViewCell {
         afterDeselect = nil
     }
 
-    func prepare(cardEntity: CardEntity, tableView: UITableView, indexPath: IndexPath) {
+    func prepare(cardEntity: CardEntity, tableView: UITableView, indexPath: IndexPath, banlistRelease: BanlistRelease? = nil) {
         entity = cardEntity
         nameLabel.text = cardEntity.getName()
         metadata.text = cardEntity.getMetadataText()
@@ -111,9 +104,7 @@ class CardTableViewCell: UITableViewCell {
         stats.text = statsText
         stats.isHidden = statsText.isEmpty
         effect.text = cardEntity.getDesc()
-        footnote.text = cardEntity.getBanlistInfoText()
-        cardID.text = "ID " + cardEntity.id
-        date.text = cardEntity.getStartDate()
+        footer.configure(cardID: cardEntity.id, date: cardEntity.getStartDate(), release: banlistRelease)
         updateFavorite()
     }
 

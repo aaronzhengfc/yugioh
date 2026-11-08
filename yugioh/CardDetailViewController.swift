@@ -13,12 +13,10 @@ class CardDetailViewController: UIViewController {
         ? .systemBackground : UIColor(red: 0.96, green: 0.965, blue: 0.96, alpha: 1) }
 
     private let cardService = CardService()
-    private let deckService = DeckService()
     private let scrollView = UIScrollView()
     private let content = UIStackView()
     private let cardImage = UIImageView()
     private let favoriteButton = UIButton(type: .system)
-    private let deckButton = UIButton(type: .system)
 
     override func loadView() {
         view = UIView()
@@ -54,51 +52,20 @@ class CardDetailViewController: UIViewController {
         content.backgroundColor = pageBackground
         view.addSubview(scrollView)
         scrollView.addSubview(content)
-        let actions = UIStackView(arrangedSubviews: [favoriteButton, deckButton])
-        actions.spacing = 12
-        actions.distribution = .fillEqually
-        let bottomBar = UIView()
-        bottomBar.backgroundColor = .systemBackground
-        view.addSubview(bottomBar)
-        bottomBar.addSubview(actions)
-        [scrollView, content, bottomBar, actions].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        content.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomBar.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             content.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             content.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             content.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            content.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
-            bottomBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            actions.topAnchor.constraint(equalTo: bottomBar.topAnchor, constant: 8),
-            actions.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor, constant: 20),
-            actions.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor, constant: -20),
-            actions.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
-            actions.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+            content.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
         ])
         favoriteButton.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
-        var configuration = UIButton.Configuration.filled()
-        configuration.title = L10n.text("卡组操作", "Deck Actions")
-        configuration.image = UIImage(systemName: "rectangle.stack.badge.plus")
-        configuration.imagePadding = 8
-        configuration.baseBackgroundColor = accent
-        configuration.baseForegroundColor = .systemBackground
-        configuration.cornerStyle = .large
-        deckButton.configuration = configuration
-        deckButton.menu = UIMenu(children: [
-            UIAction(title: L10n.text("加入我的卡组", "Add to My Deck"), image: UIImage(systemName: "plus")) { [weak self] _ in
-                self?.chooseDeck(isAdd: true)
-            },
-            UIAction(title: L10n.text("从我的卡组移除", "Remove from My Deck"), image: UIImage(systemName: "minus")) { [weak self] _ in
-                self?.chooseDeck(isAdd: false)
-            }
-        ])
-        deckButton.showsMenuAsPrimaryAction = true
     }
 
     private func populateContent() {
@@ -109,8 +76,12 @@ class CardDetailViewController: UIViewController {
         cardImage.accessibilityTraits = .button
         cardImage.isAccessibilityElement = true
         cardImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showCardImage)))
+        let preferredArtworkWidth = cardImage.widthAnchor.constraint(equalToConstant: 104)
+        preferredArtworkWidth.priority = UILayoutPriority(998)
         NSLayoutConstraint.activate([
-            cardImage.widthAnchor.constraint(equalToConstant: 104),
+            preferredArtworkWidth,
+            cardImage.widthAnchor.constraint(lessThanOrEqualToConstant: 104),
+            cardImage.widthAnchor.constraint(greaterThanOrEqualToConstant: 64),
             cardImage.heightAnchor.constraint(equalTo: cardImage.widthAnchor, multiplier: 230 / 160)
         ])
         cardImage.kf.setImage(with: URL(string: getCardUrl(id: cardEntity.id)), placeholder: UIImage(named: "defaultimg"))
@@ -118,7 +89,16 @@ class CardDetailViewController: UIViewController {
         summary.axis = .vertical
         summary.spacing = 8
         let name = label(cardEntity.getName() ?? "", style: .headline)
-        summary.addArrangedSubview(name)
+        favoriteButton.accessibilityIdentifier = "detailFavoriteStar"
+        favoriteButton.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(font: name.font, scale: .small), forImageIn: .normal)
+        NSLayoutConstraint.activate([
+            favoriteButton.widthAnchor.constraint(equalToConstant: 44),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 44)
+        ])
+        let titleRow = UIStackView(arrangedSubviews: [name, favoriteButton])
+        titleRow.alignment = .center
+        titleRow.spacing = 4
+        summary.addArrangedSubview(titleRow)
         let metadata = cardEntity.getMetadataText()
         summary.addArrangedSubview(label(metadata, style: .footnote, color: .secondaryLabel))
 
@@ -128,49 +108,75 @@ class CardDetailViewController: UIViewController {
             values.font = UIFontMetrics(forTextStyle: .footnote).scaledFont(for: .monospacedDigitSystemFont(ofSize: 13, weight: .regular))
             summary.addArrangedSubview(values)
         }
-        let spacer = UIView()
-        spacer.setContentHuggingPriority(.init(1), for: .vertical)
-        spacer.setContentCompressionResistancePriority(.init(1), for: .vertical)
-        summary.addArrangedSubview(spacer)
-        let banlist = label(cardEntity.getBanlistInfoText(), style: .caption2, color: .secondaryLabel)
-        let cardID = label("ID \(cardEntity.getId())", style: .caption2, color: .secondaryLabel)
-        let date = label(cardEntity.getStartDate(), style: .caption2, color: .secondaryLabel)
-        banlist.textAlignment = .left
-        cardID.textAlignment = .center
-        date.textAlignment = .right
-        let footer = UIStackView(arrangedSubviews: [banlist, cardID, date])
-        footer.distribution = .fillEqually
-        footer.spacing = 4
-        [banlist, cardID, date].forEach {
-            $0.font = UIFontMetrics(forTextStyle: .caption1).scaledFont(for: .systemFont(ofSize: 10, weight: .regular))
-            $0.numberOfLines = 1
-            $0.adjustsFontSizeToFitWidth = true
-            $0.minimumScaleFactor = 0.75
-            $0.setContentCompressionResistancePriority(.required, for: .vertical)
-        }
-        summary.addArrangedSubview(footer)
-        let header = UIStackView(arrangedSubviews: [cardImage, summary])
-        header.spacing = 12
-        header.alignment = .top
+        let metadataRow = CardMetadataRow()
+        metadataRow.configure(cardID: cardEntity.id, date: cardEntity.getStartDate())
+        summary.addArrangedSubview(UIView())
+        summary.addArrangedSubview(metadataRow)
+
+        // Let the artwork yield some width on smaller phones before scrolling the metadata.
+        let visibleMetadata = summary.widthAnchor.constraint(greaterThanOrEqualTo: metadataRow.contentLayoutGuide.widthAnchor)
+        visibleMetadata.priority = UILayoutPriority(999)
+        visibleMetadata.isActive = true
+        let artworkSummary = UIStackView(arrangedSubviews: [cardImage, summary])
+        artworkSummary.spacing = 10
+        artworkSummary.alignment = .center
         summary.heightAnchor.constraint(greaterThanOrEqualTo: cardImage.heightAnchor).isActive = true
-        header.isLayoutMarginsRelativeArrangement = true
+        let header = makePanel([artworkSummary])
         header.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
-        header.backgroundColor = .secondarySystemGroupedBackground
-        header.layer.cornerRadius = 14
-        header.layer.cornerCurve = .continuous
         content.addArrangedSubview(header)
         addPanel(title: L10n.text("卡牌效果", "Card Effect"), body: cardEntity.getDesc() ?? "")
+        addArchivedRestrictionPanel()
         addAlternateImages()
     }
 
-    private func addPanel(title: String, body: String) {
+    private func addArchivedRestrictionPanel() {
+        let service = BanlistService.shared
+        let heading = panelHeading(L10n.text("历史禁限表", "Forbidden & Limited History"))
+        heading.accessibilityIdentifier = "banlistHistory"
+        var views: [UIView] = [heading]
+
+        for format in CardFormat.allCases {
+            let formatHeading = label(format.rawValue, style: .subheadline)
+            formatHeading.font = UIFont.preferredFont(forTextStyle: .subheadline).withTraits(.traitBold)
+            formatHeading.accessibilityIdentifier = "banlistHistory" + format.rawValue
+            views.append(formatHeading)
+            let history = service.history(for: cardEntity.id, format: format)
+            if history.isEmpty {
+                views.append(label(L10n.text("已收录版本中没有限制变化", "No restriction changes in the archive"), style: .caption1, color: .secondaryLabel))
+            } else {
+                for entry in history {
+                    let status = entry.restriction?.title ?? L10n.text("待更新", "Unknown")
+                    let upcoming = entry.release.effectiveDate > BanlistService.today
+                        ? L10n.text(" · 尚未生效", " · Upcoming") : ""
+                    let incomplete = !entry.release.isComplete
+                        ? L10n.text(" · 资料不完整", " · Incomplete archive") : ""
+                    let row = label("\(entry.release.effectiveDate) · \(status)\(upcoming)\(incomplete)",
+                                    style: .caption1, color: RestrictionBadgeLabel.ink(for: entry.restriction))
+                    views.append(row)
+                }
+            }
+        }
+        let panel = makePanel(views)
+        panel.accessibilityIdentifier = "banlistHistoryPanel"
+        content.addArrangedSubview(panel)
+    }
+
+    private func panelHeading(_ title: String) -> UILabel {
         let heading = label(title, style: .footnote, color: accent)
         heading.font = UIFont.preferredFont(forTextStyle: .footnote).withTraits(.traitBold)
+        return heading
+    }
+
+    private func addPanel(title: String, body: String) {
         let text = label(body, style: .subheadline)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 3
         text.attributedText = NSAttributedString(string: body, attributes: [.paragraphStyle: paragraph])
-        let panel = UIStackView(arrangedSubviews: [heading, text])
+        content.addArrangedSubview(makePanel([panelHeading(title), text]))
+    }
+
+    private func makePanel(_ views: [UIView]) -> UIStackView {
+        let panel = UIStackView(arrangedSubviews: views)
         panel.axis = .vertical
         panel.spacing = 8
         panel.isLayoutMarginsRelativeArrangement = true
@@ -178,7 +184,7 @@ class CardDetailViewController: UIViewController {
         panel.backgroundColor = .secondarySystemGroupedBackground
         panel.layer.cornerRadius = 14
         panel.layer.cornerCurve = .continuous
-        content.addArrangedSubview(panel)
+        return panel
     }
 
     private func addAlternateImages() {
@@ -186,7 +192,6 @@ class CardDetailViewController: UIViewController {
               let images = (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]] else { return }
         let ids = images.compactMap { ($0["id"] as? NSNumber)?.stringValue }.filter { $0 != cardEntity.id }
         guard !ids.isEmpty else { return }
-        content.addArrangedSubview(label(L10n.text("其他卡图", "Alternate Artwork"), style: .headline))
         let scroller = UIScrollView()
         let row = UIStackView()
         row.spacing = 12
@@ -209,7 +214,8 @@ class CardDetailViewController: UIViewController {
             image.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showAlternateImage(_:))))
             row.addArrangedSubview(image)
         }
-        content.addArrangedSubview(scroller)
+        let heading = panelHeading(L10n.text("其他卡图", "Alternate Artwork"))
+        content.addArrangedSubview(makePanel([heading, scroller]))
     }
 
     @objc private func showCardImage() { showImage(cardImage.image) }
@@ -233,30 +239,10 @@ class CardDetailViewController: UIViewController {
     private func updateFavorite() {
         let selected = cardService.isExist(id: cardEntity.id)
         cardEntity.isSelected = selected
-        var configuration = UIButton.Configuration.tinted()
-        configuration.title = selected ? L10n.text("已收藏", "Favorited") : L10n.text("收藏", "Favorite")
-        configuration.image = UIImage(systemName: selected ? "star.fill" : "star")
-        configuration.imagePadding = 8
-        configuration.baseForegroundColor = selected ? .systemOrange : .tertiaryLabel
-        configuration.baseBackgroundColor = selected ? .systemOrange : .tertiaryLabel
-        configuration.cornerStyle = .large
-        favoriteButton.configuration = configuration
+        favoriteButton.setImage(UIImage(systemName: selected ? "star.fill" : "star"), for: .normal)
+        favoriteButton.tintColor = selected ? .systemOrange : .tertiaryLabel
+        favoriteButton.accessibilityLabel = selected ? L10n.text("取消收藏", "Remove from favorites") : L10n.text("收藏卡牌", "Favorite card")
         favoriteButton.accessibilityTraits = selected ? [.button, .selected] : [.button]
-    }
-
-    private func chooseDeck(isAdd: Bool) {
-        let sheet = UIAlertController(title: isAdd ? L10n.text("加入我的卡组", "Add to My Deck") : L10n.text("从我的卡组移除", "Remove from My Deck"), message: L10n.text("选择卡组区域", "Choose a deck section"), preferredStyle: .actionSheet)
-        for (title, type) in [(L10n.text("主卡组", "Main Deck"), "0"), (L10n.text("副卡组", "Side Deck"), "1"), (L10n.text("额外卡组", "Extra Deck"), "2")] {
-            sheet.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
-                guard let self = self else { return }
-                if isAdd { self.deckService.save(id: self.cardEntity.id, type: type) }
-                else { self.deckService.delete(id: self.cardEntity.id, type: type) }
-            })
-        }
-        sheet.addAction(UIAlertAction(title: L10n.text("取消", "Cancel"), style: .cancel))
-        sheet.popoverPresentationController?.sourceView = deckButton
-        sheet.popoverPresentationController?.sourceRect = deckButton.bounds
-        present(sheet, animated: true)
     }
 
     @objc private func shareButtonHandler() {
@@ -264,6 +250,9 @@ class CardDetailViewController: UIViewController {
         let format = UIGraphicsImageRendererFormat()
         format.scale = 3
         let image = UIGraphicsImageRenderer(size: content.bounds.size, format: format).image { context in
+            let previousAlpha = favoriteButton.alpha
+            favoriteButton.alpha = 0
+            defer { favoriteButton.alpha = previousAlpha }
             content.layer.render(in: context.cgContext)
         }
         WeChatSharing.sendImage(image, from: self)

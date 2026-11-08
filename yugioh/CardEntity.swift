@@ -82,14 +82,14 @@ class CardEntity {
     
     
     func getName() -> String! {
-        if language == "cn", !cnName.isEmpty { return cnName }
+        if language == "cn", !cnName.isEmpty { return (isAITranslated(cardID: id ?? "", field: 1) ? "[AI译] " : "") + cnName }
         if !enName.isEmpty { return language == "cn" ? "[待译] " + enName : enName }
         if !cnName.isEmpty { return "[English unavailable] " + cnName }
         return id
     }
 
     func getDesc() -> String! {
-        if language == "cn", !cnDesc.isEmpty { return cnDesc }
+        if language == "cn", !cnDesc.isEmpty { return (isAITranslated(cardID: id ?? "", field: 2) ? "[AI译] " : "") + cnDesc }
         if !enDesc.isEmpty { return language == "cn" ? "[待译] " + enDesc : enDesc }
         if !cnDesc.isEmpty { return "[English unavailable] " + cnDesc }
         return ""
@@ -215,23 +215,7 @@ class CardEntity {
     }
     
     func getBanlistInfoText() -> String {
-        // 禁止，限制，准限制，无限制
-        var r = "Unlimited"
-        if banlistInfo != nil && banlistInfo.contains("Semi-Limited") {
-            r = "Semi-Limited"
-        }
-        if banlistInfo != nil && banlistInfo.contains("Limited") {
-            r = "Limited"
-        }
-        if banlistInfo != nil && banlistInfo.contains("Banned") {
-            r = "Forbidden"
-        }
-        
-        if(language != "en") {
-            r = getValue(key: "ban", subKey: r, language: language)
-        }
-        
-        return r;
+        return BanlistService.shared.label(for: getId())
     }
     
     func getStartDate() -> String {

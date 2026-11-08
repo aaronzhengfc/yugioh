@@ -53,6 +53,8 @@ class ViewController: UITabBarController {
         self.setupData()
         navigationItem.title = navigationBarTitleText
         packButton.title = L10n.text("搜索", "Search")
+        packButton.target = self
+        packButton.action = #selector(openCardSearch)
         let titles = [L10n.text("卡牌", "Cards"), L10n.text("卡组", "Decks"), L10n.text("工具", "Tools")]
         for (index, controller) in (viewControllers ?? []).enumerated() {
             controller.tabBarItem.title = titles[index]
@@ -141,6 +143,10 @@ class ViewController: UITabBarController {
             button.configuration?.baseForegroundColor = selected ? greenColor : .secondaryLabel
             button.accessibilityTraits = selected ? [.button, .selected] : [.button]
         }
+    }
+
+    @objc private func openCardSearch() {
+        (selectedViewController as? CardViewBaseController)?.presentCardSearch()
     }
 
     private func setupData() {

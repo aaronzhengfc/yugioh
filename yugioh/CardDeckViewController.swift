@@ -34,6 +34,8 @@ class CardDeckViewController: UIViewController {
     private let modeControl = UISegmentedControl(items: [L10n.text("构筑解读", "Analysis"), L10n.text("卡牌配方", "Deck List")])
     private let readingView = UIScrollView()
     private let recipeSummary = UILabel()
+    private let restrictionNotice = UILabel()
+    private var isSharing = false
 
     override func loadView() {
         view = UIView()
@@ -60,6 +62,14 @@ class CardDeckViewController: UIViewController {
         recipeSummary.textColor = .secondaryLabel
         recipeSummary.numberOfLines = 0
         heading.addArrangedSubview(recipeSummary)
+        if deckViewEntity.type == "self" {
+            restrictionNotice.font = .preferredFont(forTextStyle: .caption1)
+            restrictionNotice.adjustsFontForContentSizeCategory = true
+            restrictionNotice.textColor = .systemOrange
+            restrictionNotice.numberOfLines = 0
+            heading.addArrangedSubview(restrictionNotice)
+            heading.addArrangedSubview(makeLabel(L10n.text("点按查看详情 · 长按卡牌调整数量或移除", "Tap for details · Hold a card to change quantity or remove it"), style: .caption1))
+        }
 
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 8
@@ -73,7 +83,7 @@ class CardDeckViewController: UIViewController {
         readingView.alwaysBounceVertical = true
         view.addSubview(readingView)
         let guideImage = UIImageView()
-        let emptyMessage = makeLabel(L10n.text("你的卡组还是空的。打开任意卡牌详情，点击“卡组操作”即可添加卡牌。", "Your deck is empty. Open a card's details and use Deck Actions to add it."), style: .body)
+        let emptyMessage = makeLabel(L10n.text("你的卡组还是空的。点击右上角“添加卡牌”，选择要加入的卡牌。", "Your deck is empty. Tap Add Cards at the top right to start building it."), style: .body)
         emptyMessage.textAlignment = .center
         emptyMessage.translatesAutoresizingMaskIntoConstraints = false
         guideImage.addSubview(emptyMessage)
@@ -179,6 +189,10 @@ class CardDeckViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        reloadDeck()
+    }
+
+    private func reloadDeck() {
         self.guide.alpha = 0
         
         //代表是自己的卡组，所以必须请求数据
@@ -202,8 +216,8 @@ class CardDeckViewController: UIViewController {
         let counts = (0...2).map { (deckEntitys[String($0)] ?? []).reduce(0) { $0 + $1.number } }
         let side = deckViewEntity.history?.recipeStatus == "partial" ? L10n.text("待补充", "Pending") : L10n.text("\(counts[1]) 张", "\(counts[1]) cards")
         recipeSummary.text = L10n.text("主卡 \(counts[0]) 张  ·  额外 \(counts[2]) 张  ·  副卡 \(side)", "Main \(counts[0]) · Extra \(counts[2]) · Side \(side)")
-        navigationItem.rightBarButtonItem = counts.reduce(0, +) > 0
-            ? WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler)) : nil
+        updateRestrictionNotice()
+        updateNavigationActions()
         self.tableView.reloadData()
     }
     
@@ -221,20 +235,80 @@ class CardDeckViewController: UIViewController {
         self.tableView.register(CardDeckViewSectionHeaderView.NibObject(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CardDeckViewSectionHeaderView.identifier())
         
         //
-        navigationItem.rightBarButtonItem = WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler))
+        updateNavigationActions()
+    }
+
+    private func updateRestrictionNotice() {
+        guard deckViewEntity.type == "self" else { return }
+        var totals: [String: (CardEntity, Int)] = [:]
+        for entry in deckEntitys.values.flatMap({ $0 }) {
+            let card = getCardEntity(id: entry.id)
+            let key = DeckService.identity(for: card)
+            totals[key] = (card, (totals[key]?.1 ?? 0) + entry.number)
+        }
+        guard !totals.isEmpty else { restrictionNotice.isHidden = true; return }
+        var violations = 0
+        var unknown = false
+        for (card, count) in totals.values {
+            if let restriction = BanlistService.shared.restriction(for: card.id) {
+                if count > restriction.rawValue { violations += 1 }
+            } else { unknown = true }
+        }
+        if violations > 0 {
+            restrictionNotice.text = L10n.text("\(CardFormat.current.rawValue) 禁限提示：\(violations) 种卡牌超出当前限制，已保留构筑。", "\(CardFormat.current.rawValue): \(violations) cards exceed the current limit. Your build is kept.")
+        } else if unknown {
+            restrictionNotice.text = L10n.text("\(CardFormat.current.rawValue) 禁限资料待更新。", "\(CardFormat.current.rawValue) restriction data is unavailable.")
+        } else {
+            restrictionNotice.text = nil
+        }
+        restrictionNotice.isHidden = restrictionNotice.text == nil
+    }
+
+    private func updateNavigationActions() {
+        var actions: [UIBarButtonItem] = []
+        if deckViewEntity.type == "self" {
+            let add = UIBarButtonItem(title: L10n.text("添加卡牌", "Add Cards"), style: .plain, target: self, action: #selector(addCards))
+            add.accessibilityIdentifier = "addDeckCards"
+            add.isEnabled = !isSharing
+            actions.append(add)
+        }
+        if isSharing {
+            let spinner = UIActivityIndicatorView(style: .medium)
+            spinner.startAnimating()
+            actions.append(UIBarButtonItem(customView: spinner))
+        } else if deckEntitys.values.flatMap({ $0 }).contains(where: { $0.number > 0 }) {
+            actions.append(WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler)))
+        }
+        navigationItem.rightBarButtonItems = actions
+    }
+
+    @objc private func addCards() {
+        let picker = DeckCardPickerViewController()
+        picker.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(picker, animated: true)
+    }
+
+    private func editCard(id: String, section: String, add: Bool, removeAll: Bool = false) {
+        let result = add ? deckService.save(id: id, type: section) : deckService.delete(id: id, type: section, all: removeAll)
+        guard result == .saved else {
+            let alert = UIAlertController(title: L10n.text("无法更新卡组", "Unable to Update Deck"), message: result.message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: L10n.text("知道了", "OK"), style: .default))
+            present(alert, animated: true)
+            return
+        }
+        reloadDeck()
     }
 
     @objc func shareButtonHandler() {
+        guard !isSharing else { return }
         let sections = (0...2).map { deckEntitys[String($0)] ?? [] }
         let cards = sections.flatMap { $0 }
         guard !cards.isEmpty else {
             WeChatSharing.showError(L10n.text("请先向卡组添加卡牌，再分享。", "Add cards to your deck before sharing it."), from: self)
             return
         }
-        navigationItem.rightBarButtonItem?.customView?.isUserInteractionEnabled = false
-        let spinner = UIActivityIndicatorView(style: .medium)
-        spinner.startAnimating()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: spinner)
+        isSharing = true
+        updateNavigationActions()
         let group = DispatchGroup()
         var images: [String: UIImage] = [:]
         for id in Set(cards.map { $0.id }) {
@@ -249,7 +323,8 @@ class CardDeckViewController: UIViewController {
         }
         group.notify(queue: .main) { [weak self] in
             guard let self = self else { return }
-            self.navigationItem.rightBarButtonItem = WeChatSharing.shareButton(target: self, action: #selector(self.shareButtonHandler))
+            self.isSharing = false
+            self.updateNavigationActions()
             let image = self.makeDeckShareImage(sections: sections, images: images)
             WeChatSharing.sendImage(image, from: self)
         }
@@ -368,6 +443,27 @@ extension CardDeckViewController: UICollectionViewDelegate {
         
     }
     
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard deckViewEntity.type == "self",
+              let entries = deckEntitys[String(indexPath.section)], indexPath.item < entries.count else { return nil }
+        let entry = entries[indexPath.item]
+        let card = getCardEntity(id: entry.id)
+        let canAdd = deckService.count(of: card) < 3 && DeckService.canAdd(card, to: entry.type)
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            UIMenu(title: L10n.text("当前区域 \(entry.number) 张", "\(entry.number) copies in this section"), children: [
+                UIAction(title: L10n.text("增加 1 张", "Add One Copy"), image: UIImage(systemName: "plus"), attributes: canAdd ? [] : .disabled) { _ in
+                    self?.editCard(id: entry.id, section: entry.type, add: true)
+                },
+                UIAction(title: L10n.text("减少 1 张", "Remove One Copy"), image: UIImage(systemName: "minus")) { _ in
+                    self?.editCard(id: entry.id, section: entry.type, add: false)
+                },
+                UIAction(title: L10n.text("从此区域移除", "Remove from This Section"), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                    self?.editCard(id: entry.id, section: entry.type, add: false, removeAll: true)
+                }
+            ])
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 32)
     }

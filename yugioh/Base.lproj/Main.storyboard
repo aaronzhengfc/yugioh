@@ -82,11 +82,7 @@
             <objects>
                 <tabBarController id="xgT-iu-NsK" customClass="ViewController" customModule="yugioh" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="游戏王卡牌" id="2XC-NK-5In">
-                        <barButtonItem key="rightBarButtonItem" title="搜索" id="BRq-3Q-8aQ">
-                            <connections>
-                                <segue destination="tqd-jF-oX0" kind="show" id="rnL-mx-R6p"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="搜索" id="BRq-3Q-8aQ"/>
                     </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="YBu-lP-tnw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>

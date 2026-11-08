@@ -17,6 +17,7 @@ class CardViewController: CardViewBaseController {
     private var originalCardEntitys: Array<CardEntity>! = []
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         self.tableView = iTableView
         self.setupTableView()
     }
