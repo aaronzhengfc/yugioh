@@ -2,6 +2,13 @@ import UIKit
 
 /// A committed search is independent of the sheet that edits it.
 struct CardSearchCriteria {
+    /// Immutable search input captured on the main thread, so background
+    /// matching never reads mutable card objects, localisation or SQLite.
+    struct Document {
+        let id, enName, cnName, enDesc, cnDesc: String
+        let type, attribute, race: String
+        let values: [String]
+    }
     static let maximums = [10000, 10000, 12]
     static var empty: CardSearchCriteria {
         CardSearchCriteria(query: "", selections: [[], [], []], ranges: [(0, 10000), (0, 10000), (0, 12)])
@@ -16,25 +23,48 @@ struct CardSearchCriteria {
             && ranges.enumerated().allSatisfy { $0.element.0 == 0 && $0.element.1 == Self.maximums[$0.offset] }
     }
 
-    func filter(_ cards: [CardEntity]) -> [CardEntity] {
-        guard !isEmpty else { return cards }
+    func documents(for cards: [CardEntity]) -> [Document] {
+        cards.map { card in
+            Document(id: card.id ?? "", enName: card.enName ?? "", cnName: card.cnName ?? "",
+                     enDesc: card.enDesc ?? "", cnDesc: card.cnDesc ?? "",
+                     type: selections[0].isEmpty ? "" : (card.getType() ?? ""),
+                     attribute: selections[1].isEmpty ? "" : (card.getAttribute() ?? ""),
+                     race: selections[2].isEmpty ? "" : (card.getRace() ?? ""),
+                     values: [card.getAtk(), card.getDef(), card.getLevel()])
+        }
+    }
+
+    /// Returns indices to allow the caller to keep model objects on the main thread.
+    func matchingIndices(in documents: [Document]) -> [Int] {
         let words = query.lowercased().split(whereSeparator: { $0.isWhitespace }).map(String.init)
-        return cards.filter { card in
-            let searchable = [card.id ?? "", card.enName ?? "", card.cnName ?? "", card.enDesc ?? "", card.cnDesc ?? ""]
-                .joined(separator: " ").lowercased()
-            guard words.allSatisfy({ searchable.contains($0) }) else { return false }
-            if !selections[0].isEmpty && !selections[0].contains(where: { card.getType().contains($0) }) { return false }
-            if !selections[1].isEmpty && !selections[1].contains(card.getAttribute() ?? "") { return false }
-            if !selections[2].isEmpty && !selections[2].contains(card.getRace() ?? "") { return false }
-            let values = [card.getAtk(), card.getDef(), card.getLevel()]
+        return documents.indices.filter { index in
+            let card = documents[index]
+            if !words.isEmpty {
+                // Most searches match a name or ID; avoid allocating and folding
+                // both long effect descriptions unless a word needs them.
+                let shortFields = [card.id, card.enName, card.cnName].map { $0.lowercased() }
+                let unmatched = words.filter { word in !shortFields.contains { $0.contains(word) } }
+                if !unmatched.isEmpty {
+                    let descriptions = [card.enDesc.lowercased(), card.cnDesc.lowercased()]
+                    guard unmatched.allSatisfy({ word in descriptions.contains { $0.contains(word) } }) else { return false }
+                }
+            }
+            if !selections[0].isEmpty && !selections[0].contains(where: { card.type.contains($0) }) { return false }
+            if !selections[1].isEmpty && !selections[1].contains(card.attribute) { return false }
+            if !selections[2].isEmpty && !selections[2].contains(card.race) { return false }
             for index in 0..<3 {
                 let (lower, upper) = ranges[index]
                 // An untouched range includes cards without that numeric stat.
                 guard lower != 0 || upper != Self.maximums[index] else { continue }
-                guard let value = Int(values[index]), value >= lower, value <= upper else { return false }
+                guard let value = Int(card.values[index]), value >= lower, value <= upper else { return false }
             }
             return true
         }
+    }
+
+    func filter(_ cards: [CardEntity]) -> [CardEntity] {
+        guard !isEmpty else { return cards }
+        return matchingIndices(in: documents(for: cards)).map { cards[$0] }
     }
 }
 

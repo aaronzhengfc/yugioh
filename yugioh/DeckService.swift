@@ -120,3 +120,115 @@ class DeckService {
         } catch { return .storageFailure }
     }
 }
+
+/// An independent count of physical cards. Card IDs are kept distinct and are
+/// not subject to deck-building rules or the three-copy limit.
+final class PhysicalCardService {
+    struct Item {
+        let id: String
+        let quantity: Int
+    }
+
+    struct Quote {
+        let tcgplayer: Decimal?
+        let cardmarket: Decimal?
+        /// Time the snapshot was retrieved, not the original quote time.
+        let fetchedAt: Date?
+    }
+
+    struct Totals {
+        let tcgplayer: Decimal
+        let cardmarket: Decimal
+        let tcgMissingCount: Int
+        let cardmarketMissingCount: Int
+        let totalCards: Int
+        let earliestFetchedAt: Date?
+    }
+
+    private let defaults: UserDefaults
+    private let key: String
+    private let quoteProvider: (String) -> Quote
+
+    init(defaults: UserDefaults = .standard, key: String = "physicalCardCollection.v1",
+         quoteProvider: ((String) -> Quote)? = nil) {
+        self.defaults = defaults
+        self.key = key
+        self.quoteProvider = quoteProvider ?? Self.snapshotQuote
+    }
+
+    private func counts() -> [String: Int] {
+        (defaults.dictionary(forKey: key) ?? [:]).reduce(into: [:]) { result, pair in
+            if let value = pair.value as? Int, value > 0, !pair.key.isEmpty { result[pair.key] = value }
+        }
+    }
+
+    func list() -> [Item] {
+        counts().map { Item(id: $0.key, quantity: $0.value) }.sorted { $0.id > $1.id }
+    }
+
+    func count(id: String) -> Int { counts()[id] ?? 0 }
+
+    @discardableResult
+    func add(id: String) -> Bool {
+        guard !id.isEmpty else { return false }
+        var values = counts()
+        let current = values[id] ?? 0
+        guard current < Int.max else { return false }
+        values[id] = current + 1
+        defaults.set(values, forKey: key)
+        return true
+    }
+
+    @discardableResult
+    func remove(id: String, all: Bool = false) -> Bool {
+        var values = counts()
+        guard let current = values[id] else { return true }
+        if all || current <= 1 { values.removeValue(forKey: id) }
+        else { values[id] = current - 1 }
+        defaults.set(values, forKey: key)
+        return true
+    }
+
+    func quote(id: String) -> Quote { quoteProvider(id) }
+
+    func totals() -> Totals {
+        var tcg = Decimal.zero, market = Decimal.zero
+        var tcgMissing = 0, marketMissing = 0, total = 0
+        var oldest: Date?
+        for item in list() {
+            let quote = quoteProvider(item.id)
+            total += item.quantity
+            if let price = quote.tcgplayer { tcg += price * Decimal(item.quantity) }
+            else { tcgMissing += item.quantity }
+            if let price = quote.cardmarket { market += price * Decimal(item.quantity) }
+            else { marketMissing += item.quantity }
+            if let date = quote.fetchedAt { oldest = min(oldest ?? date, date) }
+        }
+        return Totals(tcgplayer: tcg, cardmarket: market, tcgMissingCount: tcgMissing,
+                      cardmarketMissingCount: marketMissing, totalCards: total, earliestFetchedAt: oldest)
+    }
+
+    private static func snapshotQuote(id: String) -> Quote {
+        let unavailable = Quote(tcgplayer: nil, cardmarket: nil, fetchedAt: nil)
+        guard let cardID = Int64(id) else { return unavailable }
+        do {
+            guard let raw = try getDB().scalar("SELECT fetchedAtUtc FROM card_price_sync WHERE cardId = ?", cardID) as? String,
+                  let fetchedAt = ISO8601DateFormatter().date(from: raw),
+                  let data = getCardEntity(id: id).getCardPrices().data(using: .utf8),
+                  let records = (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]],
+                  let record = records.first else { return unavailable }
+            return Quote(tcgplayer: positivePrice(record["tcgplayer_price"]),
+                         cardmarket: positivePrice(record["cardmarket_price"]), fetchedAt: fetchedAt)
+        } catch { return unavailable }
+    }
+
+    private static func positivePrice(_ value: Any?) -> Decimal? {
+        let text: String
+        if let string = value as? String { text = string }
+        else if let number = value as? NSNumber { text = number.stringValue }
+        else { return nil }
+        guard let price = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")),
+              !price.isNaN, price > .zero else { return nil }
+        return price
+    }
+}

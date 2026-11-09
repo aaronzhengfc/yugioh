@@ -1,9 +1,188 @@
 import XCTest
 import UIKit
 import CoreData
+import Vision
+import SQLite
 @testable import yugioh
 
 class yugiohTests: XCTestCase {
+    func testPhysicalScanWithoutJapaneseNameTableStillMatchesExistingNames() throws {
+        let olderCatalogue = try Connection(.inMemory)
+        let japaneseNames = PhysicalCardScanMatcher.loadJapaneseNames(from: olderCatalogue)
+        XCTAssertTrue(japaneseNames.isEmpty)
+        let card = CardEntity(); card.id = "89631139"; card.enName = "Blue-Eyes White Dragon"
+        let matcher = PhysicalCardScanMatcher(cards: [card], japaneseNames: japaneseNames)
+        XCTAssertEqual(matcher.find(lines: ["Blue-Eyes White Dragon"]).first?.card.id, "89631139")
+        XCTAssertEqual(matcher.find(lines: ["89631139"]).first?.card.id, "89631139")
+    }
+
+    func testPhysicalScanMatchesJapaneseNameAndReadingWithoutLosingVoicing() {
+        let blueEyes = CardEntity(); blueEyes.id = "89631139"; blueEyes.enName = "Blue-Eyes White Dragon"
+        let plain = CardEntity(); plain.id = "1"; plain.enName = "Unvoiced"
+        let voiced = CardEntity(); voiced.id = "2"; voiced.enName = "Voiced"
+        let matcher = PhysicalCardScanMatcher(cards: [blueEyes, plain, voiced], japaneseNames: [
+            "89631139": ["青眼の白龍", "ブルーアイズ・ホワイト・ドラゴン"],
+            "1": ["カカカ"], "2": ["ガガガ"]
+        ])
+        XCTAssertEqual(matcher.find(lines: ["青眼の白龍"]).map { $0.card.id }, ["89631139"])
+        XCTAssertEqual(matcher.find(lines: ["ﾌﾞﾙｰｱｲｽﾞ・ﾎﾜｲﾄ・ﾄﾞﾗｺﾞﾝ"]).map { $0.card.id }, ["89631139"])
+        XCTAssertTrue(matcher.find(lines: ["89631139"]).first?.reason.contains("青眼の白龍") == true)
+        XCTAssertEqual(matcher.find(lines: ["ガガガ"]).map { $0.card.id }, ["2"])
+        XCTAssertEqual(matcher.find(lines: ["ｶｶｶ"]).map { $0.card.id }, ["1"])
+        let suggestion = matcher.find(lines: ["青眼の白竜"])
+        XCTAssertEqual(suggestion.first?.card.id, "89631139")
+        XCTAssertTrue(suggestion.first?.reason.contains("青眼の白龍") == true)
+    }
+
+    @MainActor
+    func testPhysicalScanAsyncMatchesJapaneseNameInBundledCatalogue() {
+        let complete = expectation(description: "Japanese card name is indexed")
+        PhysicalCardScanMatcher.matchAsync(lines: ["青眼の白龍"]) { candidates in
+            XCTAssertEqual(candidates.first?.card.id, "89631139")
+            complete.fulfill()
+        }
+        wait(for: [complete], timeout: 20)
+    }
+
+    @MainActor
+    func testPhysicalScanRecognizesSyntheticJapaneseNameWithVision() throws {
+        // This exercises real on-device OCR on rendered text. It is not a test
+        // of camera optics, reflections or printed card typography.
+        let request = VNRecognizeTextRequest()
+        request.recognitionLevel = .accurate
+        let available = try request.supportedRecognitionLanguages()
+        guard available.contains("ja-JP") else { throw XCTSkip("Japanese Vision OCR unavailable on this device") }
+        request.recognitionLanguages = ["ja-JP", "zh-Hans", "en-US"].filter { available.contains($0) }
+        request.usesLanguageCorrection = false
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 1000, height: 500), format: format).image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 1000, height: 500))
+            let attrs: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 100, weight: .bold),
+                .foregroundColor: UIColor.black
+            ]
+            ("青眼の白龍" as NSString).draw(at: CGPoint(x: 100, y: 150), withAttributes: attrs)
+        }
+        try VNImageRequestHandler(cgImage: try XCTUnwrap(image.cgImage), options: [:]).perform([request])
+        let lines = (request.results ?? []).flatMap { $0.topCandidates(2).map(\.string) }
+        let card = getCardEntity(id: "89631139")
+        let matcher = PhysicalCardScanMatcher(cards: [card], japaneseNames: ["89631139": ["青眼の白龍"]])
+        XCTAssertEqual(matcher.find(lines: lines).first?.card.id, "89631139", "OCR lines: \(lines)")
+    }
+
+    func testPhysicalScanMatchesCardPasswordSetCodeAndNamesConservatively() {
+        func card(_ id: String, _ chinese: String, _ english: String, _ sets: String) -> CardEntity {
+            let value = CardEntity()
+            value.id = id
+            value.cnName = chinese
+            value.enName = english
+            value.cardSets = sets
+            return value
+        }
+        let blueEyes = card("89631139", "青眼白龙", "Blue-Eyes White Dragon", #"[{"set_code":"SDK-001"}]"#)
+        let darkMagician = card("46986414", "黑魔术师", "Dark Magician", #"[{"set_code":"SDY-006"}]"#)
+        let shortId = card("176393", "核成衍生物", "Koa'ki Meiru Token", "[]")
+        let matcher = PhysicalCardScanMatcher(cards: [darkMagician, blueEyes, shortId])
+
+        XCTAssertEqual(matcher.find(lines: ["89631139"]).map { $0.card.id }, ["89631139"])
+        XCTAssertEqual(matcher.find(lines: ["00176393"]).map { $0.card.id }, ["176393"])
+        XCTAssertEqual(matcher.find(lines: ["SDK-001"]).map { $0.card.id }, ["89631139"])
+        XCTAssertEqual(matcher.find(lines: ["ＳＤＹ－００６"]).map { $0.card.id }, ["46986414"])
+        XCTAssertEqual(matcher.find(lines: ["ＢＬＵＥ－ＥＹＥＳ ＷＨＩＴＥ ＤＲＡＧＯＮ"]).map { $0.card.id }, ["89631139"])
+        XCTAssertEqual(matcher.find(lines: ["青眼白龙"]).map { $0.card.id }, ["89631139"])
+        XCTAssertEqual(matcher.find(lines: ["Blue-Eyes White Drag0n"]).map { $0.card.id }, ["89631139"])
+        XCTAssertTrue(matcher.find(lines: ["TSDK-0019", "1896311399"]).isEmpty)
+        XCTAssertTrue(matcher.find(lines: ["Dragon"]).isEmpty)
+    }
+
+    func testPhysicalScanKeepsAmbiguousVersionMatchesAndRanksPasswordFirst() {
+        let first = CardEntity(); first.id = "89631139"; first.enName = "Blue-Eyes White Dragon"
+        let second = CardEntity(); second.id = "46986414"; second.enName = "Dark Magician"
+        first.cardSets = #"[{"set_code":"TEST-EN001"}]"#
+        second.cardSets = first.cardSets
+        let result = PhysicalCardScanMatcher(cards: [second, first]).find(lines: ["TEST-EN001", "89631139"])
+        XCTAssertEqual(result.map { $0.card.id }, ["89631139", "46986414"])
+    }
+
+    func testPhysicalScanMatchesVersionCodeInBundledCatalogue() {
+        let card = getCardEntity(id: "89631139")
+        let result = PhysicalCardScanMatcher(cards: [card]).find(lines: ["CT13-EN008"])
+        XCTAssertEqual(result.first?.card.id, "89631139")
+    }
+
+    @MainActor
+    func testPhysicalScanRecognizesSyntheticCardTextWithVision() throws {
+        // A rendered fixture exercises real Vision OCR and catalogue matching;
+        // it does not substitute for tests with photographed physical cards.
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 1100, height: 700), format: format).image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 1100, height: 700))
+            let attrs: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 72, weight: .bold),
+                .foregroundColor: UIColor.black
+            ]
+            ("Blue-Eyes White Dragon" as NSString).draw(at: CGPoint(x: 70, y: 120), withAttributes: attrs)
+            ("89631139" as NSString).draw(at: CGPoint(x: 70, y: 400), withAttributes: attrs)
+        }
+        let request = VNRecognizeTextRequest()
+        request.recognitionLevel = .accurate
+        request.recognitionLanguages = ["en-US"]
+        request.usesLanguageCorrection = false
+        try VNImageRequestHandler(cgImage: try XCTUnwrap(image.cgImage), options: [:]).perform([request])
+        let lines = (request.results ?? []).compactMap { $0.topCandidates(1).first?.string }
+        XCTAssertTrue(lines.contains { $0.lowercased().contains("blue-eyes white dragon") }, "OCR lines: \(lines)")
+        XCTAssertTrue(lines.contains { $0.contains("89631139") }, "OCR lines: \(lines)")
+        let result = PhysicalCardScanMatcher(cards: [getCardEntity(id: "89631139")]).find(lines: lines)
+        XCTAssertEqual(result.first?.card.id, "89631139")
+    }
+
+    @MainActor
+    func testPhysicalScanAsyncMatchesAndReturnsOnMainThread() {
+        let complete = expectation(description: "Scan matching finishes")
+        PhysicalCardScanMatcher.matchAsync(lines: ["89631139"]) { candidates in
+            XCTAssertTrue(Thread.isMainThread)
+            XCTAssertEqual(candidates.first?.card.id, "89631139")
+            complete.fulfill()
+        }
+        wait(for: [complete], timeout: 20)
+    }
+
+    func testPhysicalCardsPersistIndependentlyAndValueOnlyKnownPrices() {
+        let suite = "physical-card-test-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let snapshot = Date(timeIntervalSince1970: 1_700_000_000)
+        let service = PhysicalCardService(defaults: defaults, key: "collection") { id in
+            if id == "1" {
+                return PhysicalCardService.Quote(tcgplayer: Decimal(string: "0.10"), cardmarket: nil, fetchedAt: snapshot)
+            }
+            return PhysicalCardService.Quote(tcgplayer: nil, cardmarket: Decimal(string: "1.25"), fetchedAt: snapshot)
+        }
+        for _ in 0..<5 { XCTAssertTrue(service.add(id: "1")) }
+        XCTAssertTrue(service.add(id: "2"))
+        XCTAssertEqual(service.count(id: "1"), 5)
+        let totals = service.totals()
+        XCTAssertEqual(totals.totalCards, 6)
+        XCTAssertEqual(totals.tcgplayer, Decimal(string: "0.50"))
+        XCTAssertEqual(totals.cardmarket, Decimal(string: "1.25"))
+        XCTAssertEqual(totals.tcgMissingCount, 1)
+        XCTAssertEqual(totals.cardmarketMissingCount, 5)
+        XCTAssertEqual(totals.earliestFetchedAt, snapshot)
+
+        let reopened = PhysicalCardService(defaults: defaults, key: "collection")
+        XCTAssertEqual(reopened.count(id: "1"), 5)
+        XCTAssertTrue(reopened.remove(id: "1"))
+        XCTAssertEqual(service.count(id: "1"), 4)
+        XCTAssertTrue(service.remove(id: "1", all: true))
+        XCTAssertEqual(service.count(id: "1"), 0)
+        XCTAssertEqual(service.count(id: "2"), 1)
+        XCTAssertEqual(PhysicalCardService(defaults: defaults, key: "other").list().count, 0)
+    }
+
     func testLanguageResolution() {
         XCTAssertEqual(AppLanguage.resolve(savedValue: "cn", preferredLanguages: ["en-US"]), .simplifiedChinese)
         XCTAssertEqual(AppLanguage.resolve(savedValue: "en", preferredLanguages: ["zh-Hans-CN"]), .english)
@@ -251,4 +430,16 @@ class yugiohTests: XCTestCase {
         XCTAssertEqual(service.count(of: beta), 3)
     }
 
+    @MainActor
+    func testFavoritesBackgroundMatchesItsListInLightAndDarkMode() throws {
+        let controller = CardViewWithStarController()
+        controller.loadViewIfNeeded()
+        let background = try XCTUnwrap(controller.view.backgroundColor)
+        let listBackground = try XCTUnwrap(controller.iTableView.backgroundColor)
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            let traits = UITraitCollection(userInterfaceStyle: style)
+            XCTAssertEqual(background.resolvedColor(with: traits), listBackground.resolvedColor(with: traits))
+            XCTAssertEqual(background.resolvedColor(with: traits), UIColor.systemGroupedBackground.resolvedColor(with: traits))
+        }
+    }
 }

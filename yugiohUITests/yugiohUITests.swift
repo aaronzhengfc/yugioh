@@ -87,6 +87,24 @@ class yugiohUITests: XCTestCase {
                           "The result count and clear action must not overlap")
         captureScreenshot(app, name: "Search results — aligned clear action")
 
+        // Returning from details must keep the same search and update the
+        // visible favorite control without rebuilding the result list.
+        let rowFavorite = blueEyes.buttons.matching(NSPredicate(format: "label IN %@", ["Favorite card", "Remove from favorites"])).firstMatch
+        XCTAssertTrue(rowFavorite.exists)
+        let initialFavorite = rowFavorite.label
+        blueEyes.tap()
+        let detailFavorite = app.buttons["detailFavoriteStar"].firstMatch
+        XCTAssertTrue(detailFavorite.waitForExistence(timeout: 5))
+        detailFavorite.tap()
+        let changedFavorite = detailFavorite.label
+        XCTAssertNotEqual(changedFavorite, initialFavorite)
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(blueEyes.waitForExistence(timeout: 5))
+        XCTAssertEqual(rowFavorite.label, changedFavorite)
+        XCTAssertTrue(app.buttons["clearCardSearch"].exists)
+        rowFavorite.tap() // Restore the simulator's previous favorite state.
+        XCTAssertEqual(rowFavorite.label, initialFavorite)
+
         // Reopening preserves applied conditions; cancelling an edit preserves the results.
         app.navigationBars.firstMatch.buttons["Search"].firstMatch.tap()
         XCTAssertEqual(field.value as? String, "89631139")
@@ -238,6 +256,8 @@ class yugiohUITests: XCTestCase {
         let myDeck = app.tables.firstMatch.cells.matching(NSPredicate(format: "label BEGINSWITH %@", "My Deck")).firstMatch
         XCTAssertTrue(myDeck.waitForExistence(timeout: 5))
         myDeck.tap()
+        XCTAssertTrue(app.navigationBars["My Deck"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.navigationBars.firstMatch.buttons["Share to WeChat"].exists)
         app.navigationBars.firstMatch.buttons["addDeckCards"].firstMatch.tap()
         let field = app.searchFields.firstMatch
         XCTAssertTrue(field.waitForExistence(timeout: 5))
@@ -274,6 +294,9 @@ class yugiohUITests: XCTestCase {
         captureScreenshot(app, name: "My Deck — card added")
         app.navigationBars.firstMatch.buttons["Done"].firstMatch.tap()
         XCTAssertTrue(app.navigationBars.firstMatch.buttons["addDeckCards"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["My Deck"].exists)
+        XCTAssertFalse(app.navigationBars.firstMatch.buttons["Share to WeChat"].exists,
+                       "Adding cards must not restore the personal deck share button")
         let addedCard = app.collectionViews.firstMatch.cells.matching(NSPredicate(format: "label BEGINSWITH %@", name + ", ")).firstMatch
         for _ in 0..<15 where !addedCard.isHittable { app.collectionViews.firstMatch.swipeUp() }
         XCTAssertTrue(addedCard.isHittable)
@@ -285,8 +308,251 @@ class yugiohUITests: XCTestCase {
         removeOne.tap()
     }
 
-    private func launchInEnglish() -> XCUIApplication {
+    func testFavoriteAndPersonalDeckTitlesInBothLanguages() {
+        for (language, search, favorite, deck, share) in [
+            ("en", "Search", "Favorites", "My Deck", "Share to WeChat"),
+            ("cn", "搜索", "我的收藏", "我的卡组", "分享到微信")
+        ] {
+            let app = XCUIApplication()
+            app.launchArguments = ["-appLanguage", language, "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+            app.launch()
+            XCTAssertTrue(app.navigationBars.firstMatch.buttons[search].firstMatch.waitForExistence(timeout: 15))
+            app.buttons["decksTab"].firstMatch.tap()
+            let favoriteEntry = app.tables.firstMatch.cells.matching(NSPredicate(format: "label BEGINSWITH %@", favorite)).firstMatch
+            XCTAssertTrue(favoriteEntry.waitForExistence(timeout: 5))
+            favoriteEntry.tap()
+            XCTAssertTrue(app.navigationBars[favorite].firstMatch.waitForExistence(timeout: 5))
+            captureScreenshot(app, name: "Favorites navigation background \(language)")
+            app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+
+            let deckEntry = app.tables.firstMatch.cells.matching(NSPredicate(format: "label BEGINSWITH %@", deck)).firstMatch
+            XCTAssertTrue(deckEntry.waitForExistence(timeout: 5))
+            deckEntry.tap()
+            XCTAssertTrue(app.navigationBars[deck].firstMatch.waitForExistence(timeout: 5))
+            XCTAssertTrue(app.navigationBars.firstMatch.buttons["addDeckCards"].exists)
+            XCTAssertFalse(app.navigationBars.firstMatch.buttons[share].exists)
+            app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+
+            let championships = app.tables.firstMatch.cells["championshipEntry"].firstMatch
+            for _ in 0..<4 where !championships.isHittable { app.tables.firstMatch.swipeUp() }
+            XCTAssertTrue(championships.isHittable)
+            championships.tap()
+            let tournamentDeck = app.tables.firstMatch.cells.firstMatch
+            XCTAssertTrue(tournamentDeck.waitForExistence(timeout: 5))
+            tournamentDeck.tap()
+            XCTAssertTrue(app.navigationBars.firstMatch.buttons[share].waitForExistence(timeout: 5),
+                          "Historical decks with cards should retain the share button")
+            app.terminate()
+        }
+    }
+
+    func testPhysicalCardsScanConfirmPriceAndPersist() {
+        let app = launchInEnglish(scanText: "Blue-Eyes White Dragon|89631139")
+        app.buttons["decksTab"].firstMatch.tap()
+        let entry = app.tables.firstMatch.cells["physicalCollectionEntry"].firstMatch
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.tap()
+        let scan = app.navigationBars.firstMatch.buttons["scanPhysicalCards"].firstMatch
+        XCTAssertTrue(scan.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.navigationBars.firstMatch.buttons["addPhysicalCards"].exists)
+        let tcg = app.staticTexts["physicalTotalTCG"].firstMatch
+        let market = app.staticTexts["physicalTotalCardmarket"].firstMatch
+        let totalCount = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Physical cards · ")).firstMatch
+        XCTAssertTrue(tcg.exists && market.exists && totalCount.exists)
+        let beforeCount = totalCount.label
+        let beforeTCG = displayedAmount(tcg.label, prefix: "US$")
+        let beforeMarket = displayedAmount(market.label, prefix: "€")
+        let list = app.tables["physicalCardsList"].firstMatch
+        let card = list.cells["physicalCardRow_89631139"].firstMatch
+        // Existing records may belong to the simulator user: preserve them.
+        let initialQuantity = physicalQuantity(card)
+
+        scan.tap()
+        let capture = app.buttons["scanCaptureButton"].firstMatch
+        XCTAssertTrue(capture.waitForExistence(timeout: 10))
+        captureScreenshot(app, name: "Scan card button")
+        capture.tap()
+        let candidate = app.descendants(matching: .any)["scanCandidate_89631139"].firstMatch
+        XCTAssertTrue(candidate.waitForExistence(timeout: 15))
+        candidate.tap()
+        let cancel = app.alerts.buttons["Cancel"].firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 5))
+        cancel.tap()
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertEqual(totalCount.label, beforeCount, "Cancel must not add a card")
+        XCTAssertEqual(physicalQuantity(card), initialQuantity)
+        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$"), beforeTCG)
+        XCTAssertEqual(displayedAmount(market.label, prefix: "€"), beforeMarket)
+
+        scan.tap()
+        XCTAssertTrue(capture.waitForExistence(timeout: 10))
+        capture.tap()
+        XCTAssertTrue(candidate.waitForExistence(timeout: 15))
+        candidate.tap()
+        let confirm = app.alerts.buttons["Add to Collection"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        for _ in 0..<20 where !card.isHittable { list.swipeUp() }
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        XCTAssertEqual(physicalQuantity(card), initialQuantity + 1)
+        captureScreenshot(app, name: "Physical card quantity buttons")
+        let rowText = card.staticTexts.allElementsBoundByIndex.map(\.label).joined(separator: " ")
+        let unitTCG = displayedAmount(rowText, prefix: "US$")
+        let unitMarket = displayedAmount(rowText, prefix: "€")
+        XCTAssertNotNil(unitTCG)
+        XCTAssertNotNil(unitMarket)
+        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$") ?? -1,
+                       (beforeTCG ?? 0) + (unitTCG ?? 0), accuracy: 0.001)
+        XCTAssertEqual(displayedAmount(market.label, prefix: "€") ?? -1,
+                       (beforeMarket ?? 0) + (unitMarket ?? 0), accuracy: 0.001)
+
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.buttons["decksTab"].firstMatch.waitForExistence(timeout: 15))
+        app.buttons["decksTab"].firstMatch.tap()
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.tap()
+        for _ in 0..<20 where !card.isHittable { list.swipeUp() }
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        XCTAssertEqual(physicalQuantity(card), initialQuantity + 1, "Collection must persist after relaunch")
+        let increase = app.buttons["physicalIncrease_89631139"].firstMatch
+        let decrease = app.buttons["physicalDecrease_89631139"].firstMatch
+        XCTAssertTrue(increase.waitForExistence(timeout: 5))
+        XCTAssertTrue(decrease.exists)
+        increase.tap()
+        XCTAssertEqual(physicalQuantity(card), initialQuantity + 2)
+        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$") ?? -1,
+                       (beforeTCG ?? 0) + (unitTCG ?? 0) * 2, accuracy: 0.001)
+        XCTAssertEqual(displayedAmount(market.label, prefix: "€") ?? -1,
+                       (beforeMarket ?? 0) + (unitMarket ?? 0) * 2, accuracy: 0.001)
+        decrease.tap()
+        XCTAssertEqual(physicalQuantity(card), initialQuantity + 1)
+        decrease.tap()
+        expectation(for: NSPredicate(format: "label == %@", beforeCount), evaluatedWith: totalCount)
+        waitForExpectations(timeout: 5)
+        if initialQuantity > 0 {
+            XCTAssertEqual(physicalQuantity(card), initialQuantity)
+        } else if beforeCount == "Physical cards · 0 copies" {
+            XCTAssertTrue(list.label.contains("No physical cards yet"))
+        }
+        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$"), beforeTCG)
+        XCTAssertEqual(displayedAmount(market.label, prefix: "€"), beforeMarket)
+    }
+
+    func testPhysicalCardScanMatchesJapaneseNameAndRequiresConfirmation() {
+        // No password or English text: this verifies the Japanese-name index.
+        let app = launchInEnglish(scanText: "青眼の白龍")
+        app.buttons["decksTab"].firstMatch.tap()
+        let entry = app.tables.firstMatch.cells["physicalCollectionEntry"].firstMatch
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.tap()
+        let list = app.tables["physicalCardsList"].firstMatch
+        let card = list.cells["physicalCardRow_89631139"].firstMatch
+        let initial = physicalQuantity(card)
+        let count = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Physical cards · ")).firstMatch
+        XCTAssertTrue(count.waitForExistence(timeout: 5))
+        let before = count.label
+        let scan = app.navigationBars.firstMatch.buttons["scanPhysicalCards"].firstMatch
+        XCTAssertTrue(scan.waitForExistence(timeout: 5))
+        scan.tap()
+        let capture = app.buttons["scanCaptureButton"].firstMatch
+        XCTAssertTrue(capture.waitForExistence(timeout: 5))
+        capture.tap()
+        let candidate = app.descendants(matching: .any)["scanCandidate_89631139"].firstMatch
+        XCTAssertTrue(candidate.waitForExistence(timeout: 20), "Japanese name alone must match Blue-Eyes White Dragon")
+        guard candidate.exists else { return }
+        candidate.tap()
+        let cancel = app.alerts.buttons["Cancel"].firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 5))
+        cancel.tap()
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertEqual(count.label, before, "Cancelling confirmation must not add a card")
+        XCTAssertEqual(physicalQuantity(card), initial)
+
+        scan.tap()
+        XCTAssertTrue(capture.waitForExistence(timeout: 5))
+        capture.tap()
+        XCTAssertTrue(candidate.waitForExistence(timeout: 20))
+        guard candidate.exists else { return }
+        candidate.tap()
+        let confirm = app.alerts.buttons["Add to Collection"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        guard confirm.exists else { return }
+        confirm.tap()
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        for _ in 0..<20 where !card.isHittable { list.swipeUp() }
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        XCTAssertEqual(physicalQuantity(card), initial + 1)
+        guard card.isHittable else { return }
+        let decrease = app.buttons["physicalDecrease_89631139"].firstMatch
+        XCTAssertTrue(decrease.waitForExistence(timeout: 5))
+        if decrease.exists { decrease.tap() }
+    }
+
+    func testPhysicalCardScanWithoutMatchesDoesNotAdd() {
+        let app = launchInEnglish(scanText: "nonsensewqzxunmatchable")
+        app.buttons["decksTab"].firstMatch.tap()
+        let entry = app.tables.firstMatch.cells["physicalCollectionEntry"].firstMatch
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.tap()
+        let totalCount = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Physical cards · ")).firstMatch
+        XCTAssertTrue(totalCount.waitForExistence(timeout: 5))
+        let beforeCount = totalCount.label
+        app.navigationBars.firstMatch.buttons["scanPhysicalCards"].firstMatch.tap()
+        let capture = app.buttons["scanCaptureButton"].firstMatch
+        XCTAssertTrue(capture.waitForExistence(timeout: 10))
+        capture.tap()
+        let status = app.staticTexts["scanStatus"].firstMatch
+        expectation(for: NSPredicate(format: "label CONTAINS[c] %@", "No matching"), evaluatedWith: status)
+        waitForExpectations(timeout: 15)
+        XCTAssertFalse(app.alerts.buttons["Add to Collection"].exists)
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertEqual(totalCount.label, beforeCount, "Unrecognized scans must not change collection")
+    }
+
+    func testWorldChampionshipsAreGroupedBehindEntry() {
+        let app = launchInEnglish()
+        app.buttons["decksTab"].firstMatch.tap()
+        let overview = app.tables.firstMatch
+        let entry = overview.cells["championshipEntry"].firstMatch
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["2025 World Championship"].exists)
+        entry.tap()
+        XCTAssertTrue(app.navigationBars["World Champions"].waitForExistence(timeout: 5))
+        let year = app.staticTexts["2025 World Championship"].firstMatch
+        for _ in 0..<8 where !year.exists { app.tables.firstMatch.swipeUp() }
+        XCTAssertTrue(year.exists)
+        let deck = app.tables.firstMatch.cells.matching(NSPredicate(format: "label CONTAINS %@", "K9 Vanquish Soul")).firstMatch
+        for _ in 0..<8 where !deck.isHittable { app.tables.firstMatch.swipeUp() }
+        XCTAssertTrue(deck.isHittable)
+        deck.tap()
+        XCTAssertTrue(app.navigationBars.firstMatch.buttons.element(boundBy: 0).waitForExistence(timeout: 5))
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.navigationBars["World Champions"].waitForExistence(timeout: 5))
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+    }
+
+    private func physicalQuantity(_ card: XCUIElement) -> Int {
+        guard card.exists else { return 0 }
+        let labels = card.staticTexts.allElementsBoundByIndex.map(\.label)
+        for label in labels {
+            guard let range = label.range(of: #"[0-9]+ copies"#, options: .regularExpression) else { continue }
+            return Int(label[range].split(separator: " ").first ?? "") ?? 0
+        }
+        return 0
+    }
+
+    private func displayedAmount(_ label: String, prefix: String) -> Double? {
+        guard let start = label.range(of: prefix)?.upperBound else { return nil }
+        let value = label[start...].prefix { $0.isNumber || $0 == "." || $0 == "," }
+        return Double(value.replacingOccurrences(of: ",", with: ""))
+    }
+
+    private func launchInEnglish(scanText: String? = nil) -> XCUIApplication {
         let app = XCUIApplication()
+        if let scanText = scanText { app.launchEnvironment["UI_TEST_SCAN_TEXT"] = scanText }
         app.launchArguments = ["-appLanguage", "en", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
         XCTAssertTrue(app.navigationBars.firstMatch.buttons["Search"].firstMatch.waitForExistence(timeout: 15))

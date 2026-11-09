@@ -20,6 +20,9 @@ class CardViewWithStarController: CardViewBaseController {
     
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        title = L10n.text("我的收藏", "Favorites")
+        view.backgroundColor = .systemGroupedBackground
         self.tableView = iTableView
         self.setupTableView()
         self.afterDeselect = starAfterDeselect

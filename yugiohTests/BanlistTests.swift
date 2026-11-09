@@ -2,6 +2,31 @@ import XCTest
 @testable import yugioh
 
 final class BanlistTests: XCTestCase {
+    func testCardSearchSnapshotPreservesCrossFieldMatchingAndValues() {
+        let card = CardEntity()
+        card.id = "89631139"
+        card.enName = "Blue-Eyes White Dragon"
+        card.cnName = "青眼白龙"
+        card.enDesc = "A legendary dragon with immense power."
+        card.cnDesc = "传说中的龙。"
+        card.atk = "3000"
+        var criteria = CardSearchCriteria.empty
+        criteria.query = "white legendary"
+        criteria.ranges[0] = (3000, 3000)
+        let documents = criteria.documents(for: [card])
+
+        // A background search must use the values captured before later edits.
+        card.enName = "Changed"
+        card.enDesc = "Changed"
+        card.atk = "1000"
+        XCTAssertEqual(criteria.matchingIndices(in: documents), [0])
+        XCTAssertTrue(criteria.filter([card]).isEmpty)
+
+        criteria.query = "white missing"
+        XCTAssertTrue(criteria.matchingIndices(in: documents).isEmpty)
+        criteria.query = ""
+        XCTAssertEqual(criteria.matchingIndices(in: documents), [0], "Range-only searches do not require text")
+    }
     private func release(_ id: String, _ format: CardFormat, _ date: String, complete: Bool = true) -> BanlistRelease {
         BanlistRelease(id: id, format: format, effectiveDate: date, sourceURL: "", title: id, isComplete: complete)
     }
@@ -91,5 +116,36 @@ final class BanlistTests: XCTestCase {
         XCTAssertEqual(history.map { $0.release.id }, ["partial-listed", "known", "partial", "forbidden"])
         XCTAssertEqual(history.map { $0.restriction }, [.limited, .unlimited, nil, .forbidden])
         XCTAssertNil(service.restriction(for: "100", in: missing))
+    }
+
+    func testIndexedHistoryMatchesSnapshotRestrictionsForRealCards() {
+        let service = BanlistService()
+        // Include a card with many historical entries, an artwork alias, and a
+        // card without restrictions; compare the indexed path with the full
+        // snapshot logic for both formats.
+        for id in ["15341821", "100200234", "89631139"] {
+            for format in CardFormat.allCases {
+                let snapshots = service.releases.filter { $0.format == format }.sorted {
+                    if $0.effectiveDate != $1.effectiveDate { return $0.effectiveDate < $1.effectiveDate }
+                    return $0.id < $1.id
+                }
+                var expected: [(String, CardRestriction?)] = []
+                var previous: CardRestriction?
+                var hasPrevious = false
+                for release in snapshots {
+                    let current = service.restriction(for: id, in: release)
+                    if !hasPrevious {
+                        if current != .unlimited { expected.append((release.id, current)) }
+                        hasPrevious = true
+                    } else if current != previous {
+                        expected.append((release.id, current))
+                    }
+                    previous = current
+                }
+                let actual = service.history(for: id, format: format)
+                XCTAssertEqual(actual.map { $0.release.id }, expected.reversed().map { $0.0 })
+                XCTAssertEqual(actual.map { $0.restriction }, expected.reversed().map { $0.1 })
+            }
+        }
     }
 }

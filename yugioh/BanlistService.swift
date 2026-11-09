@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import SQLite
 
 enum CardFormat: String, CaseIterable {
     case ocg = "OCG"
@@ -158,11 +159,24 @@ final class BanlistService {
             if $0.effectiveDate != $1.effectiveDate { return $0.effectiveDate < $1.effectiveDate }
             return $0.id < $1.id
         }
+        // A detail screen needs the history of one card, not every card in every
+        // release. Loading complete snapshots here eagerly would decode all
+        // banlist entries on the UI thread the first time a detail is opened.
+        // Query all artwork aliases via the cardId index once instead. The
+        // injectable in-memory service retains its existing snapshot semantics.
+        let targeted = loadsFromDatabase ? historyEntries(for: cardID) : nil
         var result: [(release: BanlistRelease, restriction: CardRestriction?)] = []
         var previous: CardRestriction?
         var hasPrevious = false
         for release in snapshots {
-            let current = restriction(for: cardID, in: release)
+            let current: CardRestriction?
+            if let targeted = targeted {
+                current = targeted[release.id] ?? (release.isComplete ? .unlimited : nil)
+            } else {
+                // On a query failure, preserve the existing per-snapshot error
+                // handling (including unknown/incomplete releases).
+                current = restriction(for: cardID, in: release)
+            }
             if !hasPrevious {
                 if current != .unlimited { result.append((release, current)) }
                 hasPrevious = true
@@ -172,6 +186,26 @@ final class BanlistService {
             previous = current
         }
         return Array(result.reversed())
+    }
+
+    private func historyEntries(for cardID: String) -> [String: CardRestriction]? {
+        let aliases = names[cardID].flatMap { IDsByName[$0] } ?? [cardID]
+        guard !aliases.isEmpty else { return [:] }
+        let placeholders = Array(repeating: "?", count: aliases.count).joined(separator: ",")
+        do {
+            var values: [String: CardRestriction] = [:]
+            let bindings = aliases.map { $0 as Binding? }
+            for row in try getDB().prepare("SELECT releaseId,limitCount FROM banlist_entry WHERE cardId IN (\(placeholders))", bindings) {
+                guard let releaseID = row[0] as? String, let count = row[1] as? Int64,
+                      let restriction = CardRestriction(rawValue: Int(count)) else { return nil }
+                if let existing = values[releaseID], existing.rawValue <= restriction.rawValue { continue }
+                values[releaseID] = restriction
+            }
+            return values
+        } catch {
+            print("Unable to load card banlist history: \(error.localizedDescription)")
+            return nil
+        }
     }
 
     func label(for cardID: String, in release: BanlistRelease? = nil, format: CardFormat = .current) -> String {

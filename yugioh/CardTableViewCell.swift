@@ -115,6 +115,9 @@ class CardTableViewCell: UITableViewCell {
         favorite.accessibilityLabel = selected ? L10n.text("取消收藏", "Remove from favorites") : L10n.text("收藏卡牌", "Favorite card")
     }
 
+    /// Refresh the visible icon after the same card was changed in detail.
+    func refreshFavorite() { updateFavorite() }
+
     @objc private func toggleFavorite() {
         guard let entity = entity else { return }
         entity.isSelected.toggle()

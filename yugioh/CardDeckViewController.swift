@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import Kingfisher
 import SafariServices
+import AVFoundation
+import Vision
 
 
 
@@ -225,7 +227,11 @@ class CardDeckViewController: UIViewController {
     override func viewDidLoad() {
         //
         super.viewDidLoad()
-        navigationItem.title = deckViewEntity.history == nil ? L10n.text("卡组", "Deck") : L10n.text("赛事卡组", "Tournament Deck")
+        if deckViewEntity.type == "self" {
+            navigationItem.title = L10n.text("我的卡组", "My Deck")
+        } else {
+            navigationItem.title = deckViewEntity.history == nil ? L10n.text("卡组", "Deck") : L10n.text("赛事卡组", "Tournament Deck")
+        }
         self.cardEntitys = rootController?.cardEntitys ?? []
         //
         self.tableView.backgroundColor = .systemGroupedBackground
@@ -272,12 +278,14 @@ class CardDeckViewController: UIViewController {
             add.isEnabled = !isSharing
             actions.append(add)
         }
-        if isSharing {
-            let spinner = UIActivityIndicatorView(style: .medium)
-            spinner.startAnimating()
-            actions.append(UIBarButtonItem(customView: spinner))
-        } else if deckEntitys.values.flatMap({ $0 }).contains(where: { $0.number > 0 }) {
-            actions.append(WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler)))
+        if deckViewEntity.type != "self" {
+            if isSharing {
+                let spinner = UIActivityIndicatorView(style: .medium)
+                spinner.startAnimating()
+                actions.append(UIBarButtonItem(customView: spinner))
+            } else if deckEntitys.values.flatMap({ $0 }).contains(where: { $0.number > 0 }) {
+                actions.append(WeChatSharing.shareButton(target: self, action: #selector(shareButtonHandler)))
+            }
         }
         navigationItem.rightBarButtonItems = actions
     }
@@ -525,5 +533,489 @@ extension CardDeckViewController: UICollectionViewDataSource {
 
         
         return cell
+    }
+}
+
+/// A personal inventory, separate from the deck and without deck-building limits.
+private final class PhysicalCardCell: UITableViewCell {
+    let artwork = UIImageView()
+    let nameLabel = UILabel()
+    let pricesLabel = UILabel()
+    let decreaseButton = UIButton(type: .system)
+    let increaseButton = UIButton(type: .system)
+    var onDecrease: (() -> Void)?
+    var onIncrease: (() -> Void)?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .secondarySystemGroupedBackground
+        accessoryType = .disclosureIndicator
+
+        artwork.contentMode = .scaleAspectFit
+        artwork.isAccessibilityElement = false
+        artwork.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(artwork)
+
+        nameLabel.font = .preferredFont(forTextStyle: .subheadline)
+        nameLabel.adjustsFontForContentSizeCategory = true
+        nameLabel.numberOfLines = 0
+        pricesLabel.font = .preferredFont(forTextStyle: .caption1)
+        pricesLabel.adjustsFontForContentSizeCategory = true
+        pricesLabel.textColor = .secondaryLabel
+        pricesLabel.numberOfLines = 0
+        for (button, symbol) in [(decreaseButton, "minus"), (increaseButton, "plus")] {
+            var configuration = UIButton.Configuration.tinted()
+            configuration.image = UIImage(systemName: symbol)
+            configuration.baseForegroundColor = greenColor
+            configuration.cornerStyle = .medium
+            button.configuration = configuration
+            button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        }
+        decreaseButton.addTarget(self, action: #selector(decrease), for: .touchUpInside)
+        increaseButton.addTarget(self, action: #selector(increase), for: .touchUpInside)
+        let controls = UIStackView(arrangedSubviews: [decreaseButton, increaseButton, UIView()])
+        controls.axis = .horizontal
+        controls.spacing = 8
+        let text = UIStackView(arrangedSubviews: [nameLabel, pricesLabel, controls])
+        text.axis = .vertical
+        text.spacing = 6
+        text.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(text)
+
+        NSLayoutConstraint.activate([
+            artwork.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            artwork.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 10),
+            artwork.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10),
+            artwork.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            artwork.widthAnchor.constraint(equalToConstant: 68),
+            artwork.heightAnchor.constraint(equalToConstant: 98),
+            text.leadingAnchor.constraint(equalTo: artwork.trailingAnchor, constant: 12),
+            text.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            text.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 12),
+            text.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -12),
+            text.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    @objc private func decrease() { onDecrease?() }
+    @objc private func increase() { onIncrease?() }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        artwork.kf.cancelDownloadTask()
+        artwork.image = nil
+        artwork.accessibilityIdentifier = nil
+        onDecrease = nil
+        onIncrease = nil
+    }
+}
+
+final class PhysicalCardsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    private let service = PhysicalCardService()
+    private let table = UITableView(frame: .zero, style: .plain)
+    private let header = UIStackView()
+    private let countLabel = UILabel()
+    private let tcgLabel = UILabel()
+    private let marketLabel = UILabel()
+    private let noteLabel = UILabel()
+    private var entries: [PhysicalCardService.Item] = []
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = .autoupdatingCurrent
+        formatter.timeZone = .autoupdatingCurrent
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = L10n.text("我的实际卡", "My Physical Cards")
+        view.backgroundColor = .systemGroupedBackground
+        view.tintColor = greenColor
+        let scan = UIBarButtonItem(title: L10n.text("扫描卡牌", "Scan Cards"), style: .plain, target: self, action: #selector(scanCards))
+        scan.accessibilityIdentifier = "scanPhysicalCards"
+        navigationItem.rightBarButtonItem = scan
+        table.backgroundColor = .systemGroupedBackground
+        table.separatorStyle = .singleLine
+        table.rowHeight = UITableView.automaticDimension
+        table.estimatedRowHeight = 110
+        table.delegate = self
+        table.dataSource = self
+        table.register(PhysicalCardCell.self, forCellReuseIdentifier: "PhysicalCard")
+        table.accessibilityIdentifier = "physicalCardsList"
+        table.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(table)
+        NSLayoutConstraint.activate([
+            table.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            table.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        header.axis = .vertical
+        header.spacing = 6
+        header.isLayoutMarginsRelativeArrangement = true
+        header.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 14, leading: 16, bottom: 16, trailing: 16)
+        for label in [countLabel, tcgLabel, marketLabel, noteLabel] {
+            label.numberOfLines = 0
+            label.adjustsFontForContentSizeCategory = true
+            label.font = .preferredFont(forTextStyle: .subheadline)
+            header.addArrangedSubview(label)
+        }
+        countLabel.font = .preferredFont(forTextStyle: .headline)
+        noteLabel.font = .preferredFont(forTextStyle: .caption1)
+        noteLabel.textColor = .secondaryLabel
+        tcgLabel.accessibilityIdentifier = "physicalTotalTCG"
+        marketLabel.accessibilityIdentifier = "physicalTotalCardmarket"
+        table.tableHeaderView = header
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        reloadCollection()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let target = CGSize(width: table.bounds.width, height: UIView.layoutFittingCompressedSize.height)
+        let height = header.systemLayoutSizeFitting(target, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
+        if header.frame.width != target.width || abs(header.frame.height - height) > 0.5 {
+            header.frame = CGRect(x: 0, y: 0, width: target.width, height: height)
+            table.tableHeaderView = header
+        }
+    }
+
+    private func amount(_ value: Decimal, prefix: String) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        return prefix + (formatter.string(from: NSDecimalNumber(decimal: value)) ?? NSDecimalNumber(decimal: value).stringValue)
+    }
+
+    private func reloadCollection() {
+        entries = service.list()
+        let totals = service.totals()
+        countLabel.text = L10n.text("实体卡 · \(totals.totalCards) 张", "Physical cards · \(totals.totalCards) copies")
+        func totalText(_ name: String, _ value: Decimal, _ prefix: String, _ missing: Int) -> String {
+            let shown = totals.totalCards > 0 && missing == totals.totalCards
+                ? L10n.text("暂无可用价格", "No price available") : amount(value, prefix: prefix)
+            let coverage = missing > 0 ? L10n.text(" · \(missing) 张未计价", " · \(missing) unpriced copies") : ""
+            return "\(name)：\(shown)\(coverage)"
+        }
+        tcgLabel.text = totalText("TCGplayer", totals.tcgplayer, "US$", totals.tcgMissingCount)
+        marketLabel.text = totalText("Cardmarket", totals.cardmarket, "€", totals.cardmarketMissingCount)
+        var note = L10n.text("不同版本的最低参考价，非所持实体卡估值；总计不含未计价卡牌。", "Lowest reference prices across printings, not an appraisal of your cards. Totals exclude unpriced copies.")
+        if let date = totals.earliestFetchedAt {
+            note += "\n" + L10n.text("最早数据获取：\(dateFormatter.string(from: date)) · YGOPRODeck", "Oldest data retrieved: \(dateFormatter.string(from: date)) · YGOPRODeck")
+        }
+        note += "\n" + L10n.text("点按卡牌查看详情 · 用 − / + 调整数量", "Tap a card for details · Use − / + to change quantity")
+        noteLabel.text = note
+        let empty = UILabel()
+        empty.text = L10n.text("还没有实际卡。点击右上角“扫描卡牌”开始记录。", "No physical cards yet. Tap Scan Cards to start.")
+        empty.textAlignment = .center
+        empty.numberOfLines = 0
+        empty.textColor = .secondaryLabel
+        empty.font = .preferredFont(forTextStyle: .body)
+        table.backgroundView = entries.isEmpty ? empty : nil
+        table.reloadData()
+        view.setNeedsLayout()
+    }
+
+    @objc private func scanCards() {
+        let scanner = PhysicalCardScanViewController()
+        scanner.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(scanner, animated: true)
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { entries.count }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PhysicalCard", for: indexPath) as! PhysicalCardCell
+        let item = entries[indexPath.row]
+        let quote = service.quote(id: item.id)
+        let card = getCardEntity(id: item.id)
+        let cardName = card.getName() ?? item.id
+        cell.nameLabel.text = L10n.text("\(cardName) · \(item.quantity) 张", "\(cardName) · \(item.quantity) copies")
+        cell.decreaseButton.accessibilityIdentifier = "physicalDecrease_\(item.id)"
+        cell.increaseButton.accessibilityIdentifier = "physicalIncrease_\(item.id)"
+        cell.decreaseButton.accessibilityLabel = L10n.text("减少一张\(cardName)", "Remove one copy of \(cardName)")
+        cell.increaseButton.accessibilityLabel = L10n.text("增加一张\(cardName)", "Add one copy of \(cardName)")
+        cell.onDecrease = { [weak self] in self?.change(id: item.id, add: false) }
+        cell.onIncrease = { [weak self] in self?.change(id: item.id, add: true) }
+        cell.artwork.accessibilityIdentifier = "physicalCardArtwork_\(item.id)"
+        setImage(card: cell.artwork, id: item.id)
+        func line(_ title: String, _ price: Decimal?, _ prefix: String) -> String {
+            guard let price = price else { return title + L10n.text("：暂无可用价格", ": No price available") }
+            return "\(title)：\(amount(price, prefix: prefix)) × \(item.quantity) = \(amount(price * Decimal(item.quantity), prefix: prefix))"
+        }
+        cell.pricesLabel.text = [line("TCGplayer", quote.tcgplayer, "US$"), line("Cardmarket", quote.cardmarket, "€")].joined(separator: "\n")
+        cell.accessibilityIdentifier = "physicalCardRow_\(item.id)"
+        cell.accessibilityHint = L10n.text("点按查看详情", "Tap for details")
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        (cell as? PhysicalCardCell)?.artwork.kf.cancelDownloadTask()
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let controller = CardDetailViewController()
+        controller.cardEntity = getCardEntity(id: entries[indexPath.row].id)
+        controller.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(controller, animated: true)
+    }
+
+    private func change(id: String, add: Bool) {
+        let success = add ? service.add(id: id) : service.remove(id: id)
+        if success { reloadCollection(); return }
+        let alert = UIAlertController(title: L10n.text("无法更新", "Unable to Update"), message: L10n.text("保存失败，请重试。", "Could not save. Please try again."), preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: L10n.text("知道了", "OK"), style: .default))
+        present(alert, animated: true)
+    }
+
+}
+
+/// Scans a single card on-device and asks the user to confirm a catalogue match.
+final class PhysicalCardScanViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDataSource, UITableViewDelegate {
+    private let preview = UIImageView()
+    private let status = UILabel()
+    private let captureButton = UIButton(type: .system)
+    private let table = UITableView(frame: .zero, style: .plain)
+    private var candidates: [PhysicalCardScanMatcher.Candidate] = []
+    private var isProcessing = false
+    private let service = PhysicalCardService()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = L10n.text("扫描卡牌", "Scan Card")
+        view.backgroundColor = .systemGroupedBackground
+        view.tintColor = greenColor
+
+        preview.contentMode = .scaleAspectFit
+        preview.backgroundColor = .secondarySystemGroupedBackground
+        preview.layer.cornerRadius = 12
+        preview.clipsToBounds = true
+        preview.isAccessibilityElement = false
+        preview.accessibilityIdentifier = "scanCapturedPhoto"
+        preview.image = UIImage(systemName: "camera.viewfinder")
+        preview.tintColor = .secondaryLabel
+        preview.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        status.numberOfLines = 0
+        status.font = .preferredFont(forTextStyle: .subheadline)
+        status.adjustsFontForContentSizeCategory = true
+        status.textColor = .secondaryLabel
+        status.accessibilityIdentifier = "scanStatus"
+        status.text = L10n.text("将单张卡牌放在明亮处，拍摄卡名和卡号。识别后请选择候选卡牌确认。", "Photograph one card in good lighting, including its name and number. Choose a match to confirm.")
+        var captureStyle = UIButton.Configuration.filled()
+        captureStyle.title = L10n.text("拍照识别", "Scan with Camera")
+        captureStyle.image = UIImage(systemName: "camera.fill")
+        captureStyle.imagePadding = 8
+        captureStyle.baseForegroundColor = .white
+        captureStyle.baseBackgroundColor = UIColor(red: 0.12, green: 0.36, blue: 0.29, alpha: 1)
+        captureStyle.cornerStyle = .large
+        captureStyle.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 20, bottom: 14, trailing: 20)
+        captureStyle.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
+            var result = attributes
+            result.font = .preferredFont(forTextStyle: .headline)
+            return result
+        }
+        captureButton.configuration = captureStyle
+        captureButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        captureButton.accessibilityIdentifier = "scanCaptureButton"
+        captureButton.addTarget(self, action: #selector(openCamera), for: .touchUpInside)
+        captureButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 52).isActive = true
+
+        let header = UIStackView(arrangedSubviews: [preview, status, captureButton])
+        header.axis = .vertical
+        header.spacing = 10
+        header.isLayoutMarginsRelativeArrangement = true
+        header.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
+        table.backgroundColor = .systemGroupedBackground
+        table.rowHeight = UITableView.automaticDimension
+        table.estimatedRowHeight = 64
+        table.dataSource = self
+        table.delegate = self
+        table.accessibilityIdentifier = "scanCandidates"
+        let layout = UIStackView(arrangedSubviews: [header, table])
+        layout.axis = .vertical
+        layout.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(layout)
+        NSLayoutConstraint.activate([
+            layout.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            layout.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            layout.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            layout.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+
+    @objc private func openCamera() {
+        guard !isProcessing else { return }
+        #if DEBUG
+        // The UI test feeds recognized text without camera hardware; production
+        // builds always use the camera and Vision below.
+        if let injected = ProcessInfo.processInfo.environment["UI_TEST_SCAN_TEXT"] {
+            handleRecognizedText(injected.components(separatedBy: "|"))
+            return
+        }
+        #endif
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            status.text = L10n.text("此设备没有可用相机。请在有相机的设备上扫描。", "No camera is available on this device. Scan on a device with a camera.")
+            return
+        }
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            presentCamera()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] allowed in
+                DispatchQueue.main.async {
+                    guard let self = self, self.viewIfLoaded?.window != nil else { return }
+                    if allowed { self.presentCamera() } else { self.showCameraPermissionMessage() }
+                }
+            }
+        case .denied, .restricted:
+            showCameraPermissionMessage()
+        @unknown default:
+            showCameraPermissionMessage()
+        }
+    }
+
+    private func presentCamera() {
+        guard presentedViewController == nil, viewIfLoaded?.window != nil else { return }
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.cameraCaptureMode = .photo
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+
+    private func showCameraPermissionMessage() {
+        status.text = L10n.text("无法使用相机。请在系统设置中允许相机访问后重试。", "Camera access is unavailable. Allow access in Settings and try again.")
+        let alert = UIAlertController(title: L10n.text("需要相机权限", "Camera Access Needed"), message: status.text, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: L10n.text("取消", "Cancel"), style: .cancel))
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            alert.addAction(UIAlertAction(title: L10n.text("打开设置", "Open Settings"), style: .default) { _ in UIApplication.shared.open(url) })
+        }
+        present(alert, animated: true)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            guard let image = info[.originalImage] as? UIImage, let cgImage = image.cgImage else {
+                self.status.text = L10n.text("无法读取照片，请重新拍摄。", "Could not read the photo. Please try again.")
+                return
+            }
+            self.preview.image = image
+            self.candidates = []
+            self.table.reloadData()
+            self.isProcessing = true
+            self.captureButton.isEnabled = false
+            self.status.text = L10n.text("正在识别卡名和卡号…", "Recognizing the card name and number…")
+            let orientation = Self.imageOrientation(image.imageOrientation)
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                let request = VNRecognizeTextRequest()
+                request.recognitionLevel = .accurate
+                request.usesLanguageCorrection = false
+                if let supported = try? request.supportedRecognitionLanguages() {
+                    let languages = ["ja-JP", "zh-Hans", "en-US"].filter { supported.contains($0) }
+                    if !languages.isEmpty { request.recognitionLanguages = languages }
+                }
+                do {
+                    try VNImageRequestHandler(cgImage: cgImage, orientation: orientation).perform([request])
+                    let lines = (request.results ?? []).flatMap { $0.topCandidates(2).map(\.string) }
+                    DispatchQueue.main.async {
+                        guard let self = self else { return }
+                        self.handleRecognizedText(lines)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        guard let self = self else { return }
+                        self.isProcessing = false
+                        self.captureButton.isEnabled = true
+                        self.status.text = L10n.text("识别失败，请重新拍摄。", "Recognition failed. Please take another photo.")
+                    }
+                }
+            }
+        }
+    }
+
+    private func handleRecognizedText(_ lines: [String]) {
+        isProcessing = true
+        captureButton.isEnabled = false
+        candidates = []
+        table.reloadData()
+        status.text = L10n.text("正在查找匹配卡牌…", "Finding matching cards…")
+        PhysicalCardScanMatcher.matchAsync(lines: lines) { [weak self] matches in
+            guard let self = self else { return }
+            self.isProcessing = false
+            self.captureButton.isEnabled = true
+            guard self.viewIfLoaded?.window != nil else { return }
+            self.candidates = matches
+            self.table.reloadData()
+            self.status.text = matches.isEmpty
+                ? L10n.text("没有找到匹配的卡牌。请靠近卡牌并避开反光，重新拍摄卡名和卡号。", "No matching card found. Move closer, avoid glare, and photograph the name and number again.")
+                : L10n.text("请选择识别到的卡牌，确认后加入收藏。", "Select a recognized card and confirm to add it to your collection.")
+        }
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { candidates.count }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ScanCandidate") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "ScanCandidate")
+        let candidate = candidates[indexPath.row]
+        cell.textLabel?.text = candidate.card.getName()
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.font = .preferredFont(forTextStyle: .body)
+        cell.textLabel?.adjustsFontForContentSizeCategory = true
+        cell.detailTextLabel?.text = "\(candidate.card.id ?? "") · \(candidate.reason)"
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.detailTextLabel?.font = .preferredFont(forTextStyle: .caption1)
+        cell.detailTextLabel?.adjustsFontForContentSizeCategory = true
+        cell.accessoryType = .disclosureIndicator
+        cell.accessibilityIdentifier = "scanCandidate_\(candidate.card.id ?? "")"
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let card = candidates[indexPath.row].card
+        let alert = UIAlertController(title: L10n.text("确认加入收藏？", "Add to Collection?"),
+                                      message: "\(card.getName() ?? "")\n\(card.id ?? "")", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: L10n.text("取消", "Cancel"), style: .cancel))
+        alert.addAction(UIAlertAction(title: L10n.text("加入收藏", "Add to Collection"), style: .default) { [weak self] _ in
+            guard let self = self, let id = card.id, self.service.add(id: id) else {
+                self?.status.text = L10n.text("保存失败，请重试。", "Could not save. Please try again.")
+                return
+            }
+            self.candidates = []
+            self.table.reloadData()
+            self.status.text = L10n.text("已加入：\(card.getName() ?? id)。可以继续扫描下一张。", "Added: \(card.getName() ?? id). You can scan another card.")
+        })
+        present(alert, animated: true)
+    }
+
+    private static func imageOrientation(_ orientation: UIImage.Orientation) -> CGImagePropertyOrientation {
+        switch orientation {
+        case .up: return .up
+        case .down: return .down
+        case .left: return .left
+        case .right: return .right
+        case .upMirrored: return .upMirrored
+        case .downMirrored: return .downMirrored
+        case .leftMirrored: return .leftMirrored
+        case .rightMirrored: return .rightMirrored
+        @unknown default: return .up
+        }
     }
 }

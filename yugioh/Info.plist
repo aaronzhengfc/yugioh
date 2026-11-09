@@ -54,6 +54,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Use the camera to scan cards and add them to your collection.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Save card and deck images to your photo library.</string>
 	<key>UIAppFonts</key>

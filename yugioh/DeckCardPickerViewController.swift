@@ -3,6 +3,8 @@ import Kingfisher
 
 /// Cards are added immediately; Done returns to the refreshed personal deck.
 final class DeckCardPickerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+    var isPhysicalCollection = false
+    private let physicalService = PhysicalCardService()
     private let service = DeckService()
     private let favorites = CardService()
     private let searchBar = UISearchBar()
@@ -28,16 +30,19 @@ final class DeckCardPickerViewController: UIViewController, UITableViewDelegate,
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
         searchBar.searchTextField.autocorrectionType = .no
-        searchBar.accessibilityIdentifier = "deckCardSearch"
+        searchBar.accessibilityIdentifier = isPhysicalCollection ? "physicalCardSearch" : "deckCardSearch"
         sectionControl.selectedSegmentIndex = 0
         sectionControl.addTarget(self, action: #selector(filterCards), for: .valueChanged)
         sectionControl.accessibilityIdentifier = "deckCardSection"
-        hint.text = L10n.text("点按卡牌加 1 张；长按查看详情。自动按卡种加入主卡或额外卡组。", "Tap a card to add one copy; hold for details. Auto chooses Main or Extra Deck by card type.")
+        hint.text = isPhysicalCollection
+            ? L10n.text("点按卡牌加 1 张；长按查看详情。", "Tap a card to add one copy; hold for details.")
+            : L10n.text("点按卡牌加 1 张；长按查看详情。自动按卡种加入主卡或额外卡组。", "Tap a card to add one copy; hold for details. Auto chooses Main or Extra Deck by card type.")
         hint.font = .preferredFont(forTextStyle: .caption1)
         hint.adjustsFontForContentSizeCategory = true
         hint.textColor = .secondaryLabel
         hint.numberOfLines = 0
         let heading = UIStackView(arrangedSubviews: [searchBar, sectionControl, hint])
+        sectionControl.isHidden = isPhysicalCollection
         heading.axis = .vertical
         heading.spacing = 8
         heading.isLayoutMarginsRelativeArrangement = true
@@ -47,7 +52,7 @@ final class DeckCardPickerViewController: UIViewController, UITableViewDelegate,
         status.textColor = .secondaryLabel
         status.numberOfLines = 3
         status.lineBreakMode = .byTruncatingTail
-        status.accessibilityIdentifier = "deckAddStatus"
+        status.accessibilityIdentifier = isPhysicalCollection ? "physicalAddStatus" : "deckAddStatus"
         let footer = UIView()
         footer.backgroundColor = .secondarySystemGroupedBackground
         footer.addSubview(status)
@@ -80,7 +85,7 @@ final class DeckCardPickerViewController: UIViewController, UITableViewDelegate,
             status.topAnchor.constraint(equalTo: footer.topAnchor, constant: 12),
             status.bottomAnchor.constraint(equalTo: footer.bottomAnchor, constant: -12)
         ])
-        allCards = getCardEntity().filter { DeckService.canAdd($0, to: "1") }
+        allCards = isPhysicalCollection ? getCardEntity() : getCardEntity().filter { DeckService.canAdd($0, to: "1") }
         searchIndex = allCards.map {
             [$0.id ?? "", $0.enName ?? "", $0.cnName ?? "", $0.enDesc ?? "", $0.cnDesc ?? ""]
                 .joined(separator: " ").lowercased()
@@ -111,7 +116,7 @@ final class DeckCardPickerViewController: UIViewController, UITableViewDelegate,
         searchTask?.cancel()
         let words = (searchBar.text ?? "").lowercased().split(whereSeparator: { $0.isWhitespace }).map(String.init)
         results = allCards.enumerated().compactMap { index, card in
-            guard DeckService.canAdd(card, to: destination(for: card)),
+            guard (isPhysicalCollection || DeckService.canAdd(card, to: destination(for: card))),
                   words.allSatisfy({ searchIndex[index].contains($0) }) else { return nil }
             return card
         }
@@ -145,12 +150,21 @@ final class DeckCardPickerViewController: UIViewController, UITableViewDelegate,
 
     private func refreshQuantities() {
         quantities = [:]
+        if isPhysicalCollection {
+            for entry in physicalService.list() { quantities[entry.id] = entry.quantity }
+            return
+        }
         for entry in service.list().values.flatMap({ $0 }) {
             quantities[DeckService.identity(for: getCardEntity(id: entry.id)), default: 0] += entry.number
         }
     }
 
     private func showSummary() {
+        if isPhysicalCollection {
+            let count = physicalService.list().reduce(0) { $0 + $1.quantity }
+            status.text = L10n.text("我的实际卡：\(count) 张", "My physical cards: \(count) copies")
+            return
+        }
         let cards = service.list()
         let counts = ["0", "2", "1"].map { key in (cards[key] ?? []).reduce(0) { $0 + $1.number } }
         status.text = L10n.text("主卡 \(counts[0]) 张 · 额外 \(counts[1]) 张 · 副卡 \(counts[2]) 张", "Main \(counts[0]) · Extra \(counts[1]) · Side \(counts[2])")
@@ -169,14 +183,14 @@ final class DeckCardPickerViewController: UIViewController, UITableViewDelegate,
         let card = results[indexPath.row]
         card.isSelected = favorites.isExist(id: card.id)
         cell.prepare(cardEntity: card, tableView: tableView, indexPath: indexPath)
-        let count = quantities[DeckService.identity(for: card), default: 0]
+        let count = quantities[isPhysicalCollection ? card.id : DeckService.identity(for: card), default: 0]
         let badge = UILabel(frame: CGRect(x: 0, y: 0, width: 36, height: 44))
-        badge.text = count >= 3 ? "\(count)/3" : "+\n\(count)/3"
+        badge.text = isPhysicalCollection ? "+\n\(count)" : (count >= 3 ? "\(count)/3" : "+\n\(count)/3")
         badge.numberOfLines = 2
         badge.textAlignment = .center
         badge.font = .preferredFont(forTextStyle: .caption1)
-        badge.textColor = count > 3 ? .systemOrange : (count == 3 ? .tertiaryLabel : greenColor)
-        badge.accessibilityLabel = L10n.text("卡组已有 \(count) 张", "\(count) copies in deck")
+        badge.textColor = isPhysicalCollection ? greenColor : (count > 3 ? .systemOrange : (count == 3 ? .tertiaryLabel : greenColor))
+        badge.accessibilityLabel = isPhysicalCollection ? L10n.text("已拥有 \(count) 张", "\(count) owned copies") : L10n.text("卡组已有 \(count) 张", "\(count) copies in deck")
         cell.accessoryView = badge
         cell.accessibilityHint = L10n.text("点按添加一张，长按查看详情", "Tap to add one copy, hold for details")
         setImage(card: cell.card, id: card.id)
@@ -190,6 +204,22 @@ final class DeckCardPickerViewController: UIViewController, UITableViewDelegate,
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let card = results[indexPath.row]
+        if isPhysicalCollection {
+            guard physicalService.add(id: card.id) else {
+                let alert = UIAlertController(title: L10n.text("无法添加", "Unable to Add"), message: L10n.text("保存失败，请重试。", "Could not save. Please try again."), preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: L10n.text("知道了", "OK"), style: .default))
+                present(alert, animated: true)
+                return
+            }
+            refreshQuantities()
+            let count = quantities[card.id, default: 0]
+            showSummary()
+            status.text = L10n.text("已添加：\(card.getName() ?? card.id ?? "")（共 \(count) 张）", "Added: \(card.getName() ?? card.id ?? "") (\(count) copies)") + "\n" + (status.text ?? "")
+            UIAccessibility.post(notification: .announcement, argument: status.text)
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            tableView.reloadData()
+            return
+        }
         let section = destination(for: card)
         let result = service.save(id: card.id, type: section)
         guard result == .saved else {

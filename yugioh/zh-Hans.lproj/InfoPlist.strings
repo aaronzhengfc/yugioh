@@ -1,2 +1,3 @@
 "CFBundleDisplayName" = "游戏卡牌图鉴";
 "NSPhotoLibraryUsageDescription" = "将卡牌和卡组图片保存到相册。";
+"NSCameraUsageDescription" = "使用相机扫描卡牌，以添加到我的实际卡。";

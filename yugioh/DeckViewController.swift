@@ -2,6 +2,8 @@ import UIKit
 
 class DeckViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    var showsWorldChampionships = false
+    private var rootController: ViewController?
 
     private struct Section {
         let title: String
@@ -10,6 +12,25 @@ class DeckViewController: UIViewController {
     private var sections: [Section] = []
     private var summaries: [String: String] = [:]
 
+    override func loadView() {
+        guard showsWorldChampionships else {
+            super.loadView()
+            return
+        }
+        let root = UIView()
+        let table = UITableView(frame: .zero, style: .plain)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        root.addSubview(table)
+        NSLayoutConstraint.activate([
+            table.topAnchor.constraint(equalTo: root.safeAreaLayoutGuide.topAnchor),
+            table.bottomAnchor.constraint(equalTo: root.safeAreaLayoutGuide.bottomAnchor),
+            table.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+            table.trailingAnchor.constraint(equalTo: root.trailingAnchor)
+        ])
+        view = root
+        tableView = table
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         for deck in sections.flatMap({ $0.decks }) {
@@ -17,9 +38,14 @@ class DeckViewController: UIViewController {
             let key = deck.type + ":" + deck.id
             if deck.type == "banlist" {
                 summaries[key] = L10n.text("OCG / TCG · 按生效日期查看", "OCG / TCG · Browse by effective date")
+            } else if deck.type == "championship-list" {
+                summaries[key] = L10n.text("查看历年世界锦标赛卡组", "Browse decks by World Championship year")
             } else if deck.type == "star" {
                 let count = CardService().list().count
                 summaries[key] = L10n.text("已收藏 \(count) 张卡牌", "\(count) favorite cards")
+            } else if deck.type == "physical" {
+                let count = PhysicalCardService().list().reduce(0) { $0 + $1.quantity }
+                summaries[key] = L10n.text("已拥有 \(count) 张实体卡", "\(count) physical cards")
             } else if deck.type == "self" || summaries[key] == nil {
                 if let history = deck.history, !history.hasRecipe {
                     summaries[key] = history.recipeLabel
@@ -38,17 +64,25 @@ class DeckViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let decks = getDeckViewEntity()
-        let history = loadDeckHistory()
-        sections = [Section(title: L10n.text("我的空间", "My Collection"), decks: decks.filter { $0.type == "star" || $0.type == "self" })]
-        sections.append(Section(title: L10n.text("禁限卡档案", "Forbidden & Limited Archive"), decks: [
-            DeckViewEntity(id: "banlists", title: L10n.text("历期禁限表", "Forbidden & Limited Lists"), introduction: "", type: "banlist")
-        ]))
-        if history.isEmpty {
-            sections.append(Section(title: L10n.text("历届世界冠军", "World Champions"), decks: decks.filter { $0.type == "worldchampionship" }))
+        if showsWorldChampionships {
+            title = L10n.text("冠军卡组", "World Champions")
+            let history = loadDeckHistory()
+            if history.isEmpty {
+                sections = [Section(title: L10n.text("历届世界冠军", "World Champions"), decks: decks.filter { $0.type == "worldchampionship" })]
+            } else {
+                sections = history.map { Section(title: L10n.text("\($0.year) 世界锦标赛", "\($0.year) World Championship"), decks: $0.decks) }
+            }
         } else {
-            sections += history.map { Section(title: L10n.text("\($0.year) 世界锦标赛", "\($0.year) World Championship"), decks: $0.decks) }
+            let physical = DeckViewEntity(id: "physical", title: L10n.text("我的实际卡", "My Physical Cards"), introduction: "", type: "physical")
+            sections = [Section(title: L10n.text("我的空间", "My Collection"), decks: decks.filter { $0.type == "star" || $0.type == "self" } + [physical])]
+            sections.append(Section(title: L10n.text("禁限卡档案", "Forbidden & Limited Archive"), decks: [
+                DeckViewEntity(id: "banlists", title: L10n.text("历期禁限表", "Forbidden & Limited Lists"), introduction: "", type: "banlist")
+            ]))
+            sections.append(Section(title: L10n.text("冠军卡组", "World Champions"), decks: [
+                DeckViewEntity(id: "championships", title: L10n.text("冠军卡组", "World Champions"), introduction: "", type: "championship-list")
+            ]))
+            sections.append(Section(title: L10n.text("经典卡组", "Classic Decks"), decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) }))
         }
-        sections.append(Section(title: L10n.text("经典卡组", "Classic Decks"), decks: decks.filter { !["star", "self", "worldchampionship"].contains($0.type) }))
         sections.removeAll { $0.decks.isEmpty }
         view.backgroundColor = .systemGroupedBackground
         tableView.backgroundColor = .systemGroupedBackground
@@ -76,6 +110,7 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DeckCard", for: indexPath) as! DeckTableCell
         let deck = sections[indexPath.section].decks[indexPath.row]
         cell.configure(deck, detail: summaries[deck.type + ":" + deck.id] ?? "")
+        cell.accessibilityIdentifier = deck.type == "physical" ? "physicalCollectionEntry" : (deck.type == "championship-list" ? "championshipEntry" : nil)
         return cell
     }
 
@@ -119,11 +154,21 @@ extension DeckViewController: UITableViewDelegate, UITableViewDataSource {
         guard !deck.isCancelled else { return }
         if deck.type == "banlist" {
             navigationController?.pushViewController(BanlistViewController(), animated: true)
+        } else if deck.type == "championship-list" {
+            let controller = DeckViewController(nibName: nil, bundle: nil)
+            controller.showsWorldChampionships = true
+            controller.rootController = tabBarController as? ViewController
+            controller.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(controller, animated: true)
         } else if deck.type == "star" {
             navigationController?.pushViewController(CardViewWithStarController(), animated: true)
+        } else if deck.type == "physical" {
+            let controller = PhysicalCardsViewController()
+            controller.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(controller, animated: true)
         } else {
             let controller = CardDeckViewController()
-            controller.rootController = tabBarController as? ViewController
+            controller.rootController = rootController ?? (tabBarController as? ViewController)
             controller.deckViewEntity = deck
             navigationController?.pushViewController(controller, animated: true)
         }

@@ -21,6 +21,12 @@ class CardViewBaseController: UIViewController {
     var afterDeselect: (() -> Void)?
     private var pagination: CardListPagination!
     private var searchCriteria: CardSearchCriteria = .empty
+    private let searchQueue = DispatchQueue(label: "com.sightcorner.yugioh.card-search", qos: .userInitiated, attributes: .concurrent)
+    private var searchGeneration = 0
+    private var isSearching = false
+    private var lastSourceIDs: [String]?
+    private var lastLanguage: String?
+    private var lastFavorites: Set<String> = []
     private let resultHeader = UIView()
     private let resultCount = UILabel()
     private let clearSearchButton = UIButton(type: .system)
@@ -139,7 +145,9 @@ class CardViewBaseController: UIViewController {
             tableView.backgroundView = nil
             return
         }
-        resultCount.text = L10n.text("搜索结果 · \(count) 张卡牌", "Search results · \(count) cards")
+        resultCount.text = isSearching
+            ? L10n.text("正在搜索…", "Searching…")
+            : L10n.text("搜索结果 · \(count) 张卡牌", "Search results · \(count) cards")
         clearSearchButton.configuration?.title = L10n.text("清除筛选", "Clear filters")
         let width = max(tableView.bounds.width, 1)
         let size = resultHeader.systemLayoutSizeFitting(
@@ -147,7 +155,7 @@ class CardViewBaseController: UIViewController {
             withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
         resultHeader.frame = CGRect(x: 0, y: 0, width: width, height: size.height)
         tableView.tableHeaderView = resultHeader
-        if count == 0 {
+        if count == 0 && !isSearching {
             let empty = UILabel()
             empty.text = L10n.text("没有找到匹配的卡牌\n试试其他搜索条件，或清除筛选。", "No matching cards\nTry other search criteria or clear filters.")
             empty.font = .preferredFont(forTextStyle: .body)
@@ -167,18 +175,67 @@ class CardViewBaseController: UIViewController {
 
     func refreshCards(resetPagination: Bool = false) {
         guard tableView != nil, pagination != nil else { return }
-        let updated = searchCriteria.filter(cardsForDisplay())
-        let changed = (cardEntitys ?? []).map { $0.id } != updated.map { $0.id }
-        let previousOffset = tableView.contentOffset
-        cardEntitys = updated
-        if resetPagination || changed { pagination.reset(total: updated.count) }
-        updateSearchResultHeader(count: updated.count)
-        let favorites = Set(cardService.list())
-        for card in cardEntitys { card.isSelected = favorites.contains(card.id) }
+        let source = cardsForDisplay()
+        let sourceIDs = source.map { $0.id ?? "" }
+        let currentLanguage = language
+        guard resetPagination || sourceIDs != lastSourceIDs || currentLanguage != lastLanguage else {
+            // Returning from detail normally does not change the catalogue or
+            // search. Keep the result, pagination and scroll position intact.
+            synchronizeFavorites()
+            return
+        }
+        lastSourceIDs = sourceIDs
+        lastLanguage = currentLanguage
+        searchGeneration += 1
+        let generation = searchGeneration
+        let criteria = searchCriteria
+
+        if criteria.isEmpty {
+            isSearching = false
+            applyResults(source)
+            return
+        }
+
+        // Capture only plain values on the main thread. Filtering descriptions
+        // for the full catalogue can then happen without blocking navigation.
+        let documents = criteria.documents(for: source)
+        isSearching = true
+        cardEntitys = []
+        pagination.reset(total: 0)
+        updateSearchResultHeader(count: 0)
         tableView.reloadData()
-        if !resetPagination && !changed {
-            tableView.layoutIfNeeded()
-            tableView.setContentOffset(previousOffset, animated: false)
+        searchQueue.async { [weak self] in
+            let indices = criteria.matchingIndices(in: documents)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self, self.searchGeneration == generation else { return }
+                self.applyResults(indices.map { source[$0] })
+            }
+        }
+    }
+
+    private func applyResults(_ updated: [CardEntity]) {
+        isSearching = false
+        let favorites = Set(cardService.list())
+        lastFavorites = favorites
+        for card in updated { card.isSelected = favorites.contains(card.id) }
+        cardEntitys = updated
+        pagination.reset(total: updated.count)
+        updateSearchResultHeader(count: updated.count)
+        tableView.reloadData()
+    }
+
+    private func synchronizeFavorites() {
+        let favorites = Set(cardService.list())
+        let changed = favorites.symmetricDifference(lastFavorites)
+        guard !changed.isEmpty else { return }
+        lastFavorites = favorites
+        for card in cardEntitys where changed.contains(card.id) {
+            card.isSelected = favorites.contains(card.id)
+        }
+        for index in tableView.indexPathsForVisibleRows ?? [] where index.row < cardEntitys.count {
+            guard changed.contains(cardEntitys[index.row].id),
+                  let cell = tableView.cellForRow(at: index) as? CardTableViewCell else { continue }
+            cell.refreshFavorite()
         }
     }
 

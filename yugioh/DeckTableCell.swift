@@ -85,6 +85,9 @@ final class DeckTableCell: UITableViewCell {
         labelsLeading.constant = badge.isHidden ? 12 : 58
         heading.text = deck.title
         switch deck.type {
+        case "championship-list":
+            accent = .systemIndigo
+            icon.image = UIImage(systemName: "trophy.fill")
         case "banlist":
             accent = .systemRed
             icon.image = UIImage(systemName: "list.bullet.rectangle")
@@ -96,6 +99,10 @@ final class DeckTableCell: UITableViewCell {
             accent = .systemGreen
             icon.image = UIImage(systemName: "rectangle.stack.fill")
             subtitle.text = L10n.text("管理你的专属卡组", "Manage your own deck")
+        case "physical":
+            accent = .systemBlue
+            icon.image = UIImage(systemName: "square.stack.3d.up.fill")
+            subtitle.text = L10n.text("管理实体卡及参考价格", "Track physical cards and reference prices")
         case "worldchampionship":
             accent = .systemIndigo
             let digits = String(deck.title.prefix(4))

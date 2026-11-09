@@ -125,8 +125,65 @@ class CardDetailViewController: UIViewController {
         header.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
         content.addArrangedSubview(header)
         addPanel(title: L10n.text("卡牌效果", "Card Effect"), body: cardEntity.getDesc() ?? "")
+        addPricePanel()
         addArchivedRestrictionPanel()
         addAlternateImages()
+    }
+
+    private func addPricePanel() {
+        let heading = panelHeading(L10n.text("卡牌参考价格", "Card Reference Prices"))
+        let unavailable = L10n.text("暂无可用价格", "No price available")
+        var views: [UIView] = [heading]
+
+        // Only show prices with a known snapshot retrieval time. Older bundled
+        // values are not part of the latest import and have unknown age.
+        guard let fetchedAt = priceSnapshotTime(),
+              let data = cardEntity.getCardPrices().data(using: .utf8),
+              let records = (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]],
+              let prices = records.first else {
+            views.append(label(unavailable, style: .subheadline, color: .secondaryLabel))
+            let panel = makePanel(views)
+            panel.accessibilityIdentifier = "cardPricePanel"
+            content.addArrangedSubview(panel)
+            return
+        }
+
+        let vendors: [(String, String, String)] = [
+            ("TCGplayer", "tcgplayer_price", "US$"),
+            ("Cardmarket", "cardmarket_price", "€")
+        ]
+        let lines = vendors.map { name, key, currency -> String in
+            let raw = prices[key]
+            let amount = (raw as? String).flatMap(Double.init) ?? (raw as? NSNumber)?.doubleValue
+            guard let amount = amount, amount.isFinite, amount > 0 else { return "\(name)：\(unavailable)" }
+            return "\(name)：\(currency)\(String(format: "%.2f", locale: Locale(identifier: "en_US_POSIX"), amount))"
+        }
+        let body = label(lines.joined(separator: "\n"), style: .subheadline)
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineSpacing = 3
+        body.attributedText = NSAttributedString(string: lines.joined(separator: "\n"), attributes: [.paragraphStyle: paragraph])
+        views.append(body)
+        views.append(label(L10n.text("数据获取：\(fetchedAt)", "Data retrieved: \(fetchedAt)"), style: .caption1, color: .secondaryLabel))
+        views.append(label(L10n.text("来源：YGOPRODeck；为不同版本的最低参考价，非实时报价。", "Source: YGOPRODeck; lowest reference prices across printings, not live quotes."), style: .caption1, color: .secondaryLabel))
+        let panel = makePanel(views)
+        panel.accessibilityIdentifier = "cardPricePanel"
+        content.addArrangedSubview(panel)
+    }
+
+    private func priceSnapshotTime() -> String? {
+        guard let id = Int64(cardEntity.id ?? "") else { return nil }
+        do {
+            guard let timestamp = try getDB().scalar("SELECT fetchedAtUtc FROM card_price_sync WHERE cardId = ?", id) as? String,
+                  let date = ISO8601DateFormatter().date(from: timestamp) else { return nil }
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            formatter.locale = Locale.autoupdatingCurrent
+            formatter.timeZone = .autoupdatingCurrent
+            return formatter.string(from: date)
+        } catch {
+            return nil
+        }
     }
 
     private func addArchivedRestrictionPanel() {

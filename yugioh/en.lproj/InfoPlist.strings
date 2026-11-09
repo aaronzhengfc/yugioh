@@ -1,2 +1,3 @@
 "CFBundleDisplayName" = "Duel Card Atlas";
 "NSPhotoLibraryUsageDescription" = "Save card and deck images to your photo library.";
+"NSCameraUsageDescription" = "Use the camera to scan cards and add them to your collection.";
