@@ -618,7 +618,6 @@ final class PhysicalCardsViewController: UIViewController, UITableViewDelegate, 
     private let table = UITableView(frame: .zero, style: .plain)
     private let header = UIStackView()
     private let countLabel = UILabel()
-    private let tcgLabel = UILabel()
     private let marketLabel = UILabel()
     private let noteLabel = UILabel()
     private var entries: [PhysicalCardService.Item] = []
@@ -659,16 +658,17 @@ final class PhysicalCardsViewController: UIViewController, UITableViewDelegate, 
         header.spacing = 6
         header.isLayoutMarginsRelativeArrangement = true
         header.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 14, leading: 16, bottom: 16, trailing: 16)
-        for label in [countLabel, tcgLabel, marketLabel, noteLabel] {
+        for label in [countLabel, marketLabel, noteLabel] {
             label.numberOfLines = 0
             label.adjustsFontForContentSizeCategory = true
             label.font = .preferredFont(forTextStyle: .subheadline)
             header.addArrangedSubview(label)
         }
         countLabel.font = .preferredFont(forTextStyle: .headline)
+        marketLabel.font = .preferredFont(forTextStyle: .title3)
+        marketLabel.textColor = greenColor
         noteLabel.font = .preferredFont(forTextStyle: .caption1)
         noteLabel.textColor = .secondaryLabel
-        tcgLabel.accessibilityIdentifier = "physicalTotalTCG"
         marketLabel.accessibilityIdentifier = "physicalTotalCardmarket"
         table.tableHeaderView = header
     }
@@ -689,30 +689,20 @@ final class PhysicalCardsViewController: UIViewController, UITableViewDelegate, 
         }
     }
 
-    private func amount(_ value: Decimal, prefix: String) -> String {
-        let formatter = NumberFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        return prefix + (formatter.string(from: NSDecimalNumber(decimal: value)) ?? NSDecimalNumber(decimal: value).stringValue)
-    }
-
     private func reloadCollection() {
         entries = service.list()
         let totals = service.totals()
         countLabel.text = L10n.text("实体卡 · \(totals.totalCards) 张", "Physical cards · \(totals.totalCards) copies")
-        func totalText(_ name: String, _ value: Decimal, _ prefix: String, _ missing: Int) -> String {
+        func totalText(_ name: String, _ value: Decimal, _ missing: Int) -> String {
             let shown = totals.totalCards > 0 && missing == totals.totalCards
-                ? L10n.text("暂无可用价格", "No price available") : amount(value, prefix: prefix)
+                ? L10n.text("暂无可用价格", "No price available") : L10n.euro(value)
             let coverage = missing > 0 ? L10n.text(" · \(missing) 张未计价", " · \(missing) unpriced copies") : ""
             return "\(name)：\(shown)\(coverage)"
         }
-        tcgLabel.text = totalText("TCGplayer", totals.tcgplayer, "US$", totals.tcgMissingCount)
-        marketLabel.text = totalText("Cardmarket", totals.cardmarket, "€", totals.cardmarketMissingCount)
-        var note = L10n.text("不同版本的最低参考价，非所持实体卡估值；总计不含未计价卡牌。", "Lowest reference prices across printings, not an appraisal of your cards. Totals exclude unpriced copies.")
+        marketLabel.text = totalText("Cardmarket", totals.cardmarket, totals.cardmarketMissingCount)
+        var note = L10n.text("跨版本最低挂牌参考价，非所持实体卡估值；总计不含未计价卡牌。", "Lowest listings across matched products, not an appraisal of your cards. Totals exclude unpriced copies.")
         if let date = totals.earliestFetchedAt {
-            note += "\n" + L10n.text("最早数据获取：\(dateFormatter.string(from: date)) · YGOPRODeck", "Oldest data retrieved: \(dateFormatter.string(from: date)) · YGOPRODeck")
+            note += "\n" + L10n.text("价格快照：\(dateFormatter.string(from: date)) · Cardmarket", "Price snapshot: \(dateFormatter.string(from: date)) · Cardmarket")
         }
         note += "\n" + L10n.text("点按卡牌查看详情 · 用 − / + 调整数量", "Tap a card for details · Use − / + to change quantity")
         noteLabel.text = note
@@ -750,11 +740,11 @@ final class PhysicalCardsViewController: UIViewController, UITableViewDelegate, 
         cell.onIncrease = { [weak self] in self?.change(id: item.id, add: true) }
         cell.artwork.accessibilityIdentifier = "physicalCardArtwork_\(item.id)"
         setImage(card: cell.artwork, id: item.id)
-        func line(_ title: String, _ price: Decimal?, _ prefix: String) -> String {
+        func line(_ title: String, _ price: Decimal?) -> String {
             guard let price = price else { return title + L10n.text("：暂无可用价格", ": No price available") }
-            return "\(title)：\(amount(price, prefix: prefix)) × \(item.quantity) = \(amount(price * Decimal(item.quantity), prefix: prefix))"
+            return "\(title)：\(L10n.euro(price)) × \(item.quantity) = \(L10n.euro(price * Decimal(item.quantity)))"
         }
-        cell.pricesLabel.text = [line("TCGplayer", quote.tcgplayer, "US$"), line("Cardmarket", quote.cardmarket, "€")].joined(separator: "\n")
+        cell.pricesLabel.text = line("Cardmarket", quote.cardmarket)
         cell.accessibilityIdentifier = "physicalCardRow_\(item.id)"
         cell.accessibilityHint = L10n.text("点按查看详情", "Tap for details")
         return cell

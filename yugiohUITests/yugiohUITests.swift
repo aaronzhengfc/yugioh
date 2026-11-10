@@ -125,6 +125,47 @@ class yugiohUITests: XCTestCase {
         app.buttons["cardSearchCancel"].firstMatch.tap()
     }
 
+    func testCardmarketPriceSummary() {
+        let app = launchInEnglish()
+        app.navigationBars.firstMatch.buttons["Search"].firstMatch.tap()
+        let search = app.searchFields["cardSearchField"].firstMatch
+        search.tap()
+        search.typeText("86988864\n")
+        let card = app.tables.firstMatch.cells.containing(.staticText, identifier: "86988864").firstMatch
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        card.tap()
+        let minimum = app.staticTexts["cardmarketMinimum"].firstMatch
+        for _ in 0..<8 where !minimum.isHittable { app.swipeUp() }
+        XCTAssertTrue(minimum.waitForExistence(timeout: 5))
+        XCTAssertEqual(minimum.label, "€0.02")
+        XCTAssertEqual(app.staticTexts["cardmarketMaximum"].firstMatch.label, "€0.20")
+        XCTAssertEqual(app.staticTexts["cardmarketAverage"].firstMatch.label, "€0.10")
+        XCTAssertFalse(app.buttons["cardmarketProductsButton"].exists)
+        XCTAssertLessThan(app.staticTexts["banlistHistory"].firstMatch.frame.minY,
+                          app.staticTexts["Card Reference Prices"].firstMatch.frame.minY)
+    }
+
+    func testChineseCardmarketPriceUsesEuroWord() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-appLanguage", "cn", "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
+        app.launch()
+        let searchButton = app.navigationBars.firstMatch.buttons["搜索"].firstMatch
+        XCTAssertTrue(searchButton.waitForExistence(timeout: 15))
+        searchButton.tap()
+        let search = app.searchFields["cardSearchField"].firstMatch
+        search.tap()
+        search.typeText("86988864\n")
+        let card = app.tables.firstMatch.cells.containing(.staticText, identifier: "86988864").firstMatch
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        card.tap()
+        let minimum = app.staticTexts["cardmarketMinimum"].firstMatch
+        for _ in 0..<8 where !minimum.isHittable { app.swipeUp() }
+        XCTAssertTrue(minimum.waitForExistence(timeout: 5))
+        XCTAssertEqual(minimum.label, "0.02 欧元")
+        XCTAssertEqual(app.staticTexts["cardmarketMaximum"].firstMatch.label, "0.20 欧元")
+        XCTAssertEqual(app.staticTexts["cardmarketAverage"].firstMatch.label, "0.10 欧元")
+    }
+
     func testBothFormatsAndHistoryStayIndependent() {
         let app = launchInEnglish()
         XCTAssertFalse(app.buttons["OCG"].firstMatch.exists)
@@ -355,12 +396,10 @@ class yugiohUITests: XCTestCase {
         let scan = app.navigationBars.firstMatch.buttons["scanPhysicalCards"].firstMatch
         XCTAssertTrue(scan.waitForExistence(timeout: 5))
         XCTAssertFalse(app.navigationBars.firstMatch.buttons["addPhysicalCards"].exists)
-        let tcg = app.staticTexts["physicalTotalTCG"].firstMatch
         let market = app.staticTexts["physicalTotalCardmarket"].firstMatch
         let totalCount = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Physical cards · ")).firstMatch
-        XCTAssertTrue(tcg.exists && market.exists && totalCount.exists)
+        XCTAssertTrue(market.exists && totalCount.exists)
         let beforeCount = totalCount.label
-        let beforeTCG = displayedAmount(tcg.label, prefix: "US$")
         let beforeMarket = displayedAmount(market.label, prefix: "€")
         let list = app.tables["physicalCardsList"].firstMatch
         let card = list.cells["physicalCardRow_89631139"].firstMatch
@@ -381,7 +420,6 @@ class yugiohUITests: XCTestCase {
         app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
         XCTAssertEqual(totalCount.label, beforeCount, "Cancel must not add a card")
         XCTAssertEqual(physicalQuantity(card), initialQuantity)
-        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$"), beforeTCG)
         XCTAssertEqual(displayedAmount(market.label, prefix: "€"), beforeMarket)
 
         scan.tap()
@@ -398,12 +436,8 @@ class yugiohUITests: XCTestCase {
         XCTAssertEqual(physicalQuantity(card), initialQuantity + 1)
         captureScreenshot(app, name: "Physical card quantity buttons")
         let rowText = card.staticTexts.allElementsBoundByIndex.map(\.label).joined(separator: " ")
-        let unitTCG = displayedAmount(rowText, prefix: "US$")
         let unitMarket = displayedAmount(rowText, prefix: "€")
-        XCTAssertNotNil(unitTCG)
         XCTAssertNotNil(unitMarket)
-        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$") ?? -1,
-                       (beforeTCG ?? 0) + (unitTCG ?? 0), accuracy: 0.001)
         XCTAssertEqual(displayedAmount(market.label, prefix: "€") ?? -1,
                        (beforeMarket ?? 0) + (unitMarket ?? 0), accuracy: 0.001)
 
@@ -422,8 +456,6 @@ class yugiohUITests: XCTestCase {
         XCTAssertTrue(decrease.exists)
         increase.tap()
         XCTAssertEqual(physicalQuantity(card), initialQuantity + 2)
-        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$") ?? -1,
-                       (beforeTCG ?? 0) + (unitTCG ?? 0) * 2, accuracy: 0.001)
         XCTAssertEqual(displayedAmount(market.label, prefix: "€") ?? -1,
                        (beforeMarket ?? 0) + (unitMarket ?? 0) * 2, accuracy: 0.001)
         decrease.tap()
@@ -436,7 +468,6 @@ class yugiohUITests: XCTestCase {
         } else if beforeCount == "Physical cards · 0 copies" {
             XCTAssertTrue(list.label.contains("No physical cards yet"))
         }
-        XCTAssertEqual(displayedAmount(tcg.label, prefix: "US$"), beforeTCG)
         XCTAssertEqual(displayedAmount(market.label, prefix: "€"), beforeMarket)
     }
 

@@ -130,16 +130,41 @@ final class PhysicalCardService {
     }
 
     struct Quote {
-        let tcgplayer: Decimal?
         let cardmarket: Decimal?
-        /// Time the snapshot was retrieved, not the original quote time.
+        /// Time Cardmarket generated the price guide snapshot.
         let fetchedAt: Date?
     }
 
+    struct MarketSummary {
+        let minimum: Decimal
+        let maximum: Decimal
+        let average: Decimal
+        let productCount: Int
+        let snapshotDate: Date
+    }
+
+    static func marketSummary(id: String) -> MarketSummary? {
+        guard let cardID = Int64(id) else { return nil }
+        do {
+            let database = getDB()
+            guard let raw = try database.scalar("SELECT pricesCreatedAt FROM cardmarket_snapshot WHERE id = 1") as? String else { return nil }
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            guard let date = formatter.date(from: raw) else { return nil }
+            let rows = try database.prepare("SELECT MIN(p.low), MAX(p.low), AVG(p.low), COUNT(*) FROM cardmarket_product c JOIN cardmarket_price p ON p.idProduct = c.idProduct WHERE c.cardId = ? AND p.low > 0", cardID)
+            for row in rows {
+                guard let minimum = row[0] as? Double, let maximum = row[1] as? Double,
+                      let average = row[2] as? Double, let count = row[3] as? Int64,
+                      minimum.isFinite, maximum.isFinite, average.isFinite, count > 0 else { return nil }
+                return MarketSummary(minimum: Decimal(minimum), maximum: Decimal(maximum), average: Decimal(average), productCount: Int(count), snapshotDate: date)
+            }
+        } catch { return nil }
+        return nil
+    }
+
     struct Totals {
-        let tcgplayer: Decimal
         let cardmarket: Decimal
-        let tcgMissingCount: Int
         let cardmarketMissingCount: Int
         let totalCards: Int
         let earliestFetchedAt: Date?
@@ -192,43 +217,24 @@ final class PhysicalCardService {
     func quote(id: String) -> Quote { quoteProvider(id) }
 
     func totals() -> Totals {
-        var tcg = Decimal.zero, market = Decimal.zero
-        var tcgMissing = 0, marketMissing = 0, total = 0
+        var market = Decimal.zero
+        var marketMissing = 0, total = 0
         var oldest: Date?
         for item in list() {
             let quote = quoteProvider(item.id)
             total += item.quantity
-            if let price = quote.tcgplayer { tcg += price * Decimal(item.quantity) }
-            else { tcgMissing += item.quantity }
             if let price = quote.cardmarket { market += price * Decimal(item.quantity) }
             else { marketMissing += item.quantity }
             if let date = quote.fetchedAt { oldest = min(oldest ?? date, date) }
         }
-        return Totals(tcgplayer: tcg, cardmarket: market, tcgMissingCount: tcgMissing,
+        return Totals(cardmarket: market,
                       cardmarketMissingCount: marketMissing, totalCards: total, earliestFetchedAt: oldest)
     }
 
     private static func snapshotQuote(id: String) -> Quote {
-        let unavailable = Quote(tcgplayer: nil, cardmarket: nil, fetchedAt: nil)
-        guard let cardID = Int64(id) else { return unavailable }
-        do {
-            guard let raw = try getDB().scalar("SELECT fetchedAtUtc FROM card_price_sync WHERE cardId = ?", cardID) as? String,
-                  let fetchedAt = ISO8601DateFormatter().date(from: raw),
-                  let data = getCardEntity(id: id).getCardPrices().data(using: .utf8),
-                  let records = (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]],
-                  let record = records.first else { return unavailable }
-            return Quote(tcgplayer: positivePrice(record["tcgplayer_price"]),
-                         cardmarket: positivePrice(record["cardmarket_price"]), fetchedAt: fetchedAt)
-        } catch { return unavailable }
-    }
-
-    private static func positivePrice(_ value: Any?) -> Decimal? {
-        let text: String
-        if let string = value as? String { text = string }
-        else if let number = value as? NSNumber { text = number.stringValue }
-        else { return nil }
-        guard let price = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")),
-              !price.isNaN, price > .zero else { return nil }
-        return price
+        guard let summary = marketSummary(id: id) else {
+            return Quote(cardmarket: nil, fetchedAt: nil)
+        }
+        return Quote(cardmarket: summary.minimum, fetchedAt: summary.snapshotDate)
     }
 }

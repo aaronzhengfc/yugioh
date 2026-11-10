@@ -34,4 +34,15 @@ enum L10n {
     static func text(_ chinese: String, _ english: String) -> String {
         return AppLanguage.current == .simplifiedChinese ? chinese : english
     }
+
+    static func euro(_ value: Decimal) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        let number = NSDecimalNumber(decimal: value)
+        let amount = formatter.string(from: number) ?? number.stringValue
+        return text("\(amount) 欧元", "€\(amount)")
+    }
 }

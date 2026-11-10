@@ -158,18 +158,16 @@ class yugiohTests: XCTestCase {
         let snapshot = Date(timeIntervalSince1970: 1_700_000_000)
         let service = PhysicalCardService(defaults: defaults, key: "collection") { id in
             if id == "1" {
-                return PhysicalCardService.Quote(tcgplayer: Decimal(string: "0.10"), cardmarket: nil, fetchedAt: snapshot)
+                return PhysicalCardService.Quote(cardmarket: nil, fetchedAt: nil)
             }
-            return PhysicalCardService.Quote(tcgplayer: nil, cardmarket: Decimal(string: "1.25"), fetchedAt: snapshot)
+            return PhysicalCardService.Quote(cardmarket: Decimal(string: "1.25"), fetchedAt: snapshot)
         }
         for _ in 0..<5 { XCTAssertTrue(service.add(id: "1")) }
         XCTAssertTrue(service.add(id: "2"))
         XCTAssertEqual(service.count(id: "1"), 5)
         let totals = service.totals()
         XCTAssertEqual(totals.totalCards, 6)
-        XCTAssertEqual(totals.tcgplayer, Decimal(string: "0.50"))
         XCTAssertEqual(totals.cardmarket, Decimal(string: "1.25"))
-        XCTAssertEqual(totals.tcgMissingCount, 1)
         XCTAssertEqual(totals.cardmarketMissingCount, 5)
         XCTAssertEqual(totals.earliestFetchedAt, snapshot)
 
@@ -181,6 +179,30 @@ class yugiohTests: XCTestCase {
         XCTAssertEqual(service.count(id: "1"), 0)
         XCTAssertEqual(service.count(id: "2"), 1)
         XCTAssertEqual(PhysicalCardService(defaults: defaults, key: "other").list().count, 0)
+    }
+
+    func testCardmarketSnapshotQuoteAndAmbiguousCard() {
+        let service = PhysicalCardService()
+        let quote = service.quote(id: "89631139")
+        XCTAssertEqual(quote.cardmarket, Decimal(string: "0.02"))
+        XCTAssertNotNil(quote.fetchedAt)
+        XCTAssertNil(service.quote(id: "46986414").cardmarket)
+        let summary = PhysicalCardService.marketSummary(id: "86988864")
+        XCTAssertEqual(summary?.productCount, 4)
+        XCTAssertEqual(summary?.minimum, Decimal(string: "0.02"))
+        XCTAssertEqual(summary?.maximum, Decimal(string: "0.20"))
+        XCTAssertEqual(NSDecimalNumber(decimal: summary!.average).doubleValue, 0.0975, accuracy: 0.000001)
+        XCTAssertEqual(summary?.minimum, service.quote(id: "86988864").cardmarket)
+        XCTAssertNil(PhysicalCardService.marketSummary(id: "46986414"))
+    }
+
+    func testEuroFormattingFollowsAppLanguage() {
+        let original = AppLanguage.current
+        defer { AppLanguage.current = original }
+        AppLanguage.current = .simplifiedChinese
+        XCTAssertEqual(L10n.euro(Decimal(string: "12.5")!), "12.50 欧元")
+        AppLanguage.current = .english
+        XCTAssertEqual(L10n.euro(Decimal(string: "12.5")!), "€12.50")
     }
 
     func testLanguageResolution() {
